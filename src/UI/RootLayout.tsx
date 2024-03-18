@@ -1,14 +1,13 @@
 import { Outlet } from "react-router-dom";
-import Test from "../components/Test";
+import Header from "../components/layout/Header";
 
 export default function RootLayout() {
   return (
-    <>
-      <header>헤더</header>
-      <Test />
-      <main>
+    <section>
+      <Header />
+      <main className="max-w-[2360px] w-11/12 mx-auto">
         <Outlet />
       </main>
-    </>
+    </section>
   );
 }
