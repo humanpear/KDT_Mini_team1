@@ -16,7 +16,7 @@ export default function LoginPage() {
             <input
               type="password"
               className="rounded-b-lg outline-none pl-4 py-3"
-              placeholder="패스워드를 입력해주세요"
+              placeholder="비밀번호를 입력해주세요"
             />
           </div>
           <button className="bg-[#F42C5B] py-3 rounded-lg text-white">
