@@ -19,7 +19,7 @@ export default function AccommodationCard({ accommodation }: AccommodationInfoPr
 				className="w-full h-full rounded"
 				src={
 					firstimage === ""
-						? "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbHGj34%2FbtsFQwFP0Ae%2FLXaSNC2wWupjePG2p0AcPk%2Fimg.png"
+						? "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcCgih9%2FbtsFWIjF2ix%2FdfFHaHfYyzekK2RiYPt6a1%2Fimg.png"
 						: firstimage
 				}
 				alt={title}
