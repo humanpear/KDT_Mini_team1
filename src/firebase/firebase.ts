@@ -6,7 +6,7 @@ import {
   signOut,
 } from "firebase/auth";
 import uuid from "react-uuid";
-import { SignUpData } from "../types/user";
+import { LoginUser, SignUpData } from "../types/user";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCeJCfWwmLd30VjrslZeyoYxKD0IIFYQMI",
@@ -26,9 +26,11 @@ export async function getUsers() {
   return users;
 }
 
-export async function signup(data: SignUpData) {
-  const users = await getUsers();
-
+export async function signup(
+  data: SignUpData,
+  setIsLoading: (arg: boolean) => void,
+  setErrorMessage: (arg: string) => void
+) {
   const userData = {
     id: uuid(),
     email: data.email,
@@ -36,18 +38,54 @@ export async function signup(data: SignUpData) {
     image: "",
   };
 
-  await fetch(
-    "https://mini-demo-server-default-rtdb.asia-southeast1.firebasedatabase.app/users.json",
-    {
-      method: "PUT",
-      body: JSON.stringify([...users, userData]),
+  setIsLoading(true);
+
+  try {
+    const users = await getUsers();
+
+    const user = users.find((u: LoginUser) => u.email === data.email);
+
+    if (user) {
+      setErrorMessage("이미 존재하는 이메일입니다.");
+      return;
     }
-  );
-  await createUserWithEmailAndPassword(auth, data.email, data.password);
+    await fetch(
+      "https://mini-demo-server-default-rtdb.asia-southeast1.firebasedatabase.app/users.json",
+      {
+        method: "PUT",
+        body: JSON.stringify([...users, userData]),
+      }
+    );
+    await createUserWithEmailAndPassword(auth, data.email, data.password);
+  } catch (error) {
+    setErrorMessage("에러 발생 !!!");
+  } finally {
+    setIsLoading(false);
+  }
 }
 
-export async function login(email: string, password: string) {
-  signInWithEmailAndPassword(auth, email, password);
+export async function login(
+  email: string,
+  password: string,
+  setIsLoading: (arg: boolean) => void,
+  setErrorMessage: (arg: string) => void
+) {
+  setIsLoading(true);
+
+  try {
+    const users = await getUsers();
+    const user = users.find((u: LoginUser) => u.email === email);
+
+    if (!user) {
+      setErrorMessage("존재하지 않는 아이디입니다.");
+      return;
+    }
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    setErrorMessage("잘못된 비밀번호입니다.");
+  } finally {
+    setIsLoading(false);
+  }
 }
 
 export async function logout() {
