@@ -1,24 +1,29 @@
 import { useNavigate } from "react-router-dom";
 import { AccommodationInfo } from "../../types/AccommodationInfo";
 
-type AccommodationInfoProps = {
+interface AccommodationInfoProps extends React.HTMLAttributes<HTMLLIElement> {
 	accommodation: AccommodationInfo;
-};
+	innerRef?: React.Ref<HTMLLIElement>;
+}
 
-export default function AccommodationCard({ accommodation }: AccommodationInfoProps) {
+export default function AccommodationCard({ accommodation, innerRef }: AccommodationInfoProps) {
 	const { addr1, title, tel, firstimage, contentid } = accommodation;
 	const navigate = useNavigate();
+<<<<<<< HEAD
+=======
+
+	const handleClick = () => {
+		navigate(`/product/${contentid}`);
+	};
+
+>>>>>>> develop
 	return (
-		<li
-			className="grid grid-rows-2 "
-			onClick={() => {
-				navigate(`/product/${contentid}`);
-			}}>
+		<li ref={innerRef} className="grid grid-rows-2 " onClick={handleClick}>
 			<img
 				className="w-full h-full rounded"
 				src={
 					firstimage === ""
-						? "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcCgih9%2FbtsFWIjF2ix%2FdfFHaHfYyzekK2RiYPt6a1%2Fimg.png"
+						? "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcaVBkP%2FbtsFU7koksb%2FzyBL59ycbUCNllOXfQxiYK%2Fimg.png"
 						: firstimage
 				}
 				alt={title}

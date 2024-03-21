@@ -4,10 +4,13 @@ import UserIcon from "../../icons/UserIcon";
 import NavBar from "./NavBar";
 import { Link } from "react-router-dom";
 import SearchIcon from "../../icons/SearchIcon";
+import { useUserStore } from "../../store/user";
 
 export default function Header() {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const navToggleRef = useRef<HTMLDivElement>(null);
+
+  const { loginUser } = useUserStore();
 
   function handleClick() {
     setIsNavOpen(!isNavOpen);
@@ -33,7 +36,14 @@ export default function Header() {
             className="w-[86px] h-[48px] border rounded-[40px] flex items-center justify-evenly cursor-pointer hover:shadow-md transition "
           >
             <MenuIcon />
-            <UserIcon />
+            {loginUser ? (
+              <img
+                src={loginUser.image}
+                className="w-[32px] h-[32px] object-cover border rounded-full"
+              />
+            ) : (
+              <UserIcon />
+            )}
           </div>
           {isNavOpen && (
             <NavBar onClose={handleClick} navToggleRef={navToggleRef} />

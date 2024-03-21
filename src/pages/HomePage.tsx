@@ -1,9 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { getStaies } from "../util/http";
 import AccommodationCard from "../components/homepage/AccommodationCard";
+import FilterCategory from "../components/homepage/FilterCategory";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
 import { AccommodationInfo } from "../types/AccommodationInfo";
 
 const filters = [
+	"전체",
 	"관광호텔",
 	"콘도미니엄",
 	"유스호스텔",
@@ -17,26 +21,72 @@ const filters = [
 ];
 
 export default function HomePage() {
-	const { isLoading, data: accommodation } = useQuery<AccommodationInfo[]>({
+	// const [filter, setFilter] = useState(filters[0]);
+	// const filtered = getFilteredItems(accommodation, filter);
+
+	const { ref, inView } = useInView();
+
+	const {
+		data: accommodation,
+		status,
+		error,
+		fetchNextPage,
+		isFetchingNextPage,
+		hasNextPage,
+	} = useInfiniteQuery({
 		queryKey: ["accommodation"],
 		queryFn: getStaies,
+		initialPageParam: 1,
+		getNextPageParam: (lastPage, allPage) => {
+			const nextPage = lastPage.length ? allPage.length + 1 : undefined;
+			return nextPage;
+		},
 	});
+
+	useEffect(() => {
+		if (inView && hasNextPage) {
+			console.log("fire!");
+
+			fetchNextPage();
+		}
+	}, [inView, hasNextPage, fetchNextPage]);
+
+	if (status === "pending") {
+		return <p>Loading...</p>;
+	}
+
+	if (status === "error") {
+		return <p>Error: {error.message}</p>;
+	}
 
 	return (
 		<div className="p-4">
-			{isLoading && <p>Loading...</p>}
-			<div className="flex justify-center flex-wrap gap-4">
-				{filters.map(filter => (
-					<p className="text-lg font-semibold p-4">{filter}</p>
-				))}
-			</div>
-			{accommodation && (
+			<FilterCategory filters={filters} />
+			{accommodation.pages && (
 				<ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5 gap-y-4">
-					{accommodation.map(item => (
-						<AccommodationCard key={item.contentid} accommodation={item} />
-					))}
+					{accommodation?.pages.map(page =>
+						page.map((item: AccommodationInfo, index: number) => {
+							if (item.length == index + 1) {
+								return <AccommodationCard innerRef={ref} key={index} accommodation={item} />;
+							}
+							return <AccommodationCard key={index} accommodation={item} />;
+						}),
+					)}
 				</ul>
 			)}
+			{isFetchingNextPage && <h3>Loading...</h3>}
 		</div>
 	);
+<<<<<<< HEAD
 }
+=======
+}
+
+// function getFilteredItems(accommodation, filter) {
+// 	if (filter === "전체") {
+// 		return accommodation;
+// 	} else if (filter == "관광호텔") {
+// 		return accommodation.filter(item => item.code === "");
+// 	}
+// }
+>>>>>>> develop
