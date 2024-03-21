@@ -1,20 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import { AccommodationInfo } from "../../types/AccommodationInfo";
 
-type AccommodationInfoProps = {
+interface AccommodationInfoProps extends React.HTMLAttributes<HTMLLIElement> {
 	accommodation: AccommodationInfo;
-};
+	innerRef?: React.Ref<HTMLLIElement>;
+}
 
-export default function AccommodationCard({ accommodation }: AccommodationInfoProps) {
+export default function AccommodationCard({ accommodation, innerRef }: AccommodationInfoProps) {
 	const { addr1, title, tel, firstimage, contentid } = accommodation;
 	const navigate = useNavigate();
 
+	const handleClick = () => {
+		navigate(`/product/${contentid}`);
+	};
+
 	return (
-		<li
-			className="grid grid-rows-2 "
-			onClick={() => {
-				navigate(`/product/${contentid}`);
-			}}>
+		<li ref={innerRef} className="grid grid-rows-2 " onClick={handleClick}>
 			<img
 				className="w-full h-full rounded"
 				src={

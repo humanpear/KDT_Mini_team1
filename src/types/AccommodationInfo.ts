@@ -4,4 +4,5 @@ export type AccommodationInfo = {
 	tel: string;
 	firstimage: string;
 	contentid: number;
+	length?: number;
 };
