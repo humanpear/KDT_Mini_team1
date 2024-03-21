@@ -1,62 +1,181 @@
+import { useState, useRef } from "react";
+
 export default function MyPage() {
-  function handleClick() {
-    window.location.replace ("/order/:id")
-  }
+  const divRef = useRef(null);
+
+  const handleClick = () => {
+    window.location.replace("/order/:id");
+  };
+
+  //이름
+  const [editModeName, setEditModeName] = useState(false);
+  const changeToEditModeName = () => {
+    setEditModeName(true);
+    setEditModePw(false);
+  };
+  const changeToReadModeName = () => {
+    setEditModeName(false);
+  };
+
+  //비밀번호
+  const [editModePw, setEditModePw] = useState(false);
+  const changeToEditModePw = () => {
+    setEditModePw(true);
+    setEditModeName(false);
+    adjustDivHeight();
+  };
+  const changeToReadModePw = () => {
+    setEditModePw(false);
+    adjustDivHeight();
+  };
+
+  //휴대폰번호
+  // const [editModePhone, setEditModePhone] = useState(false);
+  // const changeToEditModePhone = () => {
+  //   setEditModePhone(true);
+  // };
+  // const changeToReadModePhone = () => {
+  //   setEditModePhone(false);
+  // };
+
+  const adjustDivHeight = () => {
+    if (divRef.current) {
+      divRef.current.style.height = editModePw ? "auto" : "unset";
+    }
+  };
 
   return (
-  <section className="absolute top-1/2 left-1/2 w-[520px] shadow-basic translate-x-[-50%] translate-y-[-50%] rounded-lg">
-  <div className="h-16 font-bold text-center leading-[64px]">
-    마이페이지
-    </div>
-  <div className="p-6 flex flex-col border-t">
-  <div className="pb-6 flex flex-row items-center ">
-    <img className="rounded-full w-32" src="https://this-person-does-not-exist.com/img/avatar-genb7923dc1293dbdb2a2be691c4f5b3445.jpg" />
-    {/* <div className="flex flex-col pl-4 text-slate-500">
-    <p className="mb-2">이름</p>
-    <p className="mb-2">이메일</p>
-    <p className="mb-2">비밀번호</p>
-    <p className="mb-2">휴대폰번호</p>
-    </div>
-    <div className="flex flex-col pl-4">
-    <p className="mb-2">박인배</p>
-    <p className="mb-2">pibmaru@naver.com</p>
-    <p className="mb-2">●●●●●●●●</p>
-    <p className="mb-2">01041553356</p> */}
-    {/* 이메일 받아서 표시 */}
-    {/* <button className="border rounded-lg px-3 py-1 mt-3">회원정보 수정</button> */}
-    {/* </div>
-    <div className="flex flex-col pl-4 text-xs text-blue-500">
-    <p className="mb-2">수정하기</p>
-    <p className="mb-2">수정하기</p>
-    <p className="mb-2">수정하기</p>
-    <p className="mb-2">수정하기</p>
-    </div> */}
-    <div className="flex flex-col pl-4 text-slate-500">
-    <p className="mb-2">이름</p>
-    <p className="mb-2">이메일</p>
-    <p className="mb-2">비밀번호</p>
-    <p className="mb-2">휴대폰번호</p>
-    </div>
-    <div className="flex flex-col pl-4">
-    <p className="mb-2">박인배</p>
-    <p className="mb-2">pibmaru@naver.com</p>
-    <p className="mb-2">●●●●●●●●</p>
-    <p className="mb-2">01041553356</p> */}
-    {/* 이메일 받아서 표시 */}
-    {/* <button className="border rounded-lg px-3 py-1 mt-3">회원정보 수정</button> */}
-    </div>
-    <div className="flex flex-col pl-4 text-xs text-blue-500">
-    <p className="mb-2">수정하기</p>
-    <p className="mb-2">수정하기</p>
-    <p className="mb-2">수정하기</p>
-    <p className="mb-2">수정하기</p>
-    </div>
-  </div>
-  <button className="bg-[#F42C5B] py-3 rounded-lg text-white" onClick={handleClick}>
-            예약내역 확인
-          </button>
+    <section className="mx-auto mt-6 w-[520px] shadow-basic rounded-lg">
+      <div className="h-16 font-bold text-center leading-[64px]">
+        마이페이지
+      </div>
+
+      {/* 개인정보 */}
+      
+      <div className="p-6 flex flex-col border-t" ref={divRef}>
+      <h1 className="text-xl font-bold pb-4">개인 정보</h1>
+        <div className="pb-6 flex flex-row place-items-start">
+          <img
+            className="rounded-full w-32"
+            src="https://this-person-does-not-exist.com/img/avatar-genb7923dc1293dbdb2a2be691c4f5b3445.jpg"
+          />
+          <div className="w-80 flex flex-col ml-6">
+            <div className="pb-4 border-b">
+              {editModeName ? (
+                <div className="flex flex-row">
+                  <p className="w-24  text-slate-500">이름</p>
+                  <input className="w-40" type="text" placeholder="이름" />
+                  <button className="ml-auto text-xs">저장</button>
+                  <button
+                    className="ml-1 text-xs"
+                    onClick={changeToReadModeName}
+                  >
+                    취소
+                  </button>
+                </div>
+              ) : (
+                <div className="flex flex-row items-center">
+                  <p className="w-24 text-slate-500">이름</p>
+                  <p>박인배</p>
+                  <button
+                    className="ml-auto text-xs text-blue-500"
+                    onClick={changeToEditModeName}
+                  >
+                    수정하기
+                  </button>
+                </div>
+              )}
+            </div>
+            <div className="py-4 border-b">
+              <div className="flex flex-row">
+                <p className="w-24 text-slate-500">이메일</p>
+                <p>pibmaru@naver.com</p>
+              </div>
+            </div>
+
+            <div className="py-4 border-b" ref={divRef}>
+              {editModePw ? (
+                <div className="flex flex-row ">
+                  <p className="w-24 text-slate-500">비밀번호</p>
+                  <div className="flex flex-col">
+                    <input
+                      className="pb-2 border-b w-40"
+                      type="text"
+                      placeholder="현재 비밀번호"
+                    />
+                    <input
+                      className="py-2 border-b w-40"
+                      type="text"
+                      placeholder="새 비밀번호"
+                    />
+                    <input
+                      className="pt-2 w-40"
+                      type="text"
+                      placeholder="새 비밀번호 확인"
+                    />
+                  </div>
+                  <button className="place-self-end ml-auto text-xs">
+                    저장
+                  </button>
+                  <button
+                    className="place-self-end ml-1 text-xs"
+                    onClick={changeToReadModePw}
+                  >
+                    취소
+                  </button>
+                </div>
+              ) : (
+                <div className="flex flex-row items-center">
+                  <p className="w-24 text-slate-500">비밀번호</p>
+                  <p>●●●●●●●●</p>
+                  <button
+                    className="ml-auto text-xs text-blue-500"
+                    onClick={changeToEditModePw}
+                  >
+                    수정하기
+                  </button>
+                </div>
+              )}
+            </div>
+            {/* 이메일 받아서 표시 */}
           </div>
-</section>
+        </div>
+      </div>
+
+      {/* 예약 내역 */}
+      <div className="pl-6 pb-6">
+        <h1 className="text-xl pb-4 font-bold">예약된 여행</h1>
+        <div className="flex flex-row">
+          <img
+            className="rounded-lg w-[72px] h-[72px]"
+            src="http://tong.visitkorea.or.kr/cms/resource/00/2626200_image2_1.jpg"
+          ></img>
+          <div className="pl-4">
+            <p className="font-semibold">
+              가경재 [한국관광 품질인증/Korea Quality]
+            </p>
+            <p>경상북도 경주시 대경로 4821-5</p>
+            <p>2024.03.19 ~ 2024.03.24</p>
+          </div>
+        </div>
+      </div>
+      <div className="pl-6">
+        <h1 className="text-xl pb-4 font-bold">이전 여행지</h1>
+        <div className="flex flex-row">
+          <img
+            className="rounded-lg w-[72px] h-[72px]"
+            src="http://tong.visitkorea.or.kr/cms/resource/00/2626200_image2_1.jpg"
+          ></img>
+          <div className="pl-4">
+            <p className="font-semibold">
+              가경재 [한국관광 품질인증/Korea Quality]
+            </p>
+            <p>경상북도 경주시 대경로 4821-5</p>
+            <p>2024.03.19 ~ 2024.03.24</p>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 

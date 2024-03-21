@@ -8,7 +8,6 @@ type AccommodationInfoProps = {
 export default function AccommodationCard({ accommodation }: AccommodationInfoProps) {
 	const { addr1, title, tel, firstimage, contentid } = accommodation;
 	const navigate = useNavigate();
-
 	return (
 		<li
 			className="grid grid-rows-2 "
