@@ -22,6 +22,7 @@ export async function getUsers() {
   const response = await fetch(
     "https://mini-demo-server-default-rtdb.asia-southeast1.firebasedatabase.app/users.json"
   );
+
   const users = await response.json();
   return users;
 }
@@ -68,7 +69,8 @@ export async function login(
   email: string,
   password: string,
   setIsLoading: (arg: boolean) => void,
-  setErrorMessage: (arg: string) => void
+  setErrorMessage: (arg: string) => void,
+  navigate: (arg: string) => void
 ) {
   setIsLoading(true);
 
@@ -81,6 +83,7 @@ export async function login(
       return;
     }
     await signInWithEmailAndPassword(auth, email, password);
+    navigate("/");
   } catch (error) {
     setErrorMessage("잘못된 비밀번호입니다.");
   } finally {
