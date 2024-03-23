@@ -1,8 +1,10 @@
 export type AccommodationInfo = {
-	addr1: string;
 	title: string;
+	address: string;
 	tel: string;
-	firstimage: string;
+	image1: string;
+	description: string;
+	category?: string;
 	contentid: number;
 	length?: number;
 };
