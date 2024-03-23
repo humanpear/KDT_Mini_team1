@@ -54,14 +54,14 @@ export default function FilterCategory({ filters }: FiltersArray) {
 						<button
 							onClick={() => handleClickFilter(index)}
 							className={`w-[150px] font-semibold p-2 rounded-full ${
-								activeFilter === index ? "bg-[#F42C5B] text-white" : "bg-gray-100 text-black"
+								activeFilter === index ? "bg-brand text-white" : "bg-gray-100 text-black"
 							}`}>
 							{filter}
 						</button>
 					</SwiperSlide>
 				))}
 			</Swiper>
-			<div>
+			<div className="hidden md:block">
 				<button onClick={handlePrev} className={`${btnCustom} left-2`}>
 					<FaArrowLeft />
 				</button>
