@@ -22,7 +22,7 @@ export default function ReservationCard() {
 						<p>게스트 1명</p>
 					</div>
 				</div>
-				<button className="w-full py-2 mb-4 bg-[#FF385C] text-white rounded hover:brightness-110">예약 하기</button>
+				<button className="w-full py-2 mb-4 bg-brand text-white rounded hover:brightness-110">예약 하기</button>
 				<p className="mb-4">예약 확정 전에는 요금이 청구되지 않습니다.</p>
 				<div className="flex justify-between pb-4 border-b">
 					<p className="underline">₩160,000 x 5박</p>
