@@ -15,8 +15,7 @@ export default function RootLayout() {
       if (user) {
         getUsers()
           .then((users) => users.find((u: LoginUser) => u.email === user.email))
-          .then((user) => setLoginUser(user))
-          .then(() => navigate("/"));
+          .then((user) => setLoginUser(user));
       } else {
         setLoginUser(null);
         navigate("/login");

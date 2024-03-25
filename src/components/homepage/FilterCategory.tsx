@@ -5,15 +5,16 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useState } from "react";
 
 type FiltersArray = {
-	filters: string[];
+  filters: string[];
+  onFilterChange: (filter: string) => void;
 };
 
-export default function FilterCategory({ filters }: FiltersArray) {
+export default function FilterCategory({ filters, onFilterChange  }: FiltersArray) {
 	const [swiper, setSwiper] = useState<SwiperClass>();
 	const [activeFilter, setActiveFilter] = useState<number | null>(0);
 
 	const btnCustom = "p-2 rounded-full bg-gray-100 hover:brightness-90 absolute top-1/2 transform -translate-y-1/2";
-
+	
 	const handlePrev = () => {
 		swiper?.slidePrev();
 	};
@@ -21,9 +22,10 @@ export default function FilterCategory({ filters }: FiltersArray) {
 		swiper?.slideNext();
 	};
 
-	const handleClickFilter = (index: number) => {
-		setActiveFilter(index);
-	};
+	const handleClickFilter = (index: number, filter: string) => {
+    setActiveFilter(index);
+    onFilterChange(filter);
+  };
 
 	return (
 		<div className="relative">
@@ -52,16 +54,16 @@ export default function FilterCategory({ filters }: FiltersArray) {
 				{filters.map((filter, index) => (
 					<SwiperSlide key={index}>
 						<button
-							onClick={() => handleClickFilter(index)}
+							onClick={() => handleClickFilter(index, filter)}
 							className={`w-[150px] font-semibold p-2 rounded-full ${
-								activeFilter === index ? "bg-[#F42C5B] text-white" : "bg-gray-100 text-black"
+								activeFilter === index ? "bg-brand text-white" : "bg-gray-100 text-black"
 							}`}>
 							{filter}
 						</button>
 					</SwiperSlide>
 				))}
 			</Swiper>
-			<div>
+			<div className="hidden md:block">
 				<button onClick={handlePrev} className={`${btnCustom} left-2`}>
 					<FaArrowLeft />
 				</button>
