@@ -1,11 +1,9 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useUserStore } from "../store/user";
+import { getDatabase, ref } from "../firebase/firebase"
 
 export default function MyPage() {
   const divRef = useRef(null);
-
-  const handleClick = () => {
-    window.location.replace("/order/:id");
-  };
 
   //이름
   const [editModeName, setEditModeName] = useState(false);
@@ -40,24 +38,27 @@ export default function MyPage() {
 
   const adjustDivHeight = () => {
     if (divRef.current) {
-      divRef.current.style.height = editModePw ? "auto" : "unset";
+      divRef.current.style.height = "auto";
     }
   };
 
   return (
-    <section className="mx-auto mt-6 w-[520px] shadow-basic rounded-lg">
+    <section
+      className="mx-auto mt-6 w-[520px] shadow-basic rounded-lg"
+      ref={divRef}
+    >
       <div className="h-16 font-bold text-center leading-[64px]">
         마이페이지
       </div>
 
       {/* 개인정보 */}
-      
+
       <div className="p-6 flex flex-col border-t" ref={divRef}>
-      <h1 className="text-xl font-bold pb-4">개인 정보</h1>
+        <h1 className="text-xl font-bold pb-4">개인 정보</h1>
         <div className="pb-6 flex flex-row place-items-start">
           <img
             className="rounded-full w-32"
-            src="https://this-person-does-not-exist.com/img/avatar-genb7923dc1293dbdb2a2be691c4f5b3445.jpg"
+            src="${loginUser?.image}"
           />
           <div className="w-80 flex flex-col ml-6">
             <div className="pb-4 border-b">
@@ -76,7 +77,7 @@ export default function MyPage() {
               ) : (
                 <div className="flex flex-row items-center">
                   <p className="w-24 text-slate-500">이름</p>
-                  <p>박인배</p>
+                  <p>{loginUser?.name}</p>
                   <button
                     className="ml-auto text-xs text-blue-500"
                     onClick={changeToEditModeName}
@@ -89,7 +90,7 @@ export default function MyPage() {
             <div className="py-4 border-b">
               <div className="flex flex-row">
                 <p className="w-24 text-slate-500">이메일</p>
-                <p>pibmaru@naver.com</p>
+                <p>{loginUser?.email}</p>
               </div>
             </div>
 
@@ -159,7 +160,7 @@ export default function MyPage() {
           </div>
         </div>
       </div>
-      <div className="pl-6">
+      <div className="pl-6 pb-6">
         <h1 className="text-xl pb-4 font-bold">이전 여행지</h1>
         <div className="flex flex-row">
           <img
