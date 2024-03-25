@@ -14,11 +14,12 @@ type Action = {
   setGuest: (num: number) => void;
 };
 
-export const paymentStore = create<State & Action>((set) => ({
+export const usePaymentStore = create<State & Action>((set) => ({
   paymentInfo: {
     startDate: null,
     endDate: null,
     guest: 1,
+    selectedAccommodation: null,
   },
   setStartDate: (date) =>
     set((state) => ({

@@ -10,7 +10,7 @@ import { getAccommodation } from "../util/http";
 export default function ProductDetailPage() {
   const { id } = useParams();
 
-  const { data } = useQuery({
+  const { data: accommodation } = useQuery({
     queryKey: ["accommodation", id],
     queryFn: () => getAccommodation(id as string),
   });
@@ -27,7 +27,7 @@ export default function ProductDetailPage() {
       <ProductImage />
       <div className="flex gap-20 mt-10">
         <ProductInfo />
-        <ReservationCard />
+        <ReservationCard accommodation={accommodation} />
       </div>
     </section>
   );

@@ -1,18 +1,23 @@
-export default function PriceInfo() {
+import { SelectedAccommodation } from "../../types/selectedAccommodation";
+
+type Props = {
+  selectedAccommodation: SelectedAccommodation;
+};
+
+export default function PriceInfo({ selectedAccommodation }: Props) {
+  const { title, image1 } = selectedAccommodation;
+
   return (
     <div className="basis-1/2 flex justify-end">
       <div className="w-[460px] h-min p-6 border rounded-lg sticky top-[200px]">
         <div className="flex border-b pb-6">
           <img
             className="w-[100px] h-[100px] rounded-lg object-cover shrink-0"
-            src="https://a0.muscache.com/im/pictures/miso/Hosting-43819093/original/a34a6095-49ab-4603-a346-9e96d94595cb.jpeg?aki_policy=large"
+            src={image1}
             alt="stay image"
           />
           <div className="ml-4 flex flex-col justify-between">
-            <p>
-              [프라이빗 1일1팀]어비계곡 최상류_1만평 청정자연 단독사용/별장전체
-              [양평 옥천] 용문산
-            </p>
+            <p>{title}</p>
             <p>⭐️ 4.88 (후기 17개)</p>
           </div>
         </div>

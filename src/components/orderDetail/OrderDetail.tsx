@@ -1,7 +1,16 @@
 import { Link } from "react-router-dom";
 import NextIcon from "../../icons/NextIcon";
+import { useQuery } from "@tanstack/react-query";
+import { getReservation } from "../../util/http";
 
 export default function OrderDetail() {
+  const { data } = useQuery({
+    queryKey: ["orderComplete"],
+    queryFn: getReservation,
+  });
+
+  console.log(data);
+
   return (
     <section className="py-16">
       <div className="text-center mb-12">
