@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useUserStore } from "../store/user";
-import { getDatabase, ref } from "../firebase/firebase"
+import UserIcon from "../icons/UserIcon";
 
 export default function MyPage() {
   const divRef = useRef(null);
@@ -27,20 +27,13 @@ export default function MyPage() {
     adjustDivHeight();
   };
 
-  //휴대폰번호
-  // const [editModePhone, setEditModePhone] = useState(false);
-  // const changeToEditModePhone = () => {
-  //   setEditModePhone(true);
-  // };
-  // const changeToReadModePhone = () => {
-  //   setEditModePhone(false);
-  // };
-
   const adjustDivHeight = () => {
     if (divRef.current) {
       divRef.current.style.height = "auto";
     }
   };
+
+  const { loginUser } = useUserStore();
 
   return (
     <section
@@ -56,10 +49,11 @@ export default function MyPage() {
       <div className="p-6 flex flex-col border-t" ref={divRef}>
         <h1 className="text-xl font-bold pb-4">개인 정보</h1>
         <div className="pb-6 flex flex-row place-items-start">
-          <img
-            className="rounded-full w-32"
-            src="${loginUser?.image}"
-          />
+          {loginUser?.image ? (
+            <img className="rounded-full w-32" src={loginUser?.image} />
+          ) : (
+            <UserIcon />
+          )}
           <div className="w-80 flex flex-col ml-6">
             <div className="pb-4 border-b">
               {editModeName ? (
