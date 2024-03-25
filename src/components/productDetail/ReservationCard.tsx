@@ -1,17 +1,40 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { paymentStore } from "../../store/payment";
+import { usePaymentStore } from "../../store/payment";
+import { AccommodationInfo } from "../../types/AccommodationInfo";
 
-export default function ReservationCard() {
+type Props = {
+  accommodation: AccommodationInfo;
+};
+
+export default function ReservationCard({ accommodation }: Props) {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  function handleClick() {
+  const { paymentInfo, setStartDate, setEndDate, setGuest } = usePaymentStore();
+
+  const { startDate, endDate, guest } = paymentInfo;
+
+  async function handleReservation() {
+    await fetch("/api/reservation", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...accommodation, ...paymentInfo }),
+    });
     navigate(`/payment/${id}`);
   }
 
-  const { paymentInfo, setStartDate, setEndDate, setGuest } = paymentStore();
-
-  const { startDate, endDate, guest } = paymentInfo;
+  async function handleCart() {
+    await fetch("/api/carts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...accommodation, ...paymentInfo }),
+    });
+    navigate(`/cart`);
+  }
 
   return (
     <div className="w-4/12">
@@ -44,10 +67,16 @@ export default function ReservationCard() {
           </div>
         </div>
         <button
-          onClick={handleClick}
+          onClick={handleReservation}
           className="w-full py-2 mb-4 bg-brand text-white rounded hover:brightness-110"
         >
           예약 하기
+        </button>
+        <button
+          onClick={handleCart}
+          className="w-full py-2 mb-4 bg-brand text-white rounded hover:brightness-110"
+        >
+          장바구니
         </button>
         <p className="mb-4">예약 확정 전에는 요금이 청구되지 않습니다.</p>
         <div className="flex justify-between pb-4 border-b">

@@ -1,10 +1,25 @@
+import { useNavigate } from "react-router-dom";
 import TimerIcon from "../../icons/TimerIcon";
-import { paymentStore } from "../../store/payment";
+import { SelectedAccommodation } from "../../types/selectedAccommodation";
 
-export default function PaymentInfo() {
-  const { paymentInfo } = paymentStore();
+type Props = {
+  selectedAccommodation: SelectedAccommodation;
+};
 
-  const { startDate, endDate, guest } = paymentInfo;
+export default function PaymentInfo({ selectedAccommodation }: Props) {
+  const { guest, startDate, endDate, contentid } = selectedAccommodation;
+  const navigate = useNavigate();
+
+  async function handleClick() {
+    await fetch("/api/reservations", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(selectedAccommodation),
+    });
+    navigate(`/payment/${contentid}/complete`);
+  }
 
   return (
     <div className="basis-1/2 pb-12">
@@ -65,7 +80,10 @@ export default function PaymentInfo() {
           수락하면 표시된 총액이 결제되는 데 동의합니다.
         </p>
       </div>
-      <button className="w-[120px] py-4 bg-[#FF385C] text-white rounded-lg">
+      <button
+        onClick={handleClick}
+        className="w-[120px] py-4 bg-[#FF385C] text-white rounded-lg"
+      >
         예약 요청
       </button>
     </div>

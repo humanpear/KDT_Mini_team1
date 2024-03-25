@@ -5,7 +5,7 @@ import "./index.css";
 
 async function deferRender() {
   const { worker } = await import("./mocks/browser.ts");
-  return worker.start();
+  return worker.start({ onUnhandledRequest: "bypass" });
 }
 
 deferRender().then(() => {
