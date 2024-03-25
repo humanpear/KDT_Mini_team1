@@ -3,14 +3,15 @@ import { FaRegCalendar, FaSwimmingPool, FaBed } from "react-icons/fa";
 import { AccommodationInfo } from "../../types/AccommodationInfo";
 
 interface ProductProps {
-	data: AccommodationInfo;
+	accommodation: AccommodationInfo;
 }
 
-export default function ProductInfo({ data }: ProductProps) {
+export default function ProductInfo({ accommodation }: ProductProps) {
+
 	return (
 		<div className="w-8/12 flex flex-col">
 			<div className="border-b">
-				<p className="text-2xl font-semibold">{data.title}</p>
+				<p className="text-2xl font-semibold">{accommodation.title}</p>
 				<p>최대 인원 4명 &middot; 침실 1개 &middot; 침대 2개 &middot;욕실 1개</p>
 				<div className="flex gap-2 pb-6">
 					<div className="flex items-center gap-2">
@@ -45,7 +46,7 @@ export default function ProductInfo({ data }: ProductProps) {
 
 			<div className="py-6 border-b">
 				<p className="text-2xl font-semibold">숙소 소개</p>
-				<p className="pt-6">{data.description}</p>
+				<p className="pt-6">{accommodation.description}</p>
 			</div>
 
 			<div className="py-6 border-b">
@@ -85,9 +86,9 @@ export default function ProductInfo({ data }: ProductProps) {
 				<div className="py-6">
 					<img
 						src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FTXzOu%2FbtsFR8YW19o%2FUqxF3Qof8FGIURzuICTBbK%2Fimg.png"
-						alt={data.address}
+						alt={accommodation.address}
 					/>
-					<p className="pt-6">{data.address}</p>
+					<p className="pt-6">{accommodation.address}</p>
 				</div>
 			</div>
 		</div>

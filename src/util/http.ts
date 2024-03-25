@@ -25,23 +25,23 @@ export async function getAccommodation(contentid: string) {
 }
 
 export async function getCarts() {
-  try {
-    const res = await fetch("/api/carts");
-    const data = await res.json();
+	try {
+		const res = await fetch("/api/carts");
+		const data = await res.json();
 
-    return data;
-  } catch (err) {
-    console.error("Error:", err);
-  }
+		return data;
+	} catch (err) {
+		console.error("Error:", err);
+	}
 }
 
 export async function getReservation() {
-  try {
-    const res = await fetch("/api/reservation");
-    const data = await res.json();
+	try {
+		const res = await fetch("/api/reservation");
+		const data = await res.json();
 
-    return data;
-  } catch (err) {
-    console.error("Error:", err);
-  }
+		return data;
+	} catch (err) {
+		console.error("Error:", err);
+	}
 }
