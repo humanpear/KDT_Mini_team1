@@ -1,7 +1,5 @@
-import { useParams } from "react-router-dom";
+import OrderDetail from "../components/orderDetail/OrderDetail";
 
 export default function OrderDetailPage() {
-  const { id } = useParams();
-
-  return <div>OrderDetailPage id: {id}</div>;
+  return <OrderDetail />;
 }
