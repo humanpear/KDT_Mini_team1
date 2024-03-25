@@ -26,7 +26,7 @@ export default function App() {
         { path: "mypage", element: <MyPage /> },
         { path: "order/:id", element: <OrderDetailPage /> },
         {
-          path: "payment",
+          path: "payment/:id",
           children: [
             { index: true, element: <PaymentPage /> },
             { path: "complete", element: <OrderCompletePage /> },
