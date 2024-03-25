@@ -4,14 +4,14 @@ import App from "./App.tsx";
 import "./index.css";
 
 async function deferRender() {
-	const { worker } = await import("./server-ej/browser.ts");
-	return worker.start();
+  const { worker } = await import("./mocks/browser.ts");
+  return worker.start();
 }
 
 deferRender().then(() => {
-	ReactDOM.createRoot(document.getElementById("root")!).render(
-		<React.StrictMode>
-			<App />
-		</React.StrictMode>,
-	);
+  ReactDOM.createRoot(document.getElementById("root")!).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
 });

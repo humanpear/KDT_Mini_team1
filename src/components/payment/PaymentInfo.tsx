@@ -1,6 +1,11 @@
 import TimerIcon from "../../icons/TimerIcon";
+import { paymentStore } from "../../store/payment";
 
 export default function PaymentInfo() {
+  const { paymentInfo } = paymentStore();
+
+  const { startDate, endDate, guest } = paymentInfo;
+
   return (
     <div className="basis-1/2 pb-12">
       <div className="border-b">
@@ -9,14 +14,16 @@ export default function PaymentInfo() {
           <div className="flex justify-between items-center">
             <div>
               <p>날짜</p>
-              <p>3월 19일 ~ 24일</p>
+              <p>
+                {startDate} ~ {endDate}
+              </p>
             </div>
             <p>수정</p>
           </div>
           <div className="flex justify-between items-center">
             <div>
               <p>게스트</p>
-              <p>게스트 2명</p>
+              <p>게스트 {guest}명</p>
             </div>
             <p>수정</p>
           </div>
