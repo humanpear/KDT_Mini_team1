@@ -3,8 +3,6 @@ import Home from "../icons/Home";
 import { GrFormPrevious } from "react-icons/gr";
 
 export default function CartPage() {
-<<<<<<< HEAD
-=======
 	return (
 		<section className="w-[1120px] mx-auto">
 			<div className="flex justify-between items-center p-6">
@@ -22,5 +20,4 @@ export default function CartPage() {
 			</div>
 		</section>
 	);
->>>>>>> develop
 }

@@ -9,14 +9,11 @@ interface AccommodationInfoProps extends React.HTMLAttributes<HTMLLIElement> {
 export default function AccommodationCard({ accommodation, innerRef }: AccommodationInfoProps) {
 	const { addr1, title, tel, firstimage, contentid } = accommodation;
 	const navigate = useNavigate();
-<<<<<<< HEAD
-=======
 
 	const handleClick = () => {
 		navigate(`/product/${contentid}`);
 	};
 
->>>>>>> develop
 	return (
 		<li ref={innerRef} className="grid grid-rows-2 " onClick={handleClick}>
 			<img

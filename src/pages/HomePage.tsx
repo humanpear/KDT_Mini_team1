@@ -77,9 +77,6 @@ export default function HomePage() {
 			{isFetchingNextPage && <h3>Loading...</h3>}
 		</div>
 	);
-<<<<<<< HEAD
-}
-=======
 }
 
 // function getFilteredItems(accommodation, filter) {
@@ -89,4 +86,3 @@ export default function HomePage() {
 // 		return accommodation.filter(item => item.code === "");
 // 	}
 // }
->>>>>>> develop
