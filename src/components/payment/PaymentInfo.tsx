@@ -1,13 +1,17 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import TimerIcon from "../../icons/TimerIcon";
-import { SelectedAccommodation } from "../../types/selectedAccommodation";
+import { AccommodationInfo } from "../../types/AccommodationInfo";
 
 type Props = {
-  selectedAccommodation: SelectedAccommodation;
+  accommodation: AccommodationInfo;
 };
 
-export default function PaymentInfo({ selectedAccommodation }: Props) {
-  const { guest, startDate, endDate, contentid } = selectedAccommodation;
+export default function PaymentInfo({ accommodation }: Props) {
+  const { contentid } = accommodation;
+  const [query] = useSearchParams();
+  const startDate = query.get("check_in");
+  const endDate = query.get("check_out");
+  const guest = query.get("guest");
   const navigate = useNavigate();
 
   async function handleClick() {
@@ -16,7 +20,7 @@ export default function PaymentInfo({ selectedAccommodation }: Props) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(selectedAccommodation),
+      body: JSON.stringify({ ...accommodation, startDate, endDate, guest }),
     });
     navigate(`/payment/${contentid}/complete`);
   }
