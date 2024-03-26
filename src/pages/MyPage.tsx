@@ -52,7 +52,7 @@ export default function MyPage() {
           {loginUser?.image ? (
             <img className="rounded-full w-32" src={loginUser?.image} />
           ) : (
-            <UserIcon />
+            <UserIcon className="w-[90px] h-[90px] text-[#717171]"/>
           )}
           <div className="w-80 flex flex-col ml-6">
             <div className="pb-4 border-b">

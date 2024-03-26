@@ -42,7 +42,7 @@ export default function Header() {
                 className="w-[32px] h-[32px] object-cover border rounded-full"
               />
             ) : (
-              <UserIcon />
+              <UserIcon className="w-[32px] h-[32px] text-[#717171]" />
             )}
           </div>
           {isNavOpen && (
