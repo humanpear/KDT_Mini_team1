@@ -1,12 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import NextIcon from "../../icons/NextIcon";
 import { useQuery } from "@tanstack/react-query";
 import { getReservation } from "../../util/http";
 
 export default function OrderDetail() {
+  const { id } = useParams();
   const { data } = useQuery({
     queryKey: ["orderComplete"],
-    queryFn: getReservation,
+    queryFn: () => getReservation(id),
   });
 
   console.log(data);

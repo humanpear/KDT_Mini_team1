@@ -1,11 +1,11 @@
-import { SelectedAccommodation } from "../../types/selectedAccommodation";
+import { AccommodationInfo } from "../../types/AccommodationInfo";
 
 type Props = {
-  selectedAccommodation: SelectedAccommodation;
+  accommodation: AccommodationInfo;
 };
 
-export default function PriceInfo({ selectedAccommodation }: Props) {
-  const { title, image1 } = selectedAccommodation;
+export default function PriceInfo({ accommodation }: Props) {
+  const { title, image1 } = accommodation;
 
   return (
     <div className="basis-1/2 flex justify-end">

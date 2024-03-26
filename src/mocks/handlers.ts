@@ -2,9 +2,7 @@ import { HttpResponse, http } from "msw";
 import { accommodations } from "./data/accommodations";
 import { carts } from "./data/carts";
 import { SelectedAccommodation } from "../types/selectedAccommodation";
-import { reservationAccommodations } from "./data/reservationAccommodations";
-
-let reservationAccommodation: SelectedAccommodation | null = null;
+import { reservedAccommodations } from "./data/reservedAccommodations";
 
 export const handlers = [
   http.get("/api/accommodations", () => {
@@ -28,24 +26,19 @@ export const handlers = [
     carts.push(accommodation as SelectedAccommodation);
     return new Response(null, { status: 200 });
   }),
-  http.get("/api/reservation", () => {
-    return HttpResponse.json(reservationAccommodation);
-  }),
-  http.post("/api/reservation", async ({ request }) => {
-    const accommodation = await request.json();
-    reservationAccommodation = accommodation as SelectedAccommodation;
-    return new Response(null, { status: 200 });
+  http.get("/api/reservations", () => {
+    return HttpResponse.json(reservedAccommodations);
   }),
   http.get("/api/reservations/:reservationId", ({ params }) => {
     return HttpResponse.json(
-      reservationAccommodations.find(
+      reservedAccommodations.find(
         (item) => item.contentid === params.reservationId
       )
     );
   }),
   http.post("/api/reservations", async ({ request }) => {
     const accommodation = await request.json();
-    reservationAccommodations.push(accommodation as SelectedAccommodation);
+    reservedAccommodations.push(accommodation as SelectedAccommodation);
     return new Response(null, { status: 200 });
   }),
 ];
