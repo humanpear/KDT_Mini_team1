@@ -1,11 +1,17 @@
 import RatingIcon from "../../icons/RatingIcon";
 import { FaRegCalendar, FaSwimmingPool, FaBed } from "react-icons/fa";
+import { AccommodationInfo } from "../../types/AccommodationInfo";
 
-export default function ProductInfo() {
+interface ProductProps {
+	accommodation: AccommodationInfo;
+}
+
+export default function ProductInfo({ accommodation }: ProductProps) {
+
 	return (
 		<div className="w-8/12 flex flex-col">
 			<div className="border-b">
-				<p className="text-2xl font-semibold">경주, 한옥호텔춘추관펜션</p>
+				<p className="text-2xl font-semibold">{accommodation.title}</p>
 				<p>최대 인원 4명 &middot; 침실 1개 &middot; 침대 2개 &middot;욕실 1개</p>
 				<div className="flex gap-2 pb-6">
 					<div className="flex items-center gap-2">
@@ -17,48 +23,30 @@ export default function ProductInfo() {
 				</div>
 			</div>
 
-			<div className="flex gap-6 py-6 border-b">
-				<img
-					className="w-[40px] h-[40px] rounded-full"
-					src="https://a0.muscache.com/im/pictures/user/bf1c26fa-0759-4d96-88a6-ab71b2aa6278.jpg?im_w=240"
-					alt="host"
-				/>
-				<div>
-					<p>호스트: Onda 님</p>
-					<p className="text-sm">호스팅 경력 4년</p>
-				</div>
-			</div>
-
 			<div className="border-b">
 				<div className="flex gap-6 py-6">
 					<FaRegCalendar className="text-2xl" />
-					<p>3월 30일 전까지 무료 취소 가능</p>
+					<p>일주일 전까지 무료 취소 가능</p>
 				</div>
 				<div className="flex gap-6">
 					<FaSwimmingPool className="text-2xl" />
 					<div>
-						<p>마음껏 물놀이를 즐기세요</p>
-						<span>해당 지역에서 수영장을 갖춘 몇 안 되는 숙소 중 하나입니다.</span>
+						<p>다양한 편의시설</p>
+						<span>숙박시설에서 제공하는 다양한 편의시설을 사용할 수 있습니다.</span>
 					</div>
 				</div>
 				<div className="flex gap-6 py-6">
 					<RatingIcon />
 					<div>
-						<p>경험이 풍부한 호스트</p>
-						<span>Onda님은 다른 숙소에 대해 1487개의 후기가 있습니다.</span>
+						<p>인증된 숙박시설</p>
+						<span>한국관광공사에서 직접 인증한 숙박시설로 안심할 수 있습니다.</span>
 					</div>
 				</div>
 			</div>
 
-			<div className="border-b">
-				<p className="pt-6">
-					안녕하세요. 저희는 다양한 휴식 공간을 연구하고 제공하는 Onda입니다. 이 곳에서 머무르실 모든 분들께서
-					편안하고 행복한 시간을 보내시길 바랍니다.
-					<br />
-					[숙소 소개] 배산임수의 아늑함과 편안함을 누리며 자연과 하나 되어 자유를 만끽할 수 있는 새로운 휴식 문화
-					공간의 숙소입니다....
-				</p>
-				<button className="underline py-6">더 보기</button>
+			<div className="py-6 border-b">
+				<p className="text-2xl font-semibold">숙소 소개</p>
+				<p className="pt-6">{accommodation.description}</p>
 			</div>
 
 			<div className="py-6 border-b">
@@ -98,9 +86,9 @@ export default function ProductInfo() {
 				<div className="py-6">
 					<img
 						src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FTXzOu%2FbtsFR8YW19o%2FUqxF3Qof8FGIURzuICTBbK%2Fimg.png"
-						alt=""
+						alt={accommodation.address}
 					/>
-					<p className="pt-6">경상북도 경주시 대경로 4821-5</p>
+					<p className="pt-6">{accommodation.address}</p>
 				</div>
 			</div>
 		</div>
