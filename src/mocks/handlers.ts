@@ -17,7 +17,7 @@ export const handlers = [
   }),
   http.get("/api/accommodations/:contentid", ({ params }) => {
     return HttpResponse.json(
-      accommodations.find((item) => item.contentid === params.id)
+      accommodations.find((item) => item.contentid === params.contentid)
     );
   }),
   http.get("/api/carts", () => {
