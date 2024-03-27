@@ -1,8 +1,8 @@
 import { HttpResponse, http } from "msw";
 import { accommodations } from "./data/accommodations";
 import { carts } from "./data/carts";
-import { SelectedAccommodation } from "../types/reservedAccommodation";
 import { reservations } from "./data/reservations";
+import { ReservedAccommodation } from "../types/reservedAccommodation";
 
 export const handlers = [
   http.get("/api/accommodations", () => {
@@ -23,7 +23,7 @@ export const handlers = [
   }),
   http.post("/api/carts", async ({ request }) => {
     const accommodation = await request.json();
-    carts.push(accommodation as SelectedAccommodation);
+    carts.push(accommodation as ReservedAccommodation);
     return new Response(null, { status: 200 });
   }),
   http.get("/api/reservations", () => {
@@ -34,9 +34,26 @@ export const handlers = [
       reservations.find((item) => item.contentid === params.reservationId)
     );
   }),
-  http.post("/api/reservations", async ({ request }) => {
+  http.post("/api/payments/reservation", async ({ request }) => {
     const accommodation = await request.json();
-    reservations.push(accommodation as SelectedAccommodation);
+    reservations.push(accommodation as ReservedAccommodation);
+    return new Response(null, { status: 200 });
+  }),
+  http.post("/api/payments/cart-reservation", async ({ request }) => {
+    const accommodation = await request.json();
+    const seletedIndex = carts.findIndex(
+      (item) =>
+        item.contentid === (accommodation as ReservedAccommodation).contentid
+    );
+    reservations.push(accommodation as ReservedAccommodation);
+    carts.splice(seletedIndex, 1);
+    return new Response(null, { status: 200 });
+  }),
+  http.put("/api/carts/:id", ({ params }) => {
+    const seletedIndex = carts.findIndex(
+      (item) => item.contentid === params.id
+    );
+    carts.splice(seletedIndex, 1);
     return new Response(null, { status: 200 });
   }),
 ];
