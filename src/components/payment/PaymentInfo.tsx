@@ -1,7 +1,7 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import TimerIcon from "../../icons/TimerIcon";
 import { AccommodationInfo } from "../../types/AccommodationInfo";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type Props = {
   accommodation: AccommodationInfo;
@@ -9,7 +9,7 @@ type Props = {
 
 export default function PaymentInfo({ accommodation }: Props) {
   const { contentid } = accommodation;
-  const [query, setQuery] = useSearchParams();
+  const [query] = useSearchParams();
   const [paymentInfo] = useState({
     startDate: query.get("check_in") || "",
     endDate: query.get("check_out") || "",
@@ -17,14 +17,6 @@ export default function PaymentInfo({ accommodation }: Props) {
   });
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    setQuery({
-      check_in: paymentInfo.startDate,
-      check_out: paymentInfo.endDate,
-      guest: paymentInfo.guest,
-    });
-  }, [paymentInfo, setQuery]);
 
   async function handleClick() {
     await fetch("/api/reservations", {
