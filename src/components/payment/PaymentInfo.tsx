@@ -1,7 +1,12 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import TimerIcon from "../../icons/TimerIcon";
 import { AccommodationInfo } from "../../types/AccommodationInfo";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useToggle } from "../../util/useToggle";
+import { RangeKeyDict } from "react-date-range";
+import { DateRange } from "react-date-range";
+import ko from "date-fns/locale/ko";
+import { formatDate } from "../../util/date";
 
 type Props = {
   accommodation: AccommodationInfo;
@@ -10,21 +15,25 @@ type Props = {
 export default function PaymentInfo({ accommodation }: Props) {
   const { contentid } = accommodation;
   const [query, setQuery] = useSearchParams();
-  const [paymentInfo] = useState({
-    startDate: query.get("check_in") || "",
-    endDate: query.get("check_out") || "",
-    guest: query.get("guest") || "",
+
+  const [date, setDate] = useState({
+    startDate: new Date(query.get("check_in") as string),
+    endDate: new Date(query.get("check_out") as string),
+    key: "selection",
   });
+
+  const [openDate, toggleDate] = useToggle();
 
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const handleChangeDate = (ranges: RangeKeyDict) => {
+    const { startDate, endDate } = ranges.selection;
+    setDate({ startDate: startDate!, endDate: endDate!, key: "selection" });
     setQuery({
-      check_in: paymentInfo.startDate,
-      check_out: paymentInfo.endDate,
-      guest: paymentInfo.guest,
+      check_in: formatDate(ranges.selection.startDate!),
+      check_out: formatDate(ranges.selection.endDate!),
     });
-  }, [paymentInfo, setQuery]);
+  };
 
   async function handleClick() {
     await fetch("/api/reservations", {
@@ -32,7 +41,7 @@ export default function PaymentInfo({ accommodation }: Props) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...accommodation, ...paymentInfo }),
+      body: JSON.stringify({ ...accommodation }),
     });
     navigate(`/payment/${contentid}/complete`);
   }
@@ -46,25 +55,42 @@ export default function PaymentInfo({ accommodation }: Props) {
             <div>
               <p>날짜</p>
               <p>
-                {paymentInfo.startDate} ~ {paymentInfo.endDate}
+                {formatDate(date.startDate)} ~ {formatDate(date.endDate)}
               </p>
             </div>
-            <p>수정</p>
+            <p
+              className="hover:bg-stone-100 cursor-pointer p-1 rounded-md transition"
+              onClick={toggleDate}
+            >
+              수정
+            </p>
+            {openDate && (
+              <DateRange
+                locale={ko}
+                ranges={[date]}
+                onChange={handleChangeDate}
+                minDate={new Date()}
+                months={2}
+                direction="horizontal"
+              />
+            )}
           </div>
           <div className="flex justify-between items-center">
             <div>
               <p>게스트</p>
-              <p>게스트 {paymentInfo.guest}명</p>
+              {/* <p>게스트 {paymentInfo.guest}명</p> */}
             </div>
-            <p>수정</p>
+            <p className="hover:bg-stone-100 cursor-pointer p-1 rounded-md transition">
+              수정
+            </p>
           </div>
         </div>
       </div>
       <div className="border-b py-6">
         <p className="text-[24px] mb-6">환불 정책</p>
         <p>
-          체크인 날짜인 3월 19일 전에 취소하면 부분 환불을 받으실 수 있습니다.
-          그 이후에는 취소 시점에 따라 환불액이 결정됩니다.
+          체크인 날짜인 {formatDate(date.startDate)} 전에 취소하면 부분 환불을
+          받으실 수 있습니다. 그 이후에는 취소 시점에 따라 환불액이 결정됩니다.
         </p>
       </div>
       <div className="border-b py-6">
