@@ -7,4 +7,5 @@ export type AccommodationInfo = {
   category?: string;
   contentid: string;
   length?: number;
+  room: [];
 };
