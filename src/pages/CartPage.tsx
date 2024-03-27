@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { getCarts } from "../util/http";
 import CartNoItem from "../components/cart/CartNoItem";
+import CartItem from "../components/cart/CartItem";
+import { reservedAccommodation } from "../types/reservedAccommodation";
 
 export default function CartPage() {
   const { data: cartItems, isLoading } = useQuery({
@@ -15,15 +17,14 @@ export default function CartPage() {
   }
 
   return (
-    <section className="w-[1120px] mx-auto mt-16">
+    <section className="w-[800px] mx-auto py-16">
       <p className="text-2xl font-bold text-center mb-4">장바구니</p>
       {cartItems.length === 0 && <CartNoItem />}
-      <ul>
-        {cartItems.map((cartItem) => (
-          <li key={cartItem.contentid}>
-            <p>{cartItem.title}</p>
-          </li>
-        ))}
+      <ul className="flex flex-col gap-4">
+        {cartItems.length > 0 &&
+          cartItems.map((cartItem: reservedAccommodation) => (
+            <CartItem key={cartItem.contentid} cartItem={cartItem} />
+          ))}
       </ul>
     </section>
   );
