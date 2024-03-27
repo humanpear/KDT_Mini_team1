@@ -1,7 +1,7 @@
 import { HttpResponse, http } from "msw";
 import { accommodations } from "./data/accommodations";
 import { carts } from "./data/carts";
-import { SelectedAccommodation } from "../types/selectedAccommodation";
+import { SelectedAccommodation } from "../types/reservedAccommodation";
 import { reservedAccommodations } from "./data/reservedAccommodations";
 
 export const handlers = [
