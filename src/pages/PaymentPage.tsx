@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import PaymentInfo from "../components/payment/PaymentInfo";
 import PriceInfo from "../components/payment/PriceInfo";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { getAccommodation } from "../util/http";
+import { useEffect } from "react";
 
 export default function PaymentPage() {
   const { id } = useParams();
@@ -10,9 +11,22 @@ export default function PaymentPage() {
     queryKey: ["accommodation", id],
     queryFn: () => getAccommodation(id as string),
   });
+  const [query] = useSearchParams();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   if (isLoading) {
     return <p>Loading...</p>;
+  }
+
+  if (
+    !query.get("check_in") ||
+    !query.get("check_out") ||
+    !query.get("guest")
+  ) {
+    return <p>예약중인 숙소 정보가 없습니다.</p>;
   }
 
   return (
