@@ -5,12 +5,16 @@ import { getReservation } from "../../util/http";
 
 export default function OrderDetail() {
   const { id } = useParams();
-  const { data } = useQuery({
+  const { data: reservedAccommodation } = useQuery({
     queryKey: ["orderComplete"],
-    queryFn: () => getReservation(id),
+    queryFn: () => getReservation(id as string),
   });
 
-  console.log(data);
+  if (!reservedAccommodation) {
+    return <p>Loading...</p>;
+  }
+
+  const { title, startDate, endDate } = reservedAccommodation;
 
   return (
     <section className="py-16">
@@ -21,19 +25,16 @@ export default function OrderDetail() {
         <p>아래의 주문내역을 확인해주세요.</p>
       </div>
       <div className="w-[600px] mx-auto">
-        <p className="text-xl">
-          [프라이빗 1일1팀]어비계곡 최상류_1만평 청정자연 단독사용/별장전체
-          [양평 옥천] 용문산
-        </p>
+        <p className="text-xl">{title}</p>
         <div className="flex justify-between items-center py-6 border-b">
           <div>
             <p>체크인</p>
-            <p>2024년 3월 19일</p>
+            <p>{startDate}</p>
           </div>
           <NextIcon />
           <div>
             <p>체크아웃</p>
-            <p>2024년 3월 24일</p>
+            <p>{endDate}</p>
           </div>
         </div>
         <div className="border-b py-6">
