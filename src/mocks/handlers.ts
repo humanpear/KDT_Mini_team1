@@ -2,7 +2,7 @@ import { HttpResponse, http } from "msw";
 import { accommodations } from "./data/accommodations";
 import { carts } from "./data/carts";
 import { SelectedAccommodation } from "../types/reservedAccommodation";
-import { reservedAccommodations } from "./data/reservedAccommodations";
+import { reservations } from "./data/reservations";
 
 export const handlers = [
   http.get("/api/accommodations", () => {
@@ -27,18 +27,16 @@ export const handlers = [
     return new Response(null, { status: 200 });
   }),
   http.get("/api/reservations", () => {
-    return HttpResponse.json(reservedAccommodations);
+    return HttpResponse.json(reservations);
   }),
   http.get("/api/reservations/:reservationId", ({ params }) => {
     return HttpResponse.json(
-      reservedAccommodations.find(
-        (item) => item.contentid === params.reservationId
-      )
+      reservations.find((item) => item.contentid === params.reservationId)
     );
   }),
   http.post("/api/reservations", async ({ request }) => {
     const accommodation = await request.json();
-    reservedAccommodations.push(accommodation as SelectedAccommodation);
+    reservations.push(accommodation as SelectedAccommodation);
     return new Response(null, { status: 200 });
   }),
 ];
