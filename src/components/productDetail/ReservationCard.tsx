@@ -11,6 +11,11 @@ import { MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowDown, MdOutlineKeybo
 import { FaPlus, FaMinus } from "react-icons/fa6";
 import { useToggle } from "../../util/useToggle";
 
+type Room = {
+	id: string;
+	stock: string;
+};
+
 type Props = {
 	accommodation: AccommodationInfo;
 };
@@ -38,38 +43,51 @@ export default function ReservationCard({ accommodation }: Props) {
 
 	const [query, setQuery] = useSearchParams();
 	const [paymentInfo, setPaymentInfo] = useState({
+		room: query.get("room") || "",
 		startDate: query.get("check_in") || "",
 		endDate: query.get("check_out") || "",
-		guest: query.get("guest") || "",
+		guest: query.get("guest") || "1",
 	});
 
 	useEffect(() => {
 		setQuery({
+			room: paymentInfo.room,
 			check_in: paymentInfo.startDate,
 			check_out: paymentInfo.endDate,
 			guest: paymentInfo.guest,
 		});
 	}, [paymentInfo, setQuery]);
 
-	const handleChange = (ranges: any, type: string) => {
-		setPaymentInfo(prevInfo => ({
-			...prevInfo,
-			[type]: ranges,
-		}));
-	};
-
-	const handleChangeDate = (ranges: any) => {
+	const handleChange = (ranges: any) => {
 		setDate(ranges.selection);
-		handleChange(format(ranges.selection.startDate, "yyyy-MM-dd"), "startDate");
-		handleChange(format(ranges.selection.endDate, "yyyy-MM-dd"), "endDate");
-	};
-
-	function handleClick(value: number) {
 		setPaymentInfo(prevInfo => ({
 			...prevInfo,
-			guest: (+prevInfo.guest + value).toString(),
+			startDate: format(ranges.selection.startDate, "yyyy-MM-dd"),
+			endDate: format(ranges.selection.endDate, "yyyy-MM-dd"),
 		}));
-	}
+	};
+
+	const handleClickGuest = (value: number) => {
+		setPaymentInfo(prevInfo => {
+			const newGuest = +prevInfo.guest + value;
+			const maxCapacity = +prevInfo.room;
+
+			if (newGuest >= 1 && newGuest <= maxCapacity) {
+				return {
+					...prevInfo,
+					guest: newGuest.toString(),
+				};
+			}
+			return prevInfo;
+		});
+	};
+
+	const handleClickRoom = (value: string) => {
+		setPaymentInfo(prevInfo => ({
+			...prevInfo,
+			room: value,
+		}));
+	};
 
 	async function handleCart() {
 		await fetch("/api/carts", {
@@ -94,7 +112,7 @@ export default function ReservationCard({ accommodation }: Props) {
 						<div onClick={toggleRoom} className="flex justify-between items-center">
 							<div>
 								<span className={textClass}>객실형태</span>
-								<p>2인실</p>
+								<p>{paymentInfo.room === "" ? "2" : paymentInfo.room}인실</p>
 							</div>
 							{openRoom ? (
 								<MdOutlineKeyboardArrowUp className={iconClass} />
@@ -104,8 +122,12 @@ export default function ReservationCard({ accommodation }: Props) {
 						</div>
 						{openRoom && (
 							<div className="w-full z-10 absolute left-0 p-4 flex flex-col gap-2 bg-white border shadow-md rounded">
-								<button className="bg-gray-100 p-2 rounded hover:brightness-90">2인실</button>
-								<button className="bg-gray-100 p-2 rounded hover:brightness-90">4인실</button>
+								{accommodation.room.map((roomItem: Room) => (
+									<button
+										key={roomItem.id}
+										onClick={() => handleClickRoom(roomItem.stock)}
+										className="bg-gray-100 p-2 rounded hover:brightness-90">{`${roomItem.stock} 인실`}</button>
+								))}
 							</div>
 						)}
 					</div>
@@ -127,7 +149,7 @@ export default function ReservationCard({ accommodation }: Props) {
 								<DateRange
 									locale={ko}
 									ranges={[date]}
-									onChange={handleChangeDate}
+									onChange={handleChange}
 									minDate={new Date()}
 									months={2}
 									direction="horizontal"
@@ -135,13 +157,12 @@ export default function ReservationCard({ accommodation }: Props) {
 							)}
 						</div>
 					</div>
-
 					{/* 인원 */}
 					<div className="relative p-4">
 						<div onClick={toggleGuests} className="flex justify-between items-center cursor-pointer">
 							<div>
 								<span className={textClass}>인원</span>
-								<p>게스트 {paymentInfo.guest}명</p>
+								<p>게스트 {paymentInfo.guest === "" ? "1" : paymentInfo.guest}명</p>
 							</div>
 							{openGuests ? (
 								<MdOutlineKeyboardArrowUp className={iconClass} />
@@ -157,11 +178,11 @@ export default function ReservationCard({ accommodation }: Props) {
 										<span className={textClass}>유아 및 아동도 인원수에 포함해주세요.</span>
 									</div>
 									<div className="flex justify-between items-center gap-4">
-										<button onClick={() => handleClick(1)} className={btnCustom}>
+										<button onClick={() => handleClickGuest(1)} className={btnCustom}>
 											<FaPlus />
 										</button>
 										{paymentInfo.guest}
-										<button onClick={() => handleClick(-1)} className={btnCustom}>
+										<button onClick={() => handleClickGuest(-1)} className={btnCustom}>
 											<FaMinus />
 										</button>
 									</div>
