@@ -7,12 +7,16 @@ import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import ko from "date-fns/locale/ko";
-import { MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from "react-icons/md";
+import {
+  MdOutlineKeyboardArrowRight,
+  MdOutlineKeyboardArrowDown,
+  MdOutlineKeyboardArrowUp,
+} from "react-icons/md";
 import { FaPlus, FaMinus } from "react-icons/fa6";
 import { useToggle } from "../../util/useToggle";
 
 type Props = {
-	accommodation: AccommodationInfo;
+  accommodation: AccommodationInfo;
 };
 
 const textClass = "text-sm opacity-80";
@@ -21,179 +25,208 @@ const iconClass = "text-xl font-semibold";
 const btnCustom = "p-2 rounded-full bg-gray-200 hover:brightness-110";
 
 export default function ReservationCard({ accommodation }: Props) {
-	const navigate = useNavigate();
-	const { id } = useParams();
+  const navigate = useNavigate();
+  const { id } = useParams();
 
-	const [date, setDate] = useState({
-		startDate: new Date(),
-		endDate: new Date(),
-		key: "selection",
-	});
+  const [date, setDate] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+    key: "selection",
+  });
 
-	const [openDate, toggleDate] = useToggle();
-	const [openRoom, toggleRoom] = useToggle();
-	const [openGuests, toggleGuests] = useToggle();
-	const startDateFormatted = format(date.startDate, "MM월 dd일 (eee)", { locale: ko });
-	const endDateFormatted = format(date.endDate, "MM월 dd일 (eee)", { locale: ko });
+  const [openDate, toggleDate] = useToggle();
+  const [openRoom, toggleRoom] = useToggle();
+  const [openGuests, toggleGuests] = useToggle();
+  const startDateFormatted = format(date.startDate, "MM월 dd일 (eee)", {
+    locale: ko,
+  });
+  const endDateFormatted = format(date.endDate, "MM월 dd일 (eee)", {
+    locale: ko,
+  });
 
-	const [query, setQuery] = useSearchParams();
-	const [paymentInfo, setPaymentInfo] = useState({
-		startDate: query.get("check_in") || "",
-		endDate: query.get("check_out") || "",
-		guest: query.get("guest") || "",
-	});
+  const [query, setQuery] = useSearchParams();
+  const [paymentInfo, setPaymentInfo] = useState({
+    startDate: query.get("check_in") || "",
+    endDate: query.get("check_out") || "",
+    guest: query.get("guest") || "",
+  });
 
-	useEffect(() => {
-		setQuery({
-			check_in: paymentInfo.startDate,
-			check_out: paymentInfo.endDate,
-			guest: paymentInfo.guest,
-		});
-	}, [paymentInfo, setQuery]);
+  useEffect(() => {
+    setQuery({
+      check_in: paymentInfo.startDate,
+      check_out: paymentInfo.endDate,
+      guest: paymentInfo.guest,
+    });
+  }, [paymentInfo, setQuery]);
 
-	const handleChange = (ranges: any, type: string) => {
-		setPaymentInfo(prevInfo => ({
-			...prevInfo,
-			[type]: ranges,
-		}));
-	};
+  const handleChange = (ranges: any, type: string) => {
+    setPaymentInfo((prevInfo) => ({
+      ...prevInfo,
+      [type]: ranges,
+    }));
+  };
 
-	const handleChangeDate = (ranges: any) => {
-		setDate(ranges.selection);
-		handleChange(format(ranges.selection.startDate, "yyyy-MM-dd"), "startDate");
-		handleChange(format(ranges.selection.endDate, "yyyy-MM-dd"), "endDate");
-	};
+  const handleChangeDate = (ranges: any) => {
+    setDate(ranges.selection);
+    handleChange(format(ranges.selection.startDate, "yyyy-MM-dd"), "startDate");
+    handleChange(format(ranges.selection.endDate, "yyyy-MM-dd"), "endDate");
+  };
 
-	function handleClick(value: number) {
-		setPaymentInfo(prevInfo => ({
-			...prevInfo,
-			guest: (+prevInfo.guest + value).toString(),
-		}));
-	}
+  function handleClick(value: number) {
+    setPaymentInfo((prevInfo) => ({
+      ...prevInfo,
+      guest: (+prevInfo.guest + value).toString(),
+    }));
+  }
 
-	async function handleCart() {
-		await fetch("/api/carts", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({ ...accommodation, ...paymentInfo }),
-		});
-	}
+  async function handleCart() {
+    await fetch("/api/carts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...accommodation, ...paymentInfo }),
+    });
+  }
 
-	return (
-		<div className="w-4/12">
-			<div className=" h-min p-6 border rounded-lg sticky top-[200px]">
-				<div className="flex items-center gap-2 mb-4">
-					<p className="text-xl font-semibold">₩160,000</p>
-					<p className="text-sm text-gray-600">/ 박</p>
-				</div>
-				<div className="border rounded mb-4">
-					{/* 숙소형태 */}
-					<div className="relative border-b p-4 cursor-pointer">
-						<div onClick={toggleRoom} className="flex justify-between items-center">
-							<div>
-								<span className={textClass}>객실형태</span>
-								<p>2인실</p>
-							</div>
-							{openRoom ? (
-								<MdOutlineKeyboardArrowUp className={iconClass} />
-							) : (
-								<MdOutlineKeyboardArrowDown className={iconClass} />
-							)}
-						</div>
-						{openRoom && (
-							<div className="w-full z-10 absolute left-0 p-4 flex flex-col gap-2 bg-white border shadow-md rounded">
-								<button className="bg-gray-100 p-2 rounded hover:brightness-90">2인실</button>
-								<button className="bg-gray-100 p-2 rounded hover:brightness-90">4인실</button>
-							</div>
-						)}
-					</div>
-					{/* 체크인-체크아웃 */}
-					<div className="relative border-b p-4">
-						<div onClick={toggleDate} className="flex justify-between items-center cursor-pointer">
-							<div className={textFlex}>
-								<span className={textClass}>체크인</span>
-								{`${startDateFormatted}`}
-							</div>
-							<MdOutlineKeyboardArrowRight className={iconClass} />
-							<div className={textFlex}>
-								<span className={textClass}>체크아웃</span>
-								{`${endDateFormatted}`}
-							</div>
-						</div>
-						<div className="z-10 absolute top-10 -inset-x-80 mx-auto w-max bg-gray-200">
-							{openDate && (
-								<DateRange
-									locale={ko}
-									ranges={[date]}
-									onChange={handleChangeDate}
-									minDate={new Date()}
-									months={2}
-									direction="horizontal"
-								/>
-							)}
-						</div>
-					</div>
+  return (
+    <div className="w-4/12">
+      <div className=" h-min p-6 border rounded-lg sticky top-[200px]">
+        <div className="flex items-center gap-2 mb-4">
+          <p className="text-xl font-semibold">₩160,000</p>
+          <p className="text-sm text-gray-600">/ 박</p>
+        </div>
+        <div className="border rounded mb-4">
+          {/* 숙소형태 */}
+          <div className="relative border-b p-4 cursor-pointer">
+            <div
+              onClick={toggleRoom}
+              className="flex justify-between items-center"
+            >
+              <div>
+                <span className={textClass}>객실형태</span>
+                <p>2인실</p>
+              </div>
+              {openRoom ? (
+                <MdOutlineKeyboardArrowUp className={iconClass} />
+              ) : (
+                <MdOutlineKeyboardArrowDown className={iconClass} />
+              )}
+            </div>
+            {openRoom && (
+              <div className="w-full z-10 absolute left-0 p-4 flex flex-col gap-2 bg-white border shadow-md rounded">
+                <button className="bg-gray-100 p-2 rounded hover:brightness-90">
+                  2인실
+                </button>
+                <button className="bg-gray-100 p-2 rounded hover:brightness-90">
+                  4인실
+                </button>
+              </div>
+            )}
+          </div>
+          {/* 체크인-체크아웃 */}
+          <div className="relative border-b p-4">
+            <div
+              onClick={toggleDate}
+              className="flex justify-between items-center cursor-pointer"
+            >
+              <div className={textFlex}>
+                <span className={textClass}>체크인</span>
+                {`${startDateFormatted}`}
+              </div>
+              <MdOutlineKeyboardArrowRight className={iconClass} />
+              <div className={textFlex}>
+                <span className={textClass}>체크아웃</span>
+                {`${endDateFormatted}`}
+              </div>
+            </div>
+            <div className="z-10 absolute top-10 -inset-x-80 mx-auto w-max bg-gray-200">
+              {openDate && (
+                <DateRange
+                  locale={ko}
+                  ranges={[date]}
+                  onChange={handleChangeDate}
+                  minDate={new Date()}
+                  months={2}
+                  direction="horizontal"
+                />
+              )}
+            </div>
+          </div>
 
-					{/* 인원 */}
-					<div className="relative p-4">
-						<div onClick={toggleGuests} className="flex justify-between items-center cursor-pointer">
-							<div>
-								<span className={textClass}>인원</span>
-								<p>게스트 {paymentInfo.guest}명</p>
-							</div>
-							{openGuests ? (
-								<MdOutlineKeyboardArrowUp className={iconClass} />
-							) : (
-								<MdOutlineKeyboardArrowDown className={iconClass} />
-							)}
-						</div>
-						<div>
-							{openGuests && (
-								<div className="flex gap-6 justify-between w-full p-6 z-10 absolute left-0 bg-white border shadow-md rounded">
-									<div className="flex flex-wrap">
-										<p className={iconClass}>인원</p>
-										<span className={textClass}>유아 및 아동도 인원수에 포함해주세요.</span>
-									</div>
-									<div className="flex justify-between items-center gap-4">
-										<button onClick={() => handleClick(1)} className={btnCustom}>
-											<FaPlus />
-										</button>
-										{paymentInfo.guest}
-										<button onClick={() => handleClick(-1)} className={btnCustom}>
-											<FaMinus />
-										</button>
-									</div>
-								</div>
-							)}
-						</div>
-					</div>
-				</div>
-				<div className="flex justify-end items-center mb-4 gap-2">
-					<button onClick={handleCart} className="p-2 text-2xl bg-gray-100 rounded hover:brightness-90">
-						<IoCartOutline />
-					</button>
-					<button
-						onClick={() =>
-							navigate(
-								`/payment/${id}?check_in=${paymentInfo.startDate}&check_out=${paymentInfo.endDate}&guest=${paymentInfo.guest}`,
-							)
-						}
-						className="w-8/12 py-2  bg-brand text-white rounded hover:brightness-110">
-						예약 하기
-					</button>
-				</div>
-				<p className="mb-4">예약 확정 전에는 요금이 청구되지 않습니다.</p>
-				<div className="flex justify-between pb-4 border-b">
-					<p className="underline">₩160,000 x 5박</p>
-					<p>₩800,000</p>
-				</div>
-				<div className="flex justify-between pt-4">
-					<p>총 합계</p>
-					<p>₩800,000</p>
-				</div>
-			</div>
-		</div>
-	);
+          {/* 인원 */}
+          <div className="relative p-4">
+            <div
+              onClick={toggleGuests}
+              className="flex justify-between items-center cursor-pointer"
+            >
+              <div>
+                <span className={textClass}>인원</span>
+                <p>게스트 {paymentInfo.guest}명</p>
+              </div>
+              {openGuests ? (
+                <MdOutlineKeyboardArrowUp className={iconClass} />
+              ) : (
+                <MdOutlineKeyboardArrowDown className={iconClass} />
+              )}
+            </div>
+            <div>
+              {openGuests && (
+                <div className="flex gap-6 justify-between w-full p-6 z-10 absolute left-0 bg-white border shadow-md rounded">
+                  <div className="flex flex-wrap">
+                    <p className={iconClass}>인원</p>
+                    <span className={textClass}>
+                      유아 및 아동도 인원수에 포함해주세요.
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center gap-4">
+                    <button
+                      onClick={() => handleClick(1)}
+                      className={btnCustom}
+                    >
+                      <FaPlus />
+                    </button>
+                    {paymentInfo.guest}
+                    <button
+                      onClick={() => handleClick(-1)}
+                      className={btnCustom}
+                    >
+                      <FaMinus />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-end items-center mb-4 gap-2">
+          <button
+            onClick={handleCart}
+            className="p-2 text-2xl bg-gray-100 rounded hover:brightness-90"
+          >
+            <IoCartOutline />
+          </button>
+          <button
+            onClick={() =>
+              navigate(
+                `/payment/${id}?check_in=${paymentInfo.startDate}&check_out=${paymentInfo.endDate}&guest=${paymentInfo.guest}`
+              )
+            }
+            className="w-8/12 py-2  bg-brand text-white rounded hover:brightness-110"
+          >
+            예약 하기
+          </button>
+        </div>
+        <p className="mb-4">예약 확정 전에는 요금이 청구되지 않습니다.</p>
+        <div className="flex justify-between pb-4 border-b">
+          <p className="underline">₩160,000 x 5박</p>
+          <p>₩800,000</p>
+        </div>
+        <div className="flex justify-between pt-4">
+          <p>총 합계</p>
+          <p>₩800,000</p>
+        </div>
+      </div>
+    </div>
+  );
 }
