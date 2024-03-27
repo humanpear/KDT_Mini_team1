@@ -2,7 +2,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import TimerIcon from "../../icons/TimerIcon";
 import { AccommodationInfo } from "../../types/AccommodationInfo";
 import { useState } from "react";
-import { useToggle } from "../../util/useToggle";
+import { useToggle } from "../../hooks/useToggle";
 import { RangeKeyDict } from "react-date-range";
 import { DateRange } from "react-date-range";
 import ko from "date-fns/locale/ko";
