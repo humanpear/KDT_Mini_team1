@@ -7,13 +7,9 @@ import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import ko from "date-fns/locale/ko";
-import {
-  MdOutlineKeyboardArrowRight,
-  MdOutlineKeyboardArrowDown,
-  MdOutlineKeyboardArrowUp,
-} from "react-icons/md";
+import { MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from "react-icons/md";
 import { FaPlus, FaMinus } from "react-icons/fa6";
-import { useToggle } from "../../util/useToggle";
+import { useToggle } from "../../hooks/useToggle";
 
 type Room = {
 	id: string;
@@ -21,7 +17,7 @@ type Room = {
 };
 
 type Props = {
-  accommodation: AccommodationInfo;
+	accommodation: AccommodationInfo;
 };
 
 const textClass = "text-sm opacity-80";
@@ -30,24 +26,24 @@ const iconClass = "text-xl font-semibold";
 const btnCustom = "p-2 rounded-full bg-gray-200 hover:brightness-110";
 
 export default function ReservationCard({ accommodation }: Props) {
-  const navigate = useNavigate();
-  const { id } = useParams();
+	const navigate = useNavigate();
+	const { id } = useParams();
 
-  const [date, setDate] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
-    key: "selection",
-  });
+	const [date, setDate] = useState({
+		startDate: new Date(),
+		endDate: new Date(),
+		key: "selection",
+	});
 
-  const [openDate, toggleDate] = useToggle();
-  const [openRoom, toggleRoom] = useToggle();
-  const [openGuests, toggleGuests] = useToggle();
-  const startDateFormatted = format(date.startDate, "MM월 dd일 (eee)", {
-    locale: ko,
-  });
-  const endDateFormatted = format(date.endDate, "MM월 dd일 (eee)", {
-    locale: ko,
-  });
+	const [openDate, toggleDate] = useToggle();
+	const [openRoom, toggleRoom] = useToggle();
+	const [openGuests, toggleGuests] = useToggle();
+	const startDateFormatted = format(date.startDate, "MM월 dd일 (eee)", {
+		locale: ko,
+	});
+	const endDateFormatted = format(date.endDate, "MM월 dd일 (eee)", {
+		locale: ko,
+	});
 
 	const [query, setQuery] = useSearchParams();
 	const [paymentInfo, setPaymentInfo] = useState({
@@ -97,21 +93,29 @@ export default function ReservationCard({ accommodation }: Props) {
 		}));
 	};
 
-  async function handleCart() {
-    await fetch("/api/carts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ ...accommodation, ...paymentInfo }),
-    });
-  }
+	const handleClearDate = () => {
+		setDate({
+			startDate: new Date(),
+			endDate: new Date(),
+			key: "selection",
+		});
+	};
+
+	async function handleCart() {
+		await fetch("/api/carts", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ ...accommodation, ...paymentInfo }),
+		});
+	}
 
 	return (
 		<div className="w-4/12">
 			<div className=" h-min p-6 border rounded-lg sticky top-[200px]">
 				<div className="flex items-center gap-2 mb-4">
-					<p className="text-xl font-semibold">₩160,000</p>
+				<p className="text-xl font-semibold">₩160,000</p>
 					<p className="text-sm text-gray-600">/ 박</p>
 				</div>
 				<div className="border rounded mb-4">
@@ -152,8 +156,8 @@ export default function ReservationCard({ accommodation }: Props) {
 								{`${endDateFormatted}`}
 							</div>
 						</div>
-						<div className="z-10 absolute top-10 -inset-x-80 mx-auto w-max bg-gray-200">
-							{openDate && (
+						{openDate && (
+							<div className="z-10 absolute top-20 -right-1/2 bg-white border shadow-md p-4">
 								<DateRange
 									locale={ko}
 									ranges={[date]}
@@ -162,8 +166,13 @@ export default function ReservationCard({ accommodation }: Props) {
 									months={2}
 									direction="horizontal"
 								/>
-							)}
-						</div>
+								<div className="flex justify-end">
+									<button className="underline" onClick={handleClearDate}>
+										날짜지우기
+									</button>
+								</div>
+							</div>
+						)}
 					</div>
 					{/* 인원 */}
 					<div className="relative p-4">
