@@ -1,6 +1,7 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import TimerIcon from "../../icons/TimerIcon";
 import { AccommodationInfo } from "../../types/AccommodationInfo";
+import { useEffect, useState } from "react";
 
 type Props = {
   accommodation: AccommodationInfo;
@@ -8,11 +9,22 @@ type Props = {
 
 export default function PaymentInfo({ accommodation }: Props) {
   const { contentid } = accommodation;
-  const [query] = useSearchParams();
-  const startDate = query.get("check_in");
-  const endDate = query.get("check_out");
-  const guest = query.get("guest");
+  const [query, setQuery] = useSearchParams();
+  const [paymentInfo] = useState({
+    startDate: query.get("check_in") || "",
+    endDate: query.get("check_out") || "",
+    guest: query.get("guest") || "",
+  });
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setQuery({
+      check_in: paymentInfo.startDate,
+      check_out: paymentInfo.endDate,
+      guest: paymentInfo.guest,
+    });
+  }, [paymentInfo, setQuery]);
 
   async function handleClick() {
     await fetch("/api/reservations", {
@@ -20,7 +32,7 @@ export default function PaymentInfo({ accommodation }: Props) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...accommodation, startDate, endDate, guest }),
+      body: JSON.stringify({ ...accommodation, ...paymentInfo }),
     });
     navigate(`/payment/${contentid}/complete`);
   }
@@ -34,7 +46,7 @@ export default function PaymentInfo({ accommodation }: Props) {
             <div>
               <p>날짜</p>
               <p>
-                {startDate} ~ {endDate}
+                {paymentInfo.startDate} ~ {paymentInfo.endDate}
               </p>
             </div>
             <p>수정</p>
@@ -42,7 +54,7 @@ export default function PaymentInfo({ accommodation }: Props) {
           <div className="flex justify-between items-center">
             <div>
               <p>게스트</p>
-              <p>게스트 {guest}명</p>
+              <p>게스트 {paymentInfo.guest}명</p>
             </div>
             <p>수정</p>
           </div>
