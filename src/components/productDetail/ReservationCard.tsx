@@ -1,15 +1,48 @@
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { IoCartOutline } from "react-icons/io5";
 import { AccommodationInfo } from "../../types/AccommodationInfo";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { format } from "date-fns";
+import { DateRange } from "react-date-range";
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
+import ko from "date-fns/locale/ko";
+import {
+  MdOutlineKeyboardArrowRight,
+  MdOutlineKeyboardArrowDown,
+  MdOutlineKeyboardArrowUp,
+} from "react-icons/md";
+import { FaPlus, FaMinus } from "react-icons/fa6";
+import { useToggle } from "../../util/useToggle";
 
 type Props = {
   accommodation: AccommodationInfo;
 };
 
+const textClass = "text-sm opacity-80";
+const textFlex = "flex flex-col";
+const iconClass = "text-xl font-semibold";
+const btnCustom = "p-2 rounded-full bg-gray-200 hover:brightness-110";
+
 export default function ReservationCard({ accommodation }: Props) {
   const navigate = useNavigate();
   const { id } = useParams();
+
+  const [date, setDate] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+    key: "selection",
+  });
+
+  const [openDate, toggleDate] = useToggle();
+  const [openRoom, toggleRoom] = useToggle();
+  const [openGuests, toggleGuests] = useToggle();
+  const startDateFormatted = format(date.startDate, "MM월 dd일 (eee)", {
+    locale: ko,
+  });
+  const endDateFormatted = format(date.endDate, "MM월 dd일 (eee)", {
+    locale: ko,
+  });
 
   const [query, setQuery] = useSearchParams();
   const [paymentInfo, setPaymentInfo] = useState({
@@ -26,12 +59,18 @@ export default function ReservationCard({ accommodation }: Props) {
     });
   }, [paymentInfo, setQuery]);
 
-  function handleChange(event: ChangeEvent<HTMLInputElement>, type: string) {
+  const handleChange = (ranges: any, type: string) => {
     setPaymentInfo((prevInfo) => ({
       ...prevInfo,
-      [type]: event.target.value,
+      [type]: ranges,
     }));
-  }
+  };
+
+  const handleChangeDate = (ranges: any) => {
+    setDate(ranges.selection);
+    handleChange(format(ranges.selection.startDate, "yyyy-MM-dd"), "startDate");
+    handleChange(format(ranges.selection.endDate, "yyyy-MM-dd"), "endDate");
+  };
 
   function handleClick(value: number) {
     setPaymentInfo((prevInfo) => ({
@@ -48,7 +87,6 @@ export default function ReservationCard({ accommodation }: Props) {
       },
       body: JSON.stringify({ ...accommodation, ...paymentInfo }),
     });
-    navigate(`/cart`);
   }
 
   return (
@@ -59,29 +97,106 @@ export default function ReservationCard({ accommodation }: Props) {
           <p className="text-sm text-gray-600">/ 박</p>
         </div>
         <div className="border rounded mb-4">
-          <div className="grid grid-cols-2 border-b p-2">
-            <div>
-              <input
-                type="date"
-                onChange={(event) => handleChange(event, "startDate")}
-              />
-              <p>체크인</p>
-              <p>{paymentInfo.startDate}</p>
+          {/* 숙소형태 */}
+          <div className="relative border-b p-4 cursor-pointer">
+            <div
+              onClick={toggleRoom}
+              className="flex justify-between items-center"
+            >
+              <div>
+                <span className={textClass}>객실형태</span>
+                <p>2인실</p>
+              </div>
+              {openRoom ? (
+                <MdOutlineKeyboardArrowUp className={iconClass} />
+              ) : (
+                <MdOutlineKeyboardArrowDown className={iconClass} />
+              )}
             </div>
-            <div>
-              <input
-                type="date"
-                onChange={(event) => handleChange(event, "endDate")}
-              />
-              <p>체크아웃</p>
-              <p>{paymentInfo.endDate}</p>
+            {openRoom && (
+              <div className="w-full z-10 absolute left-0 p-4 flex flex-col gap-2 bg-white border shadow-md rounded">
+                <button className="bg-gray-100 p-2 rounded hover:brightness-90">
+                  2인실
+                </button>
+                <button className="bg-gray-100 p-2 rounded hover:brightness-90">
+                  4인실
+                </button>
+              </div>
+            )}
+          </div>
+          {/* 체크인-체크아웃 */}
+          <div className="relative border-b p-4">
+            <div
+              onClick={toggleDate}
+              className="flex justify-between items-center cursor-pointer"
+            >
+              <div className={textFlex}>
+                <span className={textClass}>체크인</span>
+                {`${startDateFormatted}`}
+              </div>
+              <MdOutlineKeyboardArrowRight className={iconClass} />
+              <div className={textFlex}>
+                <span className={textClass}>체크아웃</span>
+                {`${endDateFormatted}`}
+              </div>
+            </div>
+            <div className="z-10 absolute top-10 -inset-x-80 mx-auto w-max bg-gray-200">
+              {openDate && (
+                <DateRange
+                  locale={ko}
+                  ranges={[date]}
+                  onChange={handleChangeDate}
+                  minDate={new Date()}
+                  months={2}
+                  direction="horizontal"
+                />
+              )}
             </div>
           </div>
-          <div className="p-2">
-            <p>인원</p>
-            <p>게스트 {paymentInfo.guest}명</p>
-            <button onClick={() => handleClick(1)}>+</button>
-            <button onClick={() => handleClick(-1)}>-</button>
+
+          {/* 인원 */}
+          <div className="relative p-4">
+            <div
+              onClick={toggleGuests}
+              className="flex justify-between items-center cursor-pointer"
+            >
+              <div>
+                <span className={textClass}>인원</span>
+                <p>게스트 {paymentInfo.guest}명</p>
+              </div>
+              {openGuests ? (
+                <MdOutlineKeyboardArrowUp className={iconClass} />
+              ) : (
+                <MdOutlineKeyboardArrowDown className={iconClass} />
+              )}
+            </div>
+            <div>
+              {openGuests && (
+                <div className="flex gap-6 justify-between w-full p-6 z-10 absolute left-0 bg-white border shadow-md rounded">
+                  <div className="flex flex-wrap">
+                    <p className={iconClass}>인원</p>
+                    <span className={textClass}>
+                      유아 및 아동도 인원수에 포함해주세요.
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center gap-4">
+                    <button
+                      onClick={() => handleClick(1)}
+                      className={btnCustom}
+                    >
+                      <FaPlus />
+                    </button>
+                    {paymentInfo.guest}
+                    <button
+                      onClick={() => handleClick(-1)}
+                      className={btnCustom}
+                    >
+                      <FaMinus />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
         <div className="flex justify-end items-center mb-4 gap-2">

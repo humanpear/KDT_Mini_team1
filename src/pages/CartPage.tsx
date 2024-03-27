@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { getCarts } from "../util/http";
 import CartNoItem from "../components/cart/CartNoItem";
-import CartItem from "../components/cart/CartItem";
 import { reservedAccommodation } from "../types/reservedAccommodation";
+import CartItem from "../components/cart/CartItem";
 
 export default function CartPage() {
   const { data: cartItems, isLoading } = useQuery({
