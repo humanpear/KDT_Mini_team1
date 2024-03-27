@@ -7,6 +7,8 @@ import { formatDate } from "../../util/date";
 import DatePicker from "../../UI/DatePicker";
 import DummyInfo from "./DummyInfo";
 import { useQuery } from "@tanstack/react-query";
+import { getCarts } from "../../util/http";
+import { ReservedAccommodation } from "../../types/reservedAccommodation";
 
 type Props = {
   accommodation: AccommodationInfo;
@@ -14,10 +16,10 @@ type Props = {
 
 export default function PaymentInfo({ accommodation }: Props) {
   const { contentid } = accommodation;
-  // const { data: cartItems, isLoading } = useQuery({
-  //   queryKey: ["carts"],
-  //   queryFn: getCarts,
-  // });
+  const { data: cartItems } = useQuery({
+    queryKey: ["carts"],
+    queryFn: getCarts,
+  });
   const [query, setQuery] = useSearchParams();
 
   const [date, setDate] = useState({
@@ -42,7 +44,17 @@ export default function PaymentInfo({ accommodation }: Props) {
   async function handleClick() {
     let url;
 
-    await fetch("/api/reservations", {
+    if (
+      cartItems.find(
+        (item: ReservedAccommodation) => item.contentid === contentid
+      )
+    ) {
+      url = "/api/payments/cart-reservation";
+    } else {
+      url = "/api/payments/reservation";
+    }
+
+    await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
