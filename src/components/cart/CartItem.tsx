@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { reservedAccommodation } from "../../types/reservedAccommodation";
+import { ReservedAccommodation } from "../../types/reservedAccommodation";
 import CloseIcon from "../../icons/CloseIcon";
 
 type Props = {
-  cartItem: reservedAccommodation;
+  cartItem: ReservedAccommodation;
 };
 
 export default function CartItem({ cartItem }: Props) {
