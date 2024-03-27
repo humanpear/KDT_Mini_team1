@@ -7,7 +7,11 @@ import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import ko from "date-fns/locale/ko";
-import { MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from "react-icons/md";
+import {
+  MdOutlineKeyboardArrowRight,
+  MdOutlineKeyboardArrowDown,
+  MdOutlineKeyboardArrowUp,
+} from "react-icons/md";
 import { FaPlus, FaMinus } from "react-icons/fa6";
 import { useToggle } from "../../util/useToggle";
 
@@ -17,7 +21,7 @@ type Room = {
 };
 
 type Props = {
-	accommodation: AccommodationInfo;
+  accommodation: AccommodationInfo;
 };
 
 const textClass = "text-sm opacity-80";
@@ -26,20 +30,24 @@ const iconClass = "text-xl font-semibold";
 const btnCustom = "p-2 rounded-full bg-gray-200 hover:brightness-110";
 
 export default function ReservationCard({ accommodation }: Props) {
-	const navigate = useNavigate();
-	const { id } = useParams();
+  const navigate = useNavigate();
+  const { id } = useParams();
 
-	const [date, setDate] = useState({
-		startDate: new Date(),
-		endDate: new Date(),
-		key: "selection",
-	});
+  const [date, setDate] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+    key: "selection",
+  });
 
-	const [openDate, toggleDate] = useToggle();
-	const [openRoom, toggleRoom] = useToggle();
-	const [openGuests, toggleGuests] = useToggle();
-	const startDateFormatted = format(date.startDate, "MM월 dd일 (eee)", { locale: ko });
-	const endDateFormatted = format(date.endDate, "MM월 dd일 (eee)", { locale: ko });
+  const [openDate, toggleDate] = useToggle();
+  const [openRoom, toggleRoom] = useToggle();
+  const [openGuests, toggleGuests] = useToggle();
+  const startDateFormatted = format(date.startDate, "MM월 dd일 (eee)", {
+    locale: ko,
+  });
+  const endDateFormatted = format(date.endDate, "MM월 dd일 (eee)", {
+    locale: ko,
+  });
 
 	const [query, setQuery] = useSearchParams();
 	const [paymentInfo, setPaymentInfo] = useState({
@@ -89,15 +97,15 @@ export default function ReservationCard({ accommodation }: Props) {
 		}));
 	};
 
-	async function handleCart() {
-		await fetch("/api/carts", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({ ...accommodation, ...paymentInfo }),
-		});
-	}
+  async function handleCart() {
+    await fetch("/api/carts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...accommodation, ...paymentInfo }),
+    });
+  }
 
 	return (
 		<div className="w-4/12">
