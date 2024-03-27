@@ -97,8 +97,17 @@ export default function PaymentInfo({ accommodation }: Props) {
           </div>
           <div className="flex justify-between items-center">
             <div>
-              <p>게스트</p>
-              {/* <p>게스트 {paymentInfo.guest}명</p> */}
+              <p>인원</p>
+              <p>{query.get("guest")}명</p>
+            </div>
+            <p className="hover:bg-stone-100 cursor-pointer p-1 rounded-md transition">
+              수정
+            </p>
+          </div>
+          <div className="flex justify-between items-center">
+            <div>
+              <p>객실 형태</p>
+              <p>{query.get("room")}인실</p>
             </div>
             <p className="hover:bg-stone-100 cursor-pointer p-1 rounded-md transition">
               수정

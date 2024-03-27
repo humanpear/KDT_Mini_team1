@@ -56,3 +56,16 @@ export async function getReservations() {
     console.error("Error:", err);
   }
 }
+
+export async function removeCartItem(contentid: string) {
+  try {
+    await fetch(`/api/carts/${contentid}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (err) {
+    console.error("Error:", err);
+  }
+}

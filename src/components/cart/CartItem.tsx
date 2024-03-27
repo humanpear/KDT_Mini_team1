@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { ReservedAccommodation } from "../../types/reservedAccommodation";
 import CloseIcon from "../../icons/CloseIcon";
+import { useMutation } from "@tanstack/react-query";
+import { queryClient, removeCartItem } from "../../util/http";
 
 type Props = {
   cartItem: ReservedAccommodation;
@@ -9,6 +11,19 @@ type Props = {
 export default function CartItem({ cartItem }: Props) {
   const { title, address, startDate, endDate, guest, image1, contentid } =
     cartItem;
+
+  const { mutate } = useMutation({
+    mutationFn: removeCartItem,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["carts"],
+      });
+    },
+  });
+
+  function handleClick() {
+    mutate(contentid);
+  }
 
   return (
     <li className="shadow-basic p-6 rounded-md relative">
@@ -38,7 +53,10 @@ export default function CartItem({ cartItem }: Props) {
           예약
         </Link>
       </div>
-      <CloseIcon className="absolute top-6 right-6 text-2xl cursor-pointer" />
+      <CloseIcon
+        className="absolute top-6 right-6 text-2xl cursor-pointer"
+        onClick={handleClick}
+      />
     </li>
   );
 }
