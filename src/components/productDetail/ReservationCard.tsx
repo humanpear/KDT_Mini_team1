@@ -2,8 +2,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { IoCartOutline } from "react-icons/io5";
 import { AccommodationInfo } from "../../types/AccommodationInfo";
 import { useEffect, useState } from "react";
-import { format } from "date-fns";
-import { DateRange } from "react-date-range";
+import { DateRange, RangeKeyDict } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import ko from "date-fns/locale/ko";
@@ -13,11 +12,13 @@ import {
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
 import { FaPlus, FaMinus } from "react-icons/fa6";
-import { useToggle } from "../../util/useToggle";
+import { useToggle } from "../../hooks/useToggle";
+import CloseBtn from "../../UI/CloseBtn";
+import { formatDate, formattedDate } from "../../util/date";
 
 type Room = {
   id: string;
-  stock: string;
+  max_capacity: string;
 };
 
 type Props = {
@@ -32,26 +33,21 @@ const btnCustom = "p-2 rounded-full bg-gray-200 hover:brightness-110";
 export default function ReservationCard({ accommodation }: Props) {
   const navigate = useNavigate();
   const { id } = useParams();
+  const currentDate = new Date();
 
+  const [query, setQuery] = useSearchParams();
   const [date, setDate] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate: new Date(query.get("check_in") || currentDate),
+    endDate: new Date(query.get("check_out") || currentDate),
     key: "selection",
   });
 
-  const [openDate, toggleDate] = useToggle();
   const [openRoom, toggleRoom] = useToggle();
+  const [openDate, toggleDate] = useToggle();
   const [openGuests, toggleGuests] = useToggle();
-  const startDateFormatted = format(date.startDate, "MM월 dd일 (eee)", {
-    locale: ko,
-  });
-  const endDateFormatted = format(date.endDate, "MM월 dd일 (eee)", {
-    locale: ko,
-  });
 
-  const [query, setQuery] = useSearchParams();
   const [paymentInfo, setPaymentInfo] = useState({
-    room: query.get("room") || "",
+    room: query.get("room") || "2",
     startDate: query.get("check_in") || "",
     endDate: query.get("check_out") || "",
     guest: query.get("guest") || "1",
@@ -66,12 +62,13 @@ export default function ReservationCard({ accommodation }: Props) {
     });
   }, [paymentInfo, setQuery]);
 
-  const handleChange = (ranges: any) => {
-    setDate(ranges.selection);
+  const handleChange = (ranges: RangeKeyDict) => {
+    const { startDate, endDate } = ranges.selection;
+    setDate({ startDate: startDate!, endDate: endDate!, key: "selection" });
     setPaymentInfo((prevInfo) => ({
       ...prevInfo,
-      startDate: format(ranges.selection.startDate, "yyyy-MM-dd"),
-      endDate: format(ranges.selection.endDate, "yyyy-MM-dd"),
+      startDate: formatDate(ranges.selection.startDate!),
+      endDate: formatDate(ranges.selection.endDate!),
     }));
   };
 
@@ -91,10 +88,19 @@ export default function ReservationCard({ accommodation }: Props) {
   };
 
   const handleClickRoom = (value: string) => {
+    toggleRoom();
     setPaymentInfo((prevInfo) => ({
       ...prevInfo,
       room: value,
     }));
+  };
+
+  const handleClearDate = () => {
+    setDate({
+      startDate: new Date(),
+      endDate: new Date(),
+      key: "selection",
+    });
   };
 
   async function handleCart() {
@@ -123,7 +129,7 @@ export default function ReservationCard({ accommodation }: Props) {
             >
               <div>
                 <span className={textClass}>객실형태</span>
-                <p>{paymentInfo.room === "" ? "2" : paymentInfo.room}인실</p>
+                <p>{paymentInfo.room}인실</p>
               </div>
               {openRoom ? (
                 <MdOutlineKeyboardArrowUp className={iconClass} />
@@ -136,9 +142,9 @@ export default function ReservationCard({ accommodation }: Props) {
                 {accommodation.room.map((roomItem: Room) => (
                   <button
                     key={roomItem.id}
-                    onClick={() => handleClickRoom(roomItem.stock)}
+                    onClick={() => handleClickRoom(roomItem.max_capacity)}
                     className="bg-gray-100 p-2 rounded hover:brightness-90"
-                  >{`${roomItem.stock} 인실`}</button>
+                  >{`${roomItem.max_capacity} 인실`}</button>
                 ))}
               </div>
             )}
@@ -151,16 +157,16 @@ export default function ReservationCard({ accommodation }: Props) {
             >
               <div className={textFlex}>
                 <span className={textClass}>체크인</span>
-                {`${startDateFormatted}`}
+                {formattedDate(date.startDate)}
               </div>
               <MdOutlineKeyboardArrowRight className={iconClass} />
               <div className={textFlex}>
                 <span className={textClass}>체크아웃</span>
-                {`${endDateFormatted}`}
+                {formattedDate(date.endDate)}
               </div>
             </div>
-            <div className="z-10 absolute top-10 -inset-x-80 mx-auto w-max bg-gray-200">
-              {openDate && (
+            {openDate && (
+              <div className="z-10 absolute -top-1/2 -right-1/2 bg-white border shadow-md p-4">
                 <DateRange
                   locale={ko}
                   ranges={[date]}
@@ -169,8 +175,19 @@ export default function ReservationCard({ accommodation }: Props) {
                   months={2}
                   direction="horizontal"
                 />
-              )}
-            </div>
+                <div className="flex justify-end gap-6">
+                  <button className="underline" onClick={handleClearDate}>
+                    날짜지우기
+                  </button>
+                  {/* <button
+										onClick={toggleDate}
+										className="px-4 py-2 bg-brand text-white hover:brightness-110 rounded">
+										닫기
+									</button> */}
+                  <CloseBtn onClick={toggleDate} />
+                </div>
+              </div>
+            )}
           </div>
           {/* 인원 */}
           <div className="relative p-4">
@@ -192,27 +209,32 @@ export default function ReservationCard({ accommodation }: Props) {
             </div>
             <div>
               {openGuests && (
-                <div className="flex gap-6 justify-between w-full p-6 z-10 absolute left-0 bg-white border shadow-md rounded">
-                  <div className="flex flex-wrap">
-                    <p className={iconClass}>인원</p>
-                    <span className={textClass}>
-                      유아 및 아동도 인원수에 포함해주세요.
-                    </span>
+                <div className="flex flex-col gap-4 w-full p-6 z-10 absolute left-0 bg-white border shadow-md rounded">
+                  <div className="flex gap-6 justify-between">
+                    <div className="flex flex-wrap">
+                      <p className={iconClass}>인원</p>
+                      <span className={textClass}>
+                        유아 및 아동도 인원수에 포함해주세요.
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center gap-4">
+                      <button
+                        onClick={() => handleClickGuest(1)}
+                        className={btnCustom}
+                      >
+                        <FaPlus />
+                      </button>
+                      {paymentInfo.guest}
+                      <button
+                        onClick={() => handleClickGuest(-1)}
+                        className={btnCustom}
+                      >
+                        <FaMinus />
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center gap-4">
-                    <button
-                      onClick={() => handleClickGuest(1)}
-                      className={btnCustom}
-                    >
-                      <FaPlus />
-                    </button>
-                    {paymentInfo.guest}
-                    <button
-                      onClick={() => handleClickGuest(-1)}
-                      className={btnCustom}
-                    >
-                      <FaMinus />
-                    </button>
+                  <div className="flex justify-end">
+                    <CloseBtn onClick={toggleGuests} />
                   </div>
                 </div>
               )}
@@ -229,10 +251,10 @@ export default function ReservationCard({ accommodation }: Props) {
           <button
             onClick={() =>
               navigate(
-                `/payment/${id}?check_in=${paymentInfo.startDate}&check_out=${paymentInfo.endDate}&guest=${paymentInfo.guest}`
+                `/payment/${id}?room=${paymentInfo.room}&check_in=${paymentInfo.startDate}&check_out=${paymentInfo.endDate}&guest=${paymentInfo.guest}`
               )
             }
-            className="w-8/12 py-2  bg-brand text-white rounded hover:brightness-110"
+            className="w-10/12 py-2 bg-brand text-white rounded hover:brightness-110"
           >
             예약 하기
           </button>
