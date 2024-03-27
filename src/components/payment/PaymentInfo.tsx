@@ -4,9 +4,8 @@ import { AccommodationInfo } from "../../types/AccommodationInfo";
 import { useState } from "react";
 import { useToggle } from "../../util/useToggle";
 import { RangeKeyDict } from "react-date-range";
-import { DateRange } from "react-date-range";
-import ko from "date-fns/locale/ko";
 import { formatDate } from "../../util/date";
+import DatePicker from "../../UI/DatePicker";
 
 type Props = {
   accommodation: AccommodationInfo;
@@ -65,14 +64,16 @@ export default function PaymentInfo({ accommodation }: Props) {
               수정
             </p>
             {openDate && (
-              <DateRange
-                locale={ko}
-                ranges={[date]}
-                onChange={handleChangeDate}
-                minDate={new Date()}
-                months={2}
-                direction="horizontal"
-              />
+              <div
+                className="fixed top-0 left-0 w-full h-full bg-black/70 flex justify-center items-center z-10"
+                onClick={(event) => {
+                  if (event.target === event.currentTarget) {
+                    toggleDate();
+                  }
+                }}
+              >
+                <DatePicker date={date} handleChangeDate={handleChangeDate} />
+              </div>
             )}
           </div>
           <div className="flex justify-between items-center">
