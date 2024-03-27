@@ -1,3 +1,3 @@
-import { SelectedAccommodation } from "../../types/reservedAccommodation";
+import { reservedAccommodation } from "../../types/reservedAccommodation";
 
-export const reservedAccommodations: SelectedAccommodation[] = [];
+export const reservedAccommodations: reservedAccommodation[] = [];

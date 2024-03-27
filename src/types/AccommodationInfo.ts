@@ -7,5 +7,12 @@ export type AccommodationInfo = {
   category?: string;
   contentid: string;
   length?: number;
-  room: [];
+  room: Room[];
+};
+
+type Room = {
+  id: string;
+  max_capacity: number;
+  price: number;
+  stock: number;
 };
