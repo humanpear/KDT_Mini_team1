@@ -11,10 +11,12 @@ import { FaPlus, FaMinus } from "react-icons/fa6";
 import { useToggle } from "../../hooks/useToggle";
 import CloseBtn from "../../UI/CloseBtn";
 import { formatDate, formattedDate } from "../../util/date";
+import { RiCloseLine } from "react-icons/ri";
 
 type Room = {
 	id: string;
 	max_capacity: string;
+	price: number;
 };
 
 type Props = {
@@ -24,28 +26,25 @@ type Props = {
 const textClass = "text-sm opacity-80";
 const textFlex = "flex flex-col";
 const iconClass = "text-xl font-semibold";
-const btnCustom = "p-2 rounded-full bg-gray-200 hover:brightness-110";
+const btnCustom = "p-2 rounded-full bg-gray-200 hover:brightness-90";
 
 export default function ReservationCard({ accommodation }: Props) {
 	const navigate = useNavigate();
 	const { id } = useParams();
 	const currentDate = new Date();
+	const tomorrowDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
 
 	const [query, setQuery] = useSearchParams();
 	const [date, setDate] = useState({
 		startDate: new Date(query.get("check_in") || currentDate),
-		endDate: new Date(query.get("check_out") || currentDate),
+		endDate: new Date(query.get("check_out") || tomorrowDate),
 		key: "selection",
 	});
 
-	const [openRoom, toggleRoom] = useToggle();
-	const [openDate, toggleDate] = useToggle();
-	const [openGuests, toggleGuests] = useToggle();
-
 	const [paymentInfo, setPaymentInfo] = useState({
-		room: query.get("room") || "2",
-		startDate: query.get("check_in") || "",
-		endDate: query.get("check_out") || "",
+		room: query.get("room") || accommodation.room[0].max_capacity,
+		startDate: query.get("check_in") || formatDate(currentDate),
+		endDate: query.get("check_out") || formatDate(tomorrowDate),
 		guest: query.get("guest") || "1",
 	});
 
@@ -57,6 +56,10 @@ export default function ReservationCard({ accommodation }: Props) {
 			guest: paymentInfo.guest,
 		});
 	}, [paymentInfo, setQuery]);
+
+	const [openRoom, toggleRoom, setRoomOpen] = useToggle();
+	const [openDate, toggleDate, setDateOpen] = useToggle();
+	const [openGuests, toggleGuests, setGuestsOpen] = useToggle();
 
 	const handleChange = (ranges: RangeKeyDict) => {
 		const { startDate, endDate } = ranges.selection;
@@ -109,17 +112,72 @@ export default function ReservationCard({ accommodation }: Props) {
 		});
 	}
 
+	const handleToggleRoom = () => {
+		toggleRoom();
+		setDateOpen(false);
+		setGuestsOpen(false);
+	};
+
+	const handleToggleDate = () => {
+		toggleDate();
+		setRoomOpen(false);
+		setGuestsOpen(false);
+	};
+
+	const handleToggleGuests = () => {
+		toggleGuests();
+		setRoomOpen(false);
+		setDateOpen(false);
+	};
+
+	// const handleClose = () => {
+	// 	if (openRoom || openDate || openGuests) {
+	// 		setDateOpen(false);
+	// 		setRoomOpen(false);
+	// 		setGuestsOpen(false);
+	// 	}
+	// };
+
+	const numberOfNights = () => {
+		if (date.startDate && date.endDate) {
+			const time = Math.abs(date.endDate.getTime() - date.startDate.getTime());
+			const days = Math.ceil(time / (1000 * 60 * 60 * 24));
+			return days;
+		}
+	};
+
+	const totalPrice = () => {
+		const nights = numberOfNights();
+		const selectedRoom = accommodation.room.find((roomItem: Room) => roomItem.max_capacity === paymentInfo.room);
+
+		if (nights && selectedRoom) {
+			return nights * selectedRoom.price;
+		}
+	};
+
 	return (
 		<div className="w-4/12">
-			<div className=" h-min p-6 border rounded-lg sticky top-[200px]">
+			<div className="h-min p-6 border rounded-lg sticky top-[200px]">
 				<div className="flex items-center gap-2 mb-4">
-					<p className="text-xl font-semibold">₩160,000</p>
+					{paymentInfo.room && (
+						<div>
+							{accommodation.room.map((roomItem: Room) => {
+								if (roomItem.max_capacity === paymentInfo.room) {
+									return (
+										<p key={roomItem.id} className="text-xl font-semibold">
+											₩{roomItem.price}
+										</p>
+									);
+								}
+							})}
+						</div>
+					)}
 					<p className="text-sm text-gray-600">/ 박</p>
 				</div>
 				<div className="border rounded mb-4">
 					{/* 숙소형태 */}
 					<div className="relative border-b p-4 cursor-pointer">
-						<div onClick={toggleRoom} className="flex justify-between items-center">
+						<div onClick={handleToggleRoom} className="flex justify-between items-center">
 							<div>
 								<span className={textClass}>객실형태</span>
 								<p>{paymentInfo.room}인실</p>
@@ -143,7 +201,7 @@ export default function ReservationCard({ accommodation }: Props) {
 					</div>
 					{/* 체크인-체크아웃 */}
 					<div className="relative border-b p-4">
-						<div onClick={toggleDate} className="flex justify-between items-center cursor-pointer">
+						<div onClick={handleToggleDate} className="flex justify-between items-center cursor-pointer">
 							<div className={textFlex}>
 								<span className={textClass}>체크인</span>
 								{formattedDate(date.startDate)}
@@ -168,11 +226,6 @@ export default function ReservationCard({ accommodation }: Props) {
 									<button className="underline" onClick={handleClearDate}>
 										날짜지우기
 									</button>
-									{/* <button
-										onClick={toggleDate}
-										className="px-4 py-2 bg-brand text-white hover:brightness-110 rounded">
-										닫기
-									</button> */}
 									<CloseBtn onClick={toggleDate} />
 								</div>
 							</div>
@@ -180,7 +233,7 @@ export default function ReservationCard({ accommodation }: Props) {
 					</div>
 					{/* 인원 */}
 					<div className="relative p-4">
-						<div onClick={toggleGuests} className="flex justify-between items-center cursor-pointer">
+						<div onClick={handleToggleGuests} className="flex justify-between items-center cursor-pointer">
 							<div>
 								<span className={textClass}>인원</span>
 								<p>게스트 {paymentInfo.guest === "" ? "1" : paymentInfo.guest}명</p>
@@ -233,12 +286,24 @@ export default function ReservationCard({ accommodation }: Props) {
 				</div>
 				<p className="mb-4">예약 확정 전에는 요금이 청구되지 않습니다.</p>
 				<div className="flex justify-between pb-4 border-b">
-					<p className="underline">₩160,000 x 5박</p>
-					<p>₩800,000</p>
+					<div className="flex items-center gap-2">
+						{paymentInfo.room && (
+							<div>
+								{accommodation.room.map((roomItem: Room) => {
+									if (roomItem.max_capacity === paymentInfo.room) {
+										return <p key={roomItem.id}>₩{roomItem.price}</p>;
+									}
+								})}
+							</div>
+						)}
+						<RiCloseLine className="text-sm" />
+						<p>{numberOfNights()}박</p>
+					</div>
+					<p>₩{totalPrice()}</p>
 				</div>
-				<div className="flex justify-between pt-4">
+				<div className="flex justify-between pt-4 text-xl font-semibold">
 					<p>총 합계</p>
-					<p>₩800,000</p>
+					<p>₩{totalPrice()}</p>
 				</div>
 			</div>
 		</div>
