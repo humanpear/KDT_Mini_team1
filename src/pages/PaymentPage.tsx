@@ -21,7 +21,12 @@ export default function PaymentPage() {
     return <p>Loading...</p>;
   }
 
-  if (!query.get("check_in") || !query.get("check_out")) {
+  if (
+    !query.get("check_in") ||
+    !query.get("check_out") ||
+    !query.get("room") ||
+    !query.get("guest")
+  ) {
     return <p>예약중인 숙소 정보가 없습니다.</p>;
   }
 
