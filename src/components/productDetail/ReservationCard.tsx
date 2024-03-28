@@ -1,6 +1,6 @@
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { IoCartOutline } from "react-icons/io5";
-import { AccommodationInfo } from "../../types/AccommodationInfo";
+import { AccommodationInfo, Room } from "../../types/AccommodationInfo";
 import { useEffect, useState } from "react";
 import { DateRange, RangeKeyDict } from "react-date-range";
 import "react-date-range/dist/styles.css";
@@ -12,12 +12,6 @@ import { useElementToggle, useToggle } from "../../hooks/useToggle";
 import CloseBtn from "../../UI/CloseBtn";
 import { formatDate, formattedDate } from "../../util/date";
 import { RiCloseLine } from "react-icons/ri";
-
-type Room = {
-	id: string;
-	max_capacity: string;
-	price: number;
-};
 
 type Props = {
 	accommodation: AccommodationInfo;
@@ -127,14 +121,6 @@ export default function ReservationCard({ accommodation }: Props) {
 	const handleToggleGuests = () => {
 		useElementToggle(toggleGuests, setRoomOpen, setDateOpen);
 	};
-
-	// const handleClose = () => {
-	// 	if (openRoom || openDate || openGuests) {
-	// 		setDateOpen(false);
-	// 		setRoomOpen(false);
-	// 		setGuestsOpen(false);
-	// 	}
-	// };
 
 	const numberOfNights = () => {
 		if (date.startDate && date.endDate) {
