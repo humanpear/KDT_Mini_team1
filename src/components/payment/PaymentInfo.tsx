@@ -1,8 +1,6 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AccommodationInfo } from "../../types/AccommodationInfo";
-import { useState } from "react";
 import { useToggle } from "../../hooks/useToggle";
-import { RangeKeyDict } from "react-date-range";
 import { formatDate } from "../../util/date";
 import DatePicker from "../../UI/DatePicker";
 import DummyInfo from "./DummyInfo";
@@ -10,6 +8,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getCarts } from "../../util/http";
 import { ReservedAccommodation } from "../../types/reservedAccommodation";
 import { FaMinus, FaPlus } from "react-icons/fa";
+import { useContext } from "react";
+import { PaymentContext } from "../../context/PaymentProvider";
 
 type Props = {
   accommodation: AccommodationInfo;
@@ -21,46 +21,13 @@ export default function PaymentInfo({ accommodation }: Props) {
     queryKey: ["carts"],
     queryFn: getCarts,
   });
-  const [query, setQuery] = useSearchParams();
 
-  const [date, setDate] = useState({
-    startDate: new Date(query.get("check_in") as string),
-    endDate: new Date(query.get("check_out") as string),
-    key: "selection",
-  });
-
-  const [room, setRoom] = useState(query.get("room"));
-  const [guest, setGuest] = useState(query.get("guest"));
+  const { date, guest, room, changeGuest, changeRoom } =
+    useContext(PaymentContext);
 
   const [openDate, toggleDate] = useToggle();
 
   const navigate = useNavigate();
-
-  const handleChangeDate = (ranges: RangeKeyDict) => {
-    const { startDate, endDate } = ranges.selection;
-    setDate({ startDate: startDate!, endDate: endDate!, key: "selection" });
-    setQuery((prevQuery) => ({
-      ...Object.fromEntries([...prevQuery]),
-      check_in: formatDate(ranges.selection.startDate!),
-      check_out: formatDate(ranges.selection.endDate!),
-    }));
-  };
-
-  const changeRoom = (value: string) => {
-    setRoom(value);
-    setQuery((prevQuery) => ({
-      ...Object.fromEntries([...prevQuery]),
-      room: value,
-    }));
-  };
-
-  const changeGuest = (value: number) => {
-    setGuest((prev) => (+prev! + value).toString());
-    setQuery((prevQuery) => ({
-      ...Object.fromEntries([...prevQuery]),
-      guest: (+prevQuery.get("guest")! + value).toString(),
-    }));
-  };
 
   async function handleClick() {
     let url;
@@ -128,7 +95,7 @@ export default function PaymentInfo({ accommodation }: Props) {
                   }
                 }}
               >
-                <DatePicker date={date} handleChangeDate={handleChangeDate} />
+                <DatePicker />
               </div>
             )}
           </div>

@@ -1,21 +1,16 @@
-import { DateRange, RangeKeyDict } from "react-date-range";
+import { DateRange } from "react-date-range";
 import ko from "date-fns/locale/ko";
+import { PaymentContext } from "../context/PaymentProvider";
+import { useContext } from "react";
 
-type Props = {
-  date: {
-    startDate: Date;
-    endDate: Date;
-    key: string;
-  };
-  handleChangeDate: (rangesByKey: RangeKeyDict) => void;
-};
+export default function DatePicker() {
+  const { date, changeDate } = useContext(PaymentContext);
 
-export default function DatePicker({ date, handleChangeDate }: Props) {
   return (
     <DateRange
       locale={ko}
       ranges={[date]}
-      onChange={handleChangeDate}
+      onChange={changeDate}
       minDate={new Date()}
       months={2}
       direction="horizontal"
