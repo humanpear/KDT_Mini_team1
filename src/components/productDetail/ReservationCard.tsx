@@ -102,7 +102,9 @@ export default function ReservationCard({ accommodation }: Props) {
 		});
 	};
 
-	async function handleCart() {
+	const [success, setSuccess] = useState(false);
+
+	const handleCart = async () => {
 		await fetch("/api/carts", {
 			method: "POST",
 			headers: {
@@ -110,7 +112,9 @@ export default function ReservationCard({ accommodation }: Props) {
 			},
 			body: JSON.stringify({ ...accommodation, ...paymentInfo }),
 		});
-	}
+		setSuccess(true);
+		setTimeout(() => setSuccess(false), 3000);
+	};
 
 	const handleToggleRoom = () => {
 		toggleRoom();
@@ -156,7 +160,7 @@ export default function ReservationCard({ accommodation }: Props) {
 	};
 
 	return (
-		<div className="w-4/12">
+		<div className="w-5/12">
 			<div className="h-min p-6 border rounded-lg sticky top-[200px]">
 				<div className="flex items-center gap-2 mb-4">
 					{paymentInfo.room && (
@@ -284,7 +288,16 @@ export default function ReservationCard({ accommodation }: Props) {
 						예약 하기
 					</button>
 				</div>
-				<p className="mb-4">예약 확정 전에는 요금이 청구되지 않습니다.</p>
+				{success ? (
+					<div className="flex justify-between mb-4">
+						<p>✅장바구니에 추가되었습니다.</p>
+						<button className="underline" onClick={() => navigate(`/cart`)}>
+							장바구니 보기
+						</button>
+					</div>
+				) : (
+					<p className="mb-4">예약 확정 전에는 요금이 청구되지 않습니다.</p>
+				)}
 				<div className="flex justify-between pb-4 border-b">
 					<div className="flex items-center gap-2">
 						{paymentInfo.room && (
