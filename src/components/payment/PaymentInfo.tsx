@@ -9,6 +9,7 @@ import DummyInfo from "./DummyInfo";
 import { useQuery } from "@tanstack/react-query";
 import { getCarts } from "../../util/http";
 import { ReservedAccommodation } from "../../types/reservedAccommodation";
+import { FaMinus, FaPlus } from "react-icons/fa";
 
 type Props = {
   accommodation: AccommodationInfo;
@@ -28,6 +29,9 @@ export default function PaymentInfo({ accommodation }: Props) {
     key: "selection",
   });
 
+  const [room, setRoom] = useState(query.get("room"));
+  const [guest, setGuest] = useState(query.get("guest"));
+
   const [openDate, toggleDate] = useToggle();
 
   const navigate = useNavigate();
@@ -35,10 +39,27 @@ export default function PaymentInfo({ accommodation }: Props) {
   const handleChangeDate = (ranges: RangeKeyDict) => {
     const { startDate, endDate } = ranges.selection;
     setDate({ startDate: startDate!, endDate: endDate!, key: "selection" });
-    setQuery({
+    setQuery((prevQuery) => ({
+      ...Object.fromEntries([...prevQuery]),
       check_in: formatDate(ranges.selection.startDate!),
       check_out: formatDate(ranges.selection.endDate!),
-    });
+    }));
+  };
+
+  const changeRoom = (value: string) => {
+    setRoom(value);
+    setQuery((prevQuery) => ({
+      ...Object.fromEntries([...prevQuery]),
+      room: value,
+    }));
+  };
+
+  const changeGuest = (value: number) => {
+    setGuest((prev) => (+prev! + value).toString());
+    setQuery((prevQuery) => ({
+      ...Object.fromEntries([...prevQuery]),
+      guest: (+prevQuery.get("guest")! + value).toString(),
+    }));
   };
 
   async function handleClick() {
@@ -70,18 +91,34 @@ export default function PaymentInfo({ accommodation }: Props) {
         <p className="text-[24px] mb-6">예약 정보</p>
         <div className="flex flex-col gap-4 pb-6">
           <div className="flex justify-between items-center">
+            <p>객실 형태</p>
+            <div className="border border-gray-200 rounded-md">
+              <button
+                onClick={() => changeRoom("2")}
+                className={`border-r border-gray-200 p-1 ${
+                  room === "2" && "bg-gray-200"
+                }`}
+              >
+                2인실
+              </button>
+              <button
+                onClick={() => changeRoom("4")}
+                className={`p-1 ${room === "4" && "bg-gray-200"}`}
+              >
+                4인실
+              </button>
+            </div>
+          </div>
+          <div className="flex justify-between items-center">
             <div>
               <p>날짜</p>
               <p>
                 {formatDate(date.startDate)} ~ {formatDate(date.endDate)}
               </p>
             </div>
-            <p
-              className="hover:bg-stone-100 cursor-pointer p-1 rounded-md transition"
-              onClick={toggleDate}
-            >
+            <button className="hover:underline" onClick={toggleDate}>
               수정
-            </p>
+            </button>
             {openDate && (
               <div
                 className="fixed top-0 left-0 w-full h-full bg-black/70 flex justify-center items-center z-10"
@@ -98,27 +135,29 @@ export default function PaymentInfo({ accommodation }: Props) {
           <div className="flex justify-between items-center">
             <div>
               <p>인원</p>
-              <p>{query.get("guest")}명</p>
             </div>
-            <p className="hover:bg-stone-100 cursor-pointer p-1 rounded-md transition">
-              수정
-            </p>
-          </div>
-          <div className="flex justify-between items-center">
-            <div>
-              <p>객실 형태</p>
-              <p>{query.get("room")}인실</p>
+            <div className="flex items-center w-[100px] justify-between">
+              <button
+                onClick={() => changeGuest(1)}
+                className="p-2 rounded-full bg-gray-200"
+              >
+                <FaPlus />
+              </button>
+              <p>{guest}명</p>
+              <button
+                onClick={() => changeGuest(-1)}
+                className="p-2 rounded-full bg-gray-200"
+              >
+                <FaMinus />
+              </button>
             </div>
-            <p className="hover:bg-stone-100 cursor-pointer p-1 rounded-md transition">
-              수정
-            </p>
           </div>
         </div>
       </div>
       <DummyInfo startDate={formatDate(date.startDate)} />
       <button
         onClick={handleClick}
-        className="w-[120px] py-4 bg-[#FF385C] text-white rounded-lg"
+        className="w-[120px] py-4 bg-brand text-white rounded-lg"
       >
         예약 요청
       </button>
