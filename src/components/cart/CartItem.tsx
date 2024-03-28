@@ -48,7 +48,7 @@ export default function CartItem({ cartItem }: Props) {
         <p className="text-end font-bold text-lg">50,000원</p>
         <Link
           to={`/payment/${contentid}?check_in=${startDate}&check_out=${endDate}&guest=${guest}`}
-          className="bg-[#FF385C] text-white py-1 px-2 rounded-lg"
+          className="bg-brand text-white py-1 px-2 rounded-lg"
         >
           예약
         </Link>

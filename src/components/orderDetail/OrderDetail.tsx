@@ -55,7 +55,7 @@ export default function OrderDetail() {
           <p>₩3,934,826</p>
         </div>
         <Link to="/mypage">
-          <button className="w-full py-4 bg-[#FF385C] text-white rounded-lg">
+          <button className="w-full py-4 bg-brand text-white rounded-lg">
             마이페이지
           </button>
         </Link>
