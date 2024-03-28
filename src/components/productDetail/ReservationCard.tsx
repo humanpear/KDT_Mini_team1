@@ -8,7 +8,7 @@ import "react-date-range/dist/theme/default.css";
 import ko from "date-fns/locale/ko";
 import { MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from "react-icons/md";
 import { FaPlus, FaMinus } from "react-icons/fa6";
-import { useToggle } from "../../hooks/useToggle";
+import { useElementToggle, useToggle } from "../../hooks/useToggle";
 import CloseBtn from "../../UI/CloseBtn";
 import { formatDate, formattedDate } from "../../util/date";
 import { RiCloseLine } from "react-icons/ri";
@@ -117,21 +117,15 @@ export default function ReservationCard({ accommodation }: Props) {
 	};
 
 	const handleToggleRoom = () => {
-		toggleRoom();
-		setDateOpen(false);
-		setGuestsOpen(false);
+		useElementToggle(toggleRoom, setDateOpen, setGuestsOpen);
 	};
 
 	const handleToggleDate = () => {
-		toggleDate();
-		setRoomOpen(false);
-		setGuestsOpen(false);
+		useElementToggle(toggleDate, setRoomOpen, setGuestsOpen);
 	};
 
 	const handleToggleGuests = () => {
-		toggleGuests();
-		setRoomOpen(false);
-		setDateOpen(false);
+		useElementToggle(toggleGuests, setRoomOpen, setDateOpen);
 	};
 
 	// const handleClose = () => {
