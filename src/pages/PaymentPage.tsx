@@ -32,7 +32,7 @@ export default function PaymentPage() {
   }
 
   return (
-    <PaymentProvider>
+    <PaymentProvider accommodation={accommodation}>
       <section className="w-[1120px] mx-auto mt-16 relative">
         <p className="text-3xl font-bold mb-12">예약 요청</p>
         <div className="flex">

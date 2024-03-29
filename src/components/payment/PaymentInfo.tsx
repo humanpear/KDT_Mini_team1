@@ -10,6 +10,8 @@ import { ReservedAccommodation } from "../../types/reservedAccommodation";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { useContext } from "react";
 import { PaymentContext } from "../../context/PaymentProvider";
+import { useUserStore } from "../../store/user";
+import uuid from "react-uuid";
 
 type Props = {
   accommodation: AccommodationInfo;
@@ -21,8 +23,9 @@ export default function PaymentInfo({ accommodation }: Props) {
     queryKey: ["carts"],
     queryFn: getCarts,
   });
+  const member_id = useUserStore((state) => state.loginUser?.id);
 
-  const { date, guest, room, changeGuest, changeRoom } =
+  const { date, guest, room, finalPrice, changeGuest, changeRoom } =
     useContext(PaymentContext);
 
   const [openDate, toggleDate] = useToggle();
@@ -31,6 +34,7 @@ export default function PaymentInfo({ accommodation }: Props) {
 
   async function handleClick() {
     let url;
+    let request;
 
     if (
       cartItems.find(
@@ -38,8 +42,33 @@ export default function PaymentInfo({ accommodation }: Props) {
       )
     ) {
       url = "/api/payments/cart-reservation";
+      request = {
+        cart_id: accommodation.contentid,
+        reservation: {
+          id: uuid(),
+          member_id,
+          room_id:
+            room === "2" ? accommodation.room[0].id : accommodation.room[1].id,
+          capacity: room,
+          start_date: formatDate(date.startDate),
+          end_date: formatDate(date.endDate),
+          total_price: finalPrice,
+        },
+      };
     } else {
       url = "/api/payments/reservation";
+      request = {
+        reservation: {
+          id: uuid(),
+          member_id,
+          room_id:
+            room === "2" ? accommodation.room[0].id : accommodation.room[1].id,
+          capacity: room,
+          start_date: formatDate(date.startDate),
+          end_date: formatDate(date.endDate),
+          total_price: finalPrice,
+        },
+      };
     }
 
     await fetch(url, {
@@ -47,9 +76,9 @@ export default function PaymentInfo({ accommodation }: Props) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...accommodation }),
+      body: JSON.stringify({ ...accommodation, ...request }),
     });
-    navigate(`/payment/${contentid}/complete`);
+    navigate(`/payment/${request.reservation.id}/complete`);
   }
 
   return (

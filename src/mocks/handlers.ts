@@ -26,12 +26,12 @@ export const handlers = [
     carts.push(accommodation as ReservedAccommodation);
     return new Response(null, { status: 200 });
   }),
-  http.get("/api/reservations", () => {
+  http.get("/api/reservations/history", () => {
     return HttpResponse.json(reservations);
   }),
   http.get("/api/reservations/:reservationId", ({ params }) => {
     return HttpResponse.json(
-      reservations.find((item) => item.contentid === params.reservationId)
+      reservations.find((item) => item.reservation.id === params.reservationId)
     );
   }),
   http.post("/api/payments/reservation", async ({ request }) => {

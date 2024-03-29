@@ -1,7 +1,8 @@
 import { ReactNode, createContext, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { formatDate } from "../util/date";
+import { formatDate, stayDuration } from "../util/date";
 import { RangeKeyDict } from "react-date-range";
+import { AccommodationInfo } from "../types/AccommodationInfo";
 
 export const PaymentContext = createContext<{
   date: {
@@ -11,6 +12,9 @@ export const PaymentContext = createContext<{
   };
   room: string;
   guest: string;
+  totalPrice: number;
+  charge: number;
+  finalPrice: number;
   changeDate: (ranges: RangeKeyDict) => void;
   changeRoom: (value: string) => void;
   changeGuest: (value: number) => void;
@@ -22,16 +26,20 @@ export const PaymentContext = createContext<{
   },
   room: "",
   guest: "",
+  totalPrice: 0,
+  charge: 0,
+  finalPrice: 0,
   changeDate: () => {},
   changeRoom: () => {},
   changeGuest: () => {},
 });
 
 type Props = {
+  accommodation: AccommodationInfo;
   children: ReactNode;
 };
 
-export default function PaymentProvider({ children }: Props) {
+export default function PaymentProvider({ accommodation, children }: Props) {
   const [query, setQuery] = useSearchParams();
 
   const [date, setDate] = useState({
@@ -42,6 +50,16 @@ export default function PaymentProvider({ children }: Props) {
 
   const [room, setRoom] = useState(query.get("room") || "");
   const [guest, setGuest] = useState(query.get("guest") || "");
+
+  const roomOption = accommodation.room;
+
+  const roomPrice = room === "2" ? roomOption[0].price : roomOption[1].price;
+
+  const totalPrice =
+    roomPrice * (stayDuration(date.startDate, date.endDate) || 0);
+  const charge = totalPrice / 10;
+
+  const finalPrice = totalPrice + charge;
 
   const changeDate = (ranges: RangeKeyDict) => {
     const { startDate, endDate } = ranges.selection;
@@ -73,6 +91,9 @@ export default function PaymentProvider({ children }: Props) {
     date,
     room,
     guest,
+    totalPrice,
+    charge,
+    finalPrice,
     changeDate,
     changeRoom,
     changeGuest,

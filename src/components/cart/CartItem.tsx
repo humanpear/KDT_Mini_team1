@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default function CartItem({ cartItem }: Props) {
-  const { title, address, startDate, endDate, guest, image1, contentid } =
+  const { title, address, startDate, endDate, guest, image1, contentid, room } =
     cartItem;
 
   const { mutate } = useMutation({
@@ -47,7 +47,7 @@ export default function CartItem({ cartItem }: Props) {
       <div className="flex justify-end items-center gap-4">
         <p className="text-end font-bold text-lg">50,000원</p>
         <Link
-          to={`/payment/${contentid}?check_in=${startDate}&check_out=${endDate}&guest=${guest}`}
+          to={`/payment/${contentid}?check_in=${startDate}&check_out=${endDate}&guest=${guest}&room=${room}`}
           className="bg-brand text-white py-1 px-2 rounded-lg"
         >
           예약
