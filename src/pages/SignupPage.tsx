@@ -1,8 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import ImageUpload from "../components/signup/ImageUpload";
-import { signup } from "../firebase/firebase";
-import { SignUpData } from "../types/user";
 import { PulseLoader } from "react-spinners";
+import { signup } from "../util/auth";
 
 export default function SignupPage() {
   const [file, setFile] = useState<File>();
@@ -68,7 +67,15 @@ export default function SignupPage() {
       return;
     }
 
-    signup(data as SignUpData, setIsLoading, setErrorMessage);
+    const signupData = {
+      username: data.email as string,
+      password: data.password as string,
+      name: data.name as string,
+      profile_image:
+        "https://github.com/humanpear/KDT_Mini_team1/assets/102540636/54738902-5dfd-4cc9-8da4-68bff10df040",
+    };
+
+    signup(signupData, setIsLoading);
   };
 
   return (
@@ -104,7 +111,6 @@ export default function SignupPage() {
               className="rounded-lg outline-none pl-4 py-3 border border-black w-full"
               placeholder="비밀번호를 입력해주세요"
               name="password"
-              minLength={6}
             />
           </div>
           <div>
@@ -114,7 +120,6 @@ export default function SignupPage() {
               className="rounded-lg outline-none pl-4 py-3 border border-black w-full"
               placeholder="비밀번호를 한번 더 입력해주세요"
               name="password-check"
-              minLength={6}
             />
           </div>
           {errorMessage && (

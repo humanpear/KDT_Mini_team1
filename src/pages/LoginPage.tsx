@@ -1,11 +1,14 @@
 import { FormEvent, useState } from "react";
-import { login } from "../firebase/firebase";
 import { PulseLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
+import { login } from "../util/auth";
+import { useUserStore } from "../store/user";
 
 export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const { setLoginUser } = useUserStore();
 
   const navigate = useNavigate();
 
@@ -42,20 +45,10 @@ export default function LoginPage() {
     login(
       data.email as string,
       data.password as string,
+      navigate,
       setIsLoading,
-      setErrorMessage,
-      navigate
+      setLoginUser
     );
-
-    // fetch(`${import.meta.env.VITE_API_URL}/open-api/member/sign-in`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ username: data.email, password: data.password }),
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => console.log(data));
   }
 
   return (

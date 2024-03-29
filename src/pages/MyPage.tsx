@@ -22,7 +22,7 @@ export default function MyPage() {
         <p className="font-bold text-xl mb-6">개인정보</p>
         <div className="flex items-center">
           <img
-            src={loginUser.image}
+            src={loginUser.profile_image}
             alt={`${loginUser?.name}님의 프로필 이미지`}
             className="w-[200px] h-[200px] object-cover shrink-0"
           />
@@ -33,7 +33,7 @@ export default function MyPage() {
             </div>
             <div className="text-xl flex border-b p-4">
               <p className="w-[70px] text-stone-400">이메일</p>
-              <p>{loginUser.email}</p>
+              <p>{loginUser.username}</p>
             </div>
           </div>
         </div>

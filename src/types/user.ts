@@ -8,7 +8,7 @@ export type LoginUser = {
 
 export type SignUpData = {
   name: string;
-  email: string;
-  image: string;
+  username: string;
+  profile_image: string;
   password: string;
 };
