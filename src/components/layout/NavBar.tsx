@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUserStore } from "../../store/user";
-import { logout } from "../../firebase/firebase";
+import { logout } from "../../util/auth";
 
 type Props = {
   onClose: () => void;
@@ -11,8 +11,9 @@ type Props = {
 export default function NavBar({ onClose, navToggleRef }: Props) {
   const linkStyle = "py-2 px-4 hover:bg-[#f8f9fa]";
   const navRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
-  const { loginUser } = useUserStore();
+  const { loginUser, setLoginUser } = useUserStore();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -61,7 +62,7 @@ export default function NavBar({ onClose, navToggleRef }: Props) {
       {loginUser && (
         <p
           onClick={() => {
-            logout();
+            logout(navigate, setLoginUser);
             onClose();
           }}
           className={`${linkStyle} cursor-pointer`}

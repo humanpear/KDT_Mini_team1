@@ -2,7 +2,7 @@ import { ReactNode, createContext, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { formatDate, stayDuration } from "../util/date";
 import { RangeKeyDict } from "react-date-range";
-import { AccommodationInfo } from "../types/AccommodationInfo";
+import { AccommodationInfo } from "../types/accommodationInfo";
 
 export const PaymentContext = createContext<{
   date: {

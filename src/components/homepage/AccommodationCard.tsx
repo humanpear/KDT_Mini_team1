@@ -1,4 +1,4 @@
-import { AccommodationInfo } from "../../types/AccommodationInfo";
+import { AccommodationInfo } from "../../types/accommodationInfo";
 import { IoLocationOutline } from "react-icons/io5";
 import { PiPhoneCall } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";

@@ -1,29 +1,22 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import Header from "../components/layout/Header";
 import { useEffect } from "react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getUsers } from "../firebase/firebase";
 import { useUserStore } from "../store/user";
-import { LoginUser } from "../types/user";
+import { useQuery } from "@tanstack/react-query";
+import { getUser } from "../util/auth";
 
 export default function RootLayout() {
-  const navigate = useNavigate();
   const { setLoginUser } = useUserStore();
+  const { data } = useQuery({
+    queryKey: ["login"],
+    queryFn: getUser,
+  });
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
-      if (user) {
-        getUsers()
-          .then((users) => users.find((u: LoginUser) => u.email === user.email))
-          .then((user) => setLoginUser(user));
-      } else {
-        setLoginUser(null);
-        navigate("/login");
-      }
-    });
-
-    return () => unsubscribe();
-  }, [navigate, setLoginUser]);
+    if (data) {
+      setLoginUser(data.body);
+    }
+  }, [setLoginUser, data]);
 
   return (
     <section>

@@ -1,11 +1,14 @@
 import { FormEvent, useState } from "react";
-import { login } from "../firebase/firebase";
 import { PulseLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
+import { login } from "../util/auth";
+import { useUserStore } from "../store/user";
 
 export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const { setLoginUser } = useUserStore();
 
   const navigate = useNavigate();
 
@@ -42,9 +45,9 @@ export default function LoginPage() {
     login(
       data.email as string,
       data.password as string,
+      navigate,
       setIsLoading,
-      setErrorMessage,
-      navigate
+      setLoginUser
     );
   }
 
@@ -68,7 +71,6 @@ export default function LoginPage() {
               className="rounded-b-lg outline-none pl-4 py-3"
               placeholder="비밀번호를 입력해주세요"
               name="password"
-              minLength={6}
             />
           </div>
           {errorMessage && (

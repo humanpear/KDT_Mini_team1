@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
-import { ReservedAccommodation } from "../../types/reservedAccommodation";
 import CloseIcon from "../../icons/CloseIcon";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient, removeCartItem } from "../../util/http";
 
 type Props = {
-  cartItem: ReservedAccommodation;
+  cartItem: any;
 };
 
 export default function CartItem({ cartItem }: Props) {

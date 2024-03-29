@@ -38,7 +38,7 @@ export default function Header() {
             <MenuIcon />
             {loginUser ? (
               <img
-                src={loginUser.image}
+                src={loginUser.profile_image}
                 className="w-[32px] h-[32px] object-cover border rounded-full"
               />
             ) : (

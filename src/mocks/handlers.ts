@@ -40,14 +40,14 @@ export const handlers = [
     const accommodation = accommodations.find((accomoodation) =>
       accomoodation.room.some((room) => room.id === requestBody.room_id)
     );
-    reservations.push({
+
+    const response = {
       accommodation,
       reservation: { id: uuid(), ...requestBody },
-    });
-    return HttpResponse.json({
-      accommodation,
-      reservation: { id: uuid(), ...requestBody },
-    });
+    };
+
+    reservations.push(response);
+    return HttpResponse.json(response);
   }),
   http.post("/api/payments/cart-reservation", async ({ request }) => {
     const requestBody = await request.json();

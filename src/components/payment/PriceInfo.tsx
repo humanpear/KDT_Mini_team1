@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AccommodationInfo } from "../../types/AccommodationInfo";
+import { AccommodationInfo } from "../../types/accommodationInfo";
 import { PaymentContext } from "../../context/PaymentProvider";
 import { stayDuration } from "../../util/date";
 

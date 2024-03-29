@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { AccommodationInfo } from "../../types/AccommodationInfo";
+import { AccommodationInfo } from "../../types/accommodationInfo";
 import { useToggle } from "../../hooks/useToggle";
 import { formatDate } from "../../util/date";
 import DatePicker from "../../UI/DatePicker";
