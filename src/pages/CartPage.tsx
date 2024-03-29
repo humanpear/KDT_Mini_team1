@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getCarts } from "../util/http";
 import CartNoItem from "../components/cart/CartNoItem";
-import { ReservedAccommodation } from "../types/reservedAccommodation";
 import CartItem from "../components/cart/CartItem";
 
 export default function CartPage() {
@@ -20,7 +19,7 @@ export default function CartPage() {
       {cartItems.length === 0 && <CartNoItem />}
       <ul className="flex flex-col gap-4">
         {cartItems.length > 0 &&
-          cartItems.map((cartItem: ReservedAccommodation) => (
+          cartItems.map((cartItem) => (
             <CartItem key={cartItem.contentid} cartItem={cartItem} />
           ))}
       </ul>
