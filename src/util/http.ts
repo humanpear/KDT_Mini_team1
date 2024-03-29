@@ -2,6 +2,14 @@ import { QueryClient } from "@tanstack/react-query";
 
 export const queryClient = new QueryClient();
 
+const getConfig = {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+  },
+};
+
 export async function getAccommodations({ pageParam }: { pageParam: number }) {
   try {
     const res = await fetch(`/api/accommodations?page=${pageParam}`);
@@ -26,7 +34,10 @@ export async function getAccommodation(contentid: string) {
 
 export async function getCarts() {
   try {
-    const res = await fetch("/api/carts");
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/carts`,
+      getConfig
+    );
     const data = await res.json();
 
     return data;
@@ -48,7 +59,10 @@ export async function getReservation(contentid: string) {
 
 export async function getReservations() {
   try {
-    const res = await fetch("/api/reservations/history");
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/reservations/history`,
+      getConfig
+    );
     const data = await res.json();
 
     return data;
