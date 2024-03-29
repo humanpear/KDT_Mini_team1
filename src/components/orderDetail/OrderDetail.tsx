@@ -6,24 +6,19 @@ import { stayDuration } from "../../util/date";
 
 export default function OrderDetail() {
   const { id } = useParams();
-  const { data: reservedAccommodation } = useQuery({
+  const { data } = useQuery({
     queryKey: ["orderComplete"],
     queryFn: () => getReservation(id as string),
   });
 
-  if (!reservedAccommodation) {
+  if (!data) {
     return <p>Loading...</p>;
   }
 
-  const { title, reservation, room } = reservedAccommodation;
-  const { start_date, end_date, total_price, capacity } = reservation;
+  const { title } = data.accommodation;
+  const { start_date, end_date, total_price, room_price } = data.reservation;
 
-  const roomPrice = capacity === "2" ? room[0].price : room[1].price;
-
-  const totalPrice =
-    roomPrice * (stayDuration(new Date(start_date), new Date(end_date)) || 0);
-
-  const charge = totalPrice / 10;
+  const charge = total_price / 10;
 
   return (
     <section className="py-16">
@@ -51,10 +46,10 @@ export default function OrderDetail() {
           <div className="flex flex-col gap-4">
             <div className="flex justify-between items-center">
               <p>
-                {roomPrice.toLocaleString()} x{" "}
+                {room_price.toLocaleString()} x{" "}
                 {stayDuration(new Date(start_date), new Date(end_date))}박
               </p>
-              <p>{totalPrice.toLocaleString()}원</p>
+              <p>{total_price.toLocaleString()}원</p>
             </div>
             <div className="flex justify-between items-center">
               <p className="underline">미니비앤비 서비스 수수료</p>
