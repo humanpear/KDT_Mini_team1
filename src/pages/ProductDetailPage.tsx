@@ -4,7 +4,6 @@ import ProductInfo from "../components/productDetail/ProductInfo";
 import ReservationCard from "../components/productDetail/ReservationCard";
 import { getAccommodation } from "../util/http";
 import { useParams } from "react-router-dom";
-import { useToggle } from '../hooks/useToggle';
 
 export default function ProductDetailPage() {
 	const { id } = useParams();
