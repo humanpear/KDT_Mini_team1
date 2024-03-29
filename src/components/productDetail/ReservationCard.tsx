@@ -112,7 +112,7 @@ export default function ReservationCard({ accommodation }: Props) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...accommodation, ...paymentInfo }),
+      body: JSON.stringify(paymentInfo),
     });
   }
 

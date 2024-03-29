@@ -10,8 +10,6 @@ export default function MyPage() {
     queryFn: getReservations,
   });
 
-  console.log(data);
-
   const divRef = useRef(null);
 
   //이름

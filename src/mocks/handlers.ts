@@ -3,6 +3,7 @@ import { accommodations } from "./data/accommodations";
 import { carts } from "./data/carts";
 import { reservations } from "./data/reservations";
 import { ReservedAccommodation } from "../types/reservedAccommodation";
+import uuid from "react-uuid";
 
 export const handlers = [
   http.get("/api/accommodations", () => {
@@ -35,19 +36,38 @@ export const handlers = [
     );
   }),
   http.post("/api/payments/reservation", async ({ request }) => {
-    const accommodation = await request.json();
-    reservations.push(accommodation as ReservedAccommodation);
-    return new Response(null, { status: 200 });
+    const requestBody = await request.json();
+    const accommodation = accommodations.find((accomoodation) =>
+      accomoodation.room.some((room) => room.id === requestBody.room_id)
+    );
+    reservations.push({
+      accommodation,
+      reservation: { id: uuid(), ...requestBody },
+    });
+    return HttpResponse.json({
+      accommodation,
+      reservation: { id: uuid(), ...requestBody },
+    });
   }),
   http.post("/api/payments/cart-reservation", async ({ request }) => {
-    const accommodation = await request.json();
+    const requestBody = await request.json();
     const seletedIndex = carts.findIndex(
-      (item) =>
-        item.contentid === (accommodation as ReservedAccommodation).contentid
+      (cart) => cart.contentid === requestBody.cart_id
     );
-    reservations.push(accommodation as ReservedAccommodation);
+    const accommodation = accommodations.find((accomoodation) =>
+      accomoodation.room.some(
+        (room) => room.id === requestBody.reservation.room_id
+      )
+    );
+    reservations.push({
+      accommodation,
+      reservation: { id: uuid(), ...requestBody.reservation },
+    });
     carts.splice(seletedIndex, 1);
-    return new Response(null, { status: 200 });
+    return HttpResponse.json({
+      accommodation,
+      reservation: { id: uuid(), ...requestBody.reservation },
+    });
   }),
   http.put("/api/carts/:id", ({ params }) => {
     const seletedIndex = carts.findIndex(

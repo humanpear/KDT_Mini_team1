@@ -12,6 +12,7 @@ export const PaymentContext = createContext<{
   };
   room: string;
   guest: string;
+  roomPrice: number;
   totalPrice: number;
   charge: number;
   finalPrice: number;
@@ -26,6 +27,7 @@ export const PaymentContext = createContext<{
   },
   room: "",
   guest: "",
+  roomPrice: 0,
   totalPrice: 0,
   charge: 0,
   finalPrice: 0,
@@ -91,6 +93,7 @@ export default function PaymentProvider({ accommodation, children }: Props) {
     date,
     room,
     guest,
+    roomPrice,
     totalPrice,
     charge,
     finalPrice,

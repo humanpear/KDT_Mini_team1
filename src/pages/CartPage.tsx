@@ -10,8 +10,6 @@ export default function CartPage() {
     queryFn: getCarts,
   });
 
-  console.log(cartItems);
-
   if (isLoading) {
     return <p>Loading...</p>;
   }

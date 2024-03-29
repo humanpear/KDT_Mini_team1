@@ -15,8 +15,6 @@ export default function OrderDetail() {
     return <p>Loading...</p>;
   }
 
-  console.log(reservedAccommodation);
-
   const { title, reservation, room } = reservedAccommodation;
   const { start_date, end_date, total_price, capacity } = reservation;
 
