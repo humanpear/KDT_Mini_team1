@@ -13,16 +13,18 @@ export default function CartPage() {
     return <p>Loading...</p>;
   }
 
+  console.log(cartItems);
+
   return (
     <section className="w-[800px] mx-auto py-16">
-      <p className="text-2xl font-bold text-center mb-4">장바구니</p>
+      {/* <p className="text-2xl font-bold text-center mb-4">장바구니</p>
       {cartItems.length === 0 && <CartNoItem />}
       <ul className="flex flex-col gap-4">
         {cartItems.length > 0 &&
           cartItems.map((cartItem) => (
             <CartItem key={cartItem.contentid} cartItem={cartItem} />
           ))}
-      </ul>
+      </ul> */}
     </section>
   );
 }
