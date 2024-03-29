@@ -1,12 +1,16 @@
-import { format } from "date-fns";
+import { format, intervalToDuration } from "date-fns";
 import ko from "date-fns/locale/ko";
 
 export function formatDate(date: Date) {
-	return format(date, "yyyy-MM-dd");
+  return format(date, "yyyy-MM-dd");
 }
 
 export function formattedDate(date: Date) {
-	return format(date, "MM월 dd일 (eee)", {
-		locale: ko,
-	});
+  return format(date, "M월 d일 (eee)", {
+    locale: ko,
+  });
+}
+
+export function stayDuration(start: Date, end: Date) {
+  return intervalToDuration({ start, end }).days;
 }
