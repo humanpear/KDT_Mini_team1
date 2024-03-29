@@ -73,8 +73,6 @@ export default function HomePage() {
 		setFilter(selectedFilter);
 	};
 
-	//const filteredAccommodations = getFilteredItems(accommodation.pages, filter);
-
 	return (
 		<div className="p-4">
 			<FilterCategory filters={filters} onFilterChange={handleFilterChange} />
@@ -94,17 +92,3 @@ export default function HomePage() {
 		</div>
 	);
 }
-
-// function getFilteredItems(
-//   accommodation: AccommodationInfo[][],
-//   filter: string
-// ) {
-//   if (filter === "전체") {
-//     return accommodation;
-//   } else {
-//     const categoryCode = categoryMap[filter];
-//     return accommodation.map((item) =>
-//       item.filter((it) => it.category === categoryCode)
-//     );
-//   }
-// }
