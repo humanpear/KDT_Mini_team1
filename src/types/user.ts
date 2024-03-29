@@ -1,8 +1,9 @@
 export type LoginUser = {
-  id: string;
+  member_id: string;
   name: string;
-  email: string;
-  image: string;
+  profile_image: string;
+  type: string;
+  username: string;
 };
 
 export type SignUpData = {
