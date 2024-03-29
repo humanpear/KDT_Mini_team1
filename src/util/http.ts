@@ -48,7 +48,7 @@ export async function getReservation(contentid: string) {
 
 export async function getReservations() {
   try {
-    const res = await fetch("/api/reservations");
+    const res = await fetch("/api/reservations/history");
     const data = await res.json();
 
     return data;
