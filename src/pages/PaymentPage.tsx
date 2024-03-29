@@ -4,6 +4,7 @@ import PriceInfo from "../components/payment/PriceInfo";
 import { useParams, useSearchParams } from "react-router-dom";
 import { getAccommodation } from "../util/http";
 import { useEffect } from "react";
+import PaymentProvider from "../context/PaymentProvider";
 
 export default function PaymentPage() {
   const { id } = useParams();
@@ -21,17 +22,24 @@ export default function PaymentPage() {
     return <p>Loading...</p>;
   }
 
-  if (!query.get("check_in") || !query.get("check_out")) {
+  if (
+    !query.get("check_in") ||
+    !query.get("check_out") ||
+    !query.get("room") ||
+    !query.get("guest")
+  ) {
     return <p>예약중인 숙소 정보가 없습니다.</p>;
   }
 
   return (
-    <section className="w-[1120px] mx-auto mt-16 relative">
-      <p className="text-3xl font-bold mb-12">예약 요청</p>
-      <div className="flex">
-        <PaymentInfo accommodation={accommodation} />
-        <PriceInfo accommodation={accommodation} />
-      </div>
-    </section>
+    <PaymentProvider accommodation={accommodation}>
+      <section className="w-[1120px] mx-auto mt-16 relative">
+        <p className="text-3xl font-bold mb-12">예약 요청</p>
+        <div className="flex">
+          <PaymentInfo accommodation={accommodation} />
+          <PriceInfo accommodation={accommodation} />
+        </div>
+      </section>
+    </PaymentProvider>
   );
 }

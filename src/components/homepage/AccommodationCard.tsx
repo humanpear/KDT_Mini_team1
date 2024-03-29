@@ -1,6 +1,7 @@
 import { AccommodationInfo } from "../../types/AccommodationInfo";
 import { IoLocationOutline } from "react-icons/io5";
 import { PiPhoneCall } from "react-icons/pi";
+import { useNavigate } from "react-router-dom";
 
 interface AccommodationInfoProps extends React.HTMLAttributes<HTMLLIElement> {
   accommodation: AccommodationInfo;
@@ -12,9 +13,12 @@ export default function AccommodationCard({
   innerRef,
 }: AccommodationInfoProps) {
   const { address, tel, title, description, image1, contentid } = accommodation;
+  const navigate = useNavigate();
 
   const handleClick = () => {
-    window.open(`/product/${contentid}`, "_blank");
+    // window.open(`/product/${contentid}`, "_blank");
+    // 새탭이 열릴 시 사라지는 상태를 막기위해 백엔드 API와 연결하기 전에는 그냥 navigate로 페이지 이동하겠습니다.
+    navigate(`/product/${contentid}`);
   };
 
   const infoFlex = "flex items-center gap-2";

@@ -1,8 +1,15 @@
 import { useState, useRef } from "react";
 import { useUserStore } from "../store/user";
 import UserIcon from "../icons/UserIcon";
+import { useQuery } from "@tanstack/react-query";
+import { getReservations } from "../util/http";
 
 export default function MyPage() {
+  const { data } = useQuery({
+    queryKey: ["reservations"],
+    queryFn: getReservations,
+  });
+
   const divRef = useRef(null);
 
   //이름
@@ -52,7 +59,7 @@ export default function MyPage() {
           {loginUser?.image ? (
             <img className="rounded-full w-32" src={loginUser?.image} />
           ) : (
-            <UserIcon className="w-[90px] h-[90px] text-[#717171]"/>
+            <UserIcon className="w-[90px] h-[90px] text-[#717171]" />
           )}
           <div className="w-80 flex flex-col ml-6">
             <div className="pb-4 border-b">

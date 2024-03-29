@@ -1,3 +1,3 @@
 import { ReservedAccommodation } from "../../types/reservedAccommodation";
 
-export const carts: ReservedAccommodation[] = [];
+export const reservations: ReservedAccommodation[] = [];

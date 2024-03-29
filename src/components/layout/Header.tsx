@@ -19,7 +19,7 @@ export default function Header() {
   return (
     <header className="border-b h-[80px] flex items-center sticky top-0 z-10 bg-white">
       <div className="max-w-[2360px] w-11/12 mx-auto flex justify-between items-center">
-        <Link to="/" className="font-bold text-[#FF385C] text-3xl w-[114px]">
+        <Link to="/" className="font-bold text-brand text-3xl w-[114px]">
           minibnb
         </Link>
         <div className="relative">
