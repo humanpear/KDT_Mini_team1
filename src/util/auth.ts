@@ -41,6 +41,10 @@ export async function login(
       }
     );
 
+    if (!response.ok) {
+      return;
+    }
+
     const data = await response.json();
 
     if (data.result.result_code === 200) {
@@ -76,18 +80,21 @@ export async function signup(
   signupData: SignUpData,
   setIsLoading: (arg: boolean) => void
 ) {
-  console.log(signupData);
   setIsLoading(true);
 
   try {
-    await fetch(`${import.meta.env.VITE_API_URL}/api/members/join`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      },
-      body: JSON.stringify(signupData),
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/members/register`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(signupData),
+      }
+    );
+
+    console.log(response);
   } catch (error) {
     console.error(error);
   } finally {
