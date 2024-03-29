@@ -4,7 +4,7 @@ import AccommodationCard from "../components/homepage/AccommodationCard";
 import FilterCategory from "../components/homepage/FilterCategory";
 import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
-import { AccommodationInfo } from "../types/AccommodationInfo";
+import { AccommodationInfo } from "../types/accommodationInfo";
 
 const filters = [
   "전체",

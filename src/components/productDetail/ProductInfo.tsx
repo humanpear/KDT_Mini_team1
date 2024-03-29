@@ -1,6 +1,6 @@
 import RatingIcon from "../../icons/RatingIcon";
 import { FaRegCalendar, FaSwimmingPool, FaBed } from "react-icons/fa";
-import { AccommodationInfo } from "../../types/AccommodationInfo";
+import { AccommodationInfo } from "../../types/accommodationInfo";
 
 interface ProductProps {
   accommodation: AccommodationInfo;

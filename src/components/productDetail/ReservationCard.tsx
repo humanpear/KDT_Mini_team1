@@ -1,6 +1,6 @@
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { IoCartOutline } from "react-icons/io5";
-import { AccommodationInfo, Room } from "../../types/AccommodationInfo";
+import { AccommodationInfo, Room } from "../../types/accommodationInfo";
 import { useEffect, useRef, useState } from "react";
 import { DateRange, RangeKeyDict } from "react-date-range";
 import "react-date-range/dist/styles.css";
