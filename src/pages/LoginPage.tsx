@@ -46,6 +46,16 @@ export default function LoginPage() {
       setErrorMessage,
       navigate
     );
+
+    // fetch(`${import.meta.env.VITE_API_URL}/open-api/member/sign-in`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ username: data.email, password: data.password }),
+    // })
+    //   .then((res) => res.json())
+    //   .then((data) => console.log(data));
   }
 
   return (
@@ -68,7 +78,6 @@ export default function LoginPage() {
               className="rounded-b-lg outline-none pl-4 py-3"
               placeholder="비밀번호를 입력해주세요"
               name="password"
-              minLength={6}
             />
           </div>
           {errorMessage && (
