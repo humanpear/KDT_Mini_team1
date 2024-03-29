@@ -5,15 +5,15 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useState } from "react";
 
 type FiltersArray = {
-  filters: string[];
-  onFilterChange: (filter: string) => void;
+	filters: string[];
+	onFilterChange: (filter: string) => void;
 };
 
-export default function FilterCategory({ filters, onFilterChange  }: FiltersArray) {
-	const [swiper, setSwiper] = useState<SwiperClass>();
-	const [activeFilter, setActiveFilter] = useState<number | null>(0);
+const btnCustom = "p-2 rounded-full bg-gray-100 hover:brightness-90 absolute top-1/2 transform -translate-y-1/2";
 
-	const btnCustom = "p-2 rounded-full bg-gray-100 hover:brightness-90 absolute top-1/2 transform -translate-y-1/2";
+export default function FilterCategory({ filters, onFilterChange }: FiltersArray) {
+	const [swiper, setSwiper] = useState<SwiperClass>();
+	const [activeFilter, setActiveFilter] = useState<string | null>(filters[0]);
 	
 	const handlePrev = () => {
 		swiper?.slidePrev();
@@ -22,10 +22,10 @@ export default function FilterCategory({ filters, onFilterChange  }: FiltersArra
 		swiper?.slideNext();
 	};
 
-	const handleClickFilter = (index: number, filter: string) => {
-    setActiveFilter(index);
-    onFilterChange(filter);
-  };
+	const handleClickFilter = (filter: string) => {
+		onFilterChange(filter);
+		setActiveFilter(filter);
+	};
 
 	return (
 		<div className="relative">
@@ -36,6 +36,7 @@ export default function FilterCategory({ filters, onFilterChange  }: FiltersArra
 				onSwiper={e => {
 					setSwiper(e);
 				}}
+				updateOnWindowResize={true}
 				breakpoints={{
 					414: {
 						slidesPerView: 2,
@@ -54,9 +55,9 @@ export default function FilterCategory({ filters, onFilterChange  }: FiltersArra
 				{filters.map((filter, index) => (
 					<SwiperSlide key={index}>
 						<button
-							onClick={() => handleClickFilter(index, filter)}
+							onClick={() => handleClickFilter(filter)}
 							className={`w-[150px] font-semibold p-2 rounded-full ${
-								activeFilter === index ? "bg-brand text-white" : "bg-gray-100 text-black"
+								activeFilter === filter ? "bg-brand text-white" : "bg-gray-100 text-black"
 							}`}>
 							{filter}
 						</button>

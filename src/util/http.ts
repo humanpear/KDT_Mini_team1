@@ -1,71 +1,103 @@
 import { QueryClient } from "@tanstack/react-query";
+import { categoryMap } from '../pages/HomePage';
 
 export const queryClient = new QueryClient();
 
-export async function getAccommodations({ pageParam }: { pageParam: number }) {
-  try {
-    const res = await fetch(`/api/accommodations?page=${pageParam}`);
-    const data = await res.json();
+export async function getAccommodations(pageParam: number, category: string | null) {
+	let url;
 
-    return data;
-  } catch (err) {
-    console.error("Error:", err);
-  }
+	if (!category) {
+		url = "/api/accommodations";
+	} else {
+		const categoryCode = categoryMap[category];
+		url = `/api/accommodations/category/${categoryCode}`;
+	}
+
+	try {
+		const res = await fetch(url + `?page=${pageParam}`);
+		const data = await res.json();
+
+		return data;
+	} catch (err) {
+		console.error("Error:", err);
+	}
 }
 
-export async function getAccommodation(contentid: string) {
-  try {
-    const res = await fetch(`/api/accommodations/${contentid}`);
-    const data = await res.json();
+// export async function getAccommodations({ pageParam }: { pageParam: number }) {
+// 	try {
+// 		const res = await fetch(`/api/accommodations?page=${pageParam}`);
+// 		const data = await res.json();
 
-    return data;
-  } catch (err) {
-    console.error("Error:", err);
-  }
+// 		return data;
+// 	} catch (err) {
+// 		console.error("Error:", err);
+// 	}
+// }
+
+// export async function getAccommodationCategory(category: string) {
+// 	try {
+// 		const res = await fetch(`/api/accommodations/category/${category}`);
+// 		const data = await res.json();
+
+// 		return data;
+// 	} catch (err) {
+// 		console.error("Error:", err);
+// 	}
+// }
+
+export async function getAccommodation(contentid: string) {
+	try {
+		const res = await fetch(`/api/accommodations/${contentid}`);
+		const data = await res.json();
+
+		return data;
+	} catch (err) {
+		console.error("Error:", err);
+	}
 }
 
 export async function getCarts() {
-  try {
-    const res = await fetch("/api/carts");
-    const data = await res.json();
+	try {
+		const res = await fetch("/api/carts");
+		const data = await res.json();
 
-    return data;
-  } catch (err) {
-    console.error("Error:", err);
-  }
+		return data;
+	} catch (err) {
+		console.error("Error:", err);
+	}
 }
 
 export async function getReservation(contentid: string) {
-  try {
-    const res = await fetch(`/api/reservations/${contentid}`);
-    const data = await res.json();
+	try {
+		const res = await fetch(`/api/reservations/${contentid}`);
+		const data = await res.json();
 
-    return data;
-  } catch (err) {
-    console.error("Error:", err);
-  }
+		return data;
+	} catch (err) {
+		console.error("Error:", err);
+	}
 }
 
 export async function getReservations() {
-  try {
-    const res = await fetch("/api/reservations/history");
-    const data = await res.json();
+	try {
+		const res = await fetch("/api/reservations/history");
+		const data = await res.json();
 
-    return data;
-  } catch (err) {
-    console.error("Error:", err);
-  }
+		return data;
+	} catch (err) {
+		console.error("Error:", err);
+	}
 }
 
 export async function removeCartItem(contentid: string) {
-  try {
-    await fetch(`/api/carts/${contentid}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  } catch (err) {
-    console.error("Error:", err);
-  }
+	try {
+		await fetch(`/api/carts/${contentid}`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+	} catch (err) {
+		console.error("Error:", err);
+	}
 }
