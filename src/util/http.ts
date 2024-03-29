@@ -48,10 +48,23 @@ export async function getReservation(contentid: string) {
 
 export async function getReservations() {
   try {
-    const res = await fetch("/api/reservations");
+    const res = await fetch("/api/reservations/history");
     const data = await res.json();
 
     return data;
+  } catch (err) {
+    console.error("Error:", err);
+  }
+}
+
+export async function removeCartItem(contentid: string) {
+  try {
+    await fetch(`/api/carts/${contentid}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   } catch (err) {
     console.error("Error:", err);
   }

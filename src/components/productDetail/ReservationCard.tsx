@@ -6,7 +6,11 @@ import { DateRange, RangeKeyDict } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import ko from "date-fns/locale/ko";
-import { MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from "react-icons/md";
+import {
+  MdOutlineKeyboardArrowRight,
+  MdOutlineKeyboardArrowDown,
+  MdOutlineKeyboardArrowUp,
+} from "react-icons/md";
 import { FaPlus, FaMinus } from "react-icons/fa6";
 import { useElementToggle, useToggle } from "../../hooks/useToggle";
 import CloseBtn from "../../UI/CloseBtn";
@@ -14,7 +18,7 @@ import { formatDate, formattedDate } from "../../util/date";
 import { RiCloseLine } from "react-icons/ri";
 
 type Props = {
-	accommodation: AccommodationInfo;
+  accommodation: AccommodationInfo;
 };
 
 const textClass = "text-sm opacity-80";
@@ -23,78 +27,78 @@ const iconClass = "text-xl font-semibold";
 const btnCustom = "p-2 rounded-full bg-gray-200 hover:brightness-90";
 
 export default function ReservationCard({ accommodation }: Props) {
-	const navigate = useNavigate();
-	const { id } = useParams();
-	const currentDate = new Date();
-	const tomorrowDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const currentDate = new Date();
+  const tomorrowDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
 
-	const [query, setQuery] = useSearchParams();
-	const [date, setDate] = useState({
-		startDate: new Date(query.get("check_in") || currentDate),
-		endDate: new Date(query.get("check_out") || tomorrowDate),
-		key: "selection",
-	});
+  const [query, setQuery] = useSearchParams();
+  const [date, setDate] = useState({
+    startDate: new Date(query.get("check_in") || currentDate),
+    endDate: new Date(query.get("check_out") || tomorrowDate),
+    key: "selection",
+  });
 
-	const [paymentInfo, setPaymentInfo] = useState({
-		room: query.get("room") || accommodation.room[0].max_capacity,
-		startDate: query.get("check_in") || formatDate(currentDate),
-		endDate: query.get("check_out") || formatDate(tomorrowDate),
-		guest: query.get("guest") || "1",
-	});
+  const [paymentInfo, setPaymentInfo] = useState({
+    room: query.get("room") || accommodation.room[0].max_capacity,
+    startDate: query.get("check_in") || formatDate(currentDate),
+    endDate: query.get("check_out") || formatDate(tomorrowDate),
+    guest: query.get("guest") || "1",
+  });
 
-	useEffect(() => {
-		setQuery({
-			room: paymentInfo.room,
-			check_in: paymentInfo.startDate,
-			check_out: paymentInfo.endDate,
-			guest: paymentInfo.guest,
-		});
-	}, [paymentInfo, setQuery]);
+  useEffect(() => {
+    setQuery({
+      room: paymentInfo.room,
+      check_in: paymentInfo.startDate,
+      check_out: paymentInfo.endDate,
+      guest: paymentInfo.guest,
+    });
+  }, [paymentInfo, setQuery]);
 
-	const [openRoom, toggleRoom, setRoomOpen] = useToggle();
-	const [openDate, toggleDate, setDateOpen] = useToggle();
-	const [openGuests, toggleGuests, setGuestsOpen] = useToggle();
+  const [openRoom, toggleRoom, setRoomOpen] = useToggle();
+  const [openDate, toggleDate, setDateOpen] = useToggle();
+  const [openGuests, toggleGuests, setGuestsOpen] = useToggle();
 
-	const handleChange = (ranges: RangeKeyDict) => {
-		const { startDate, endDate } = ranges.selection;
-		setDate({ startDate: startDate!, endDate: endDate!, key: "selection" });
-		setPaymentInfo(prevInfo => ({
-			...prevInfo,
-			startDate: formatDate(ranges.selection.startDate!),
-			endDate: formatDate(ranges.selection.endDate!),
-		}));
-	};
+  const handleChange = (ranges: RangeKeyDict) => {
+    const { startDate, endDate } = ranges.selection;
+    setDate({ startDate: startDate!, endDate: endDate!, key: "selection" });
+    setPaymentInfo((prevInfo) => ({
+      ...prevInfo,
+      startDate: formatDate(ranges.selection.startDate!),
+      endDate: formatDate(ranges.selection.endDate!),
+    }));
+  };
 
-	const handleClickGuest = (value: number) => {
-		setPaymentInfo(prevInfo => {
-			const newGuest = +prevInfo.guest + value;
-			const maxCapacity = +prevInfo.room;
+  const handleClickGuest = (value: number) => {
+    setPaymentInfo((prevInfo) => {
+      const newGuest = +prevInfo.guest + value;
+      const maxCapacity = +prevInfo.room;
 
-			if (newGuest >= 1 && newGuest <= maxCapacity) {
-				return {
-					...prevInfo,
-					guest: newGuest.toString(),
-				};
-			}
-			return prevInfo;
-		});
-	};
+      if (newGuest >= 1 && newGuest <= maxCapacity) {
+        return {
+          ...prevInfo,
+          guest: newGuest.toString(),
+        };
+      }
+      return prevInfo;
+    });
+  };
 
-	const handleClickRoom = (value: string) => {
-		toggleRoom();
-		setPaymentInfo(prevInfo => ({
-			...prevInfo,
-			room: value,
-		}));
-	};
+  const handleClickRoom = (value: string) => {
+    toggleRoom();
+    setPaymentInfo((prevInfo) => ({
+      ...prevInfo,
+      room: value,
+    }));
+  };
 
-	const handleClearDate = () => {
-		setDate({
-			startDate: new Date(),
-			endDate: new Date(),
-			key: "selection",
-		});
-	};
+  const handleClearDate = () => {
+    setDate({
+      startDate: new Date(),
+      endDate: new Date(),
+      key: "selection",
+    });
+  };
 
 	const [success, setSuccess] = useState(false);
 
@@ -122,22 +126,24 @@ export default function ReservationCard({ accommodation }: Props) {
 		useElementToggle(toggleGuests, setRoomOpen, setDateOpen);
 	};
 
-	const numberOfNights = () => {
-		if (date.startDate && date.endDate) {
-			const time = Math.abs(date.endDate.getTime() - date.startDate.getTime());
-			const days = Math.ceil(time / (1000 * 60 * 60 * 24));
-			return days;
-		}
-	};
+  const numberOfNights = () => {
+    if (date.startDate && date.endDate) {
+      const time = Math.abs(date.endDate.getTime() - date.startDate.getTime());
+      const days = Math.ceil(time / (1000 * 60 * 60 * 24));
+      return days;
+    }
+  };
 
-	const totalPrice = () => {
-		const nights = numberOfNights();
-		const selectedRoom = accommodation.room.find((roomItem: Room) => roomItem.max_capacity === paymentInfo.room);
+  const totalPrice = () => {
+    const nights = numberOfNights();
+    const selectedRoom = accommodation.room.find(
+      (roomItem: Room) => roomItem.max_capacity === paymentInfo.room
+    );
 
-		if (nights && selectedRoom) {
-			return nights * selectedRoom.price;
-		}
-	};
+    if (nights && selectedRoom) {
+      return nights * selectedRoom.price;
+    }
+  };
 
 	return (
 		<div className="w-5/12">

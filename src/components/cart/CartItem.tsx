@@ -1,14 +1,29 @@
 import { Link } from "react-router-dom";
-import { reservedAccommodation } from "../../types/reservedAccommodation";
+import { ReservedAccommodation } from "../../types/reservedAccommodation";
 import CloseIcon from "../../icons/CloseIcon";
+import { useMutation } from "@tanstack/react-query";
+import { queryClient, removeCartItem } from "../../util/http";
 
 type Props = {
-  cartItem: reservedAccommodation;
+  cartItem: ReservedAccommodation;
 };
 
 export default function CartItem({ cartItem }: Props) {
-  const { title, address, startDate, endDate, guest, image1, contentid } =
+  const { title, address, startDate, endDate, guest, image1, contentid, room } =
     cartItem;
+
+  const { mutate } = useMutation({
+    mutationFn: removeCartItem,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["carts"],
+      });
+    },
+  });
+
+  function handleClick() {
+    mutate(contentid);
+  }
 
   return (
     <li className="shadow-basic p-6 rounded-md relative">
@@ -32,13 +47,16 @@ export default function CartItem({ cartItem }: Props) {
       <div className="flex justify-end items-center gap-4">
         <p className="text-end font-bold text-lg">50,000원</p>
         <Link
-          to={`/payment/${contentid}?check_in=${startDate}&check_out=${endDate}&guest=${guest}`}
-          className="bg-[#FF385C] text-white py-1 px-2 rounded-lg"
+          to={`/payment/${contentid}?check_in=${startDate}&check_out=${endDate}&guest=${guest}&room=${room}`}
+          className="bg-brand text-white py-1 px-2 rounded-lg"
         >
           예약
         </Link>
       </div>
-      <CloseIcon className="absolute top-6 right-6 text-2xl cursor-pointer" />
+      <CloseIcon
+        className="absolute top-6 right-6 text-2xl cursor-pointer"
+        onClick={handleClick}
+      />
     </li>
   );
 }
