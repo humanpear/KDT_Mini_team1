@@ -51,7 +51,7 @@ export async function login(
       localStorage.setItem("access_token", data.body.access_token);
     }
     const loginUser = await getUser();
-    setLoginUser(loginUser);
+    setLoginUser(loginUser.body);
     navigate("/");
   } catch (error) {
     console.error(error);

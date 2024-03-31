@@ -69,11 +69,12 @@ export async function getAccommodation(contentid: string) {
 
 export async function getCarts() {
   try {
-    const res = await fetch(
+    const response = await fetch(
       `${import.meta.env.VITE_API_URL}/api/carts`,
       getConfig
     );
-    const data = await res.json();
+
+    const data = await response.json();
 
     return data;
   } catch (err) {
