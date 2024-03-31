@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 
 export default function ProductDetailPage() {
 	const { id } = useParams();
-	const { data: accommodation, isLoading } = useQuery({
+	const { data: accommodationData, isLoading } = useQuery({
 		queryKey: ["accommodation", id],
 		queryFn: () => getAccommodation(id as string),
 	});
@@ -18,10 +18,10 @@ export default function ProductDetailPage() {
 
 	return (
 		<section className="w-[1120px] mx-auto relative p-4">
-			<ProductImage accommodation={accommodation} />
+			<ProductImage accommodationData={accommodationData} />
 			<div className="flex gap-20 mt-10">
-				<ProductInfo accommodation={accommodation} />
-				<ReservationCard accommodation={accommodation} />
+				<ProductInfo accommodationData={accommodationData} />
+				<ReservationCard accommodationData={accommodationData} />
 			</div>
 		</section>
 	);
