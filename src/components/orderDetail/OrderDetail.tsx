@@ -6,17 +6,18 @@ import { getStayDuration } from "../../util/date";
 
 export default function OrderDetail() {
   const { id } = useParams();
-  const { data } = useQuery({
+  const { data, isPending } = useQuery({
     queryKey: ["orderComplete"],
     queryFn: () => getReservation(id as string),
   });
 
-  if (!data) {
+  if (isPending) {
     return <p>Loading...</p>;
   }
 
-  const { title } = data.accommodation;
-  const { start_date, end_date, total_price, room_price } = data.reservation;
+  const { title } = data.body.accommodation;
+  const { start_date, end_date, total_price, room_price } =
+    data.body.reservation;
 
   const charge = total_price / 10;
 
@@ -53,7 +54,7 @@ export default function OrderDetail() {
             </div>
             <div className="flex justify-between items-center">
               <p className="underline">미니비앤비 서비스 수수료</p>
-              <p>{charge.toLocaleString()}</p>
+              <p>{charge.toLocaleString()}원</p>
             </div>
           </div>
         </div>

@@ -23,7 +23,7 @@ export default function AccommodationItem({ item, type }: Props) {
     total_price,
     capacity: guest,
     max_capacity: room,
-    id: cart_id,
+    id: option_id,
   } = item.option!;
 
   const { mutate } = useMutation({
@@ -36,7 +36,7 @@ export default function AccommodationItem({ item, type }: Props) {
   });
 
   function handleClick() {
-    mutate(cart_id);
+    mutate(option_id);
   }
 
   return (
@@ -70,6 +70,14 @@ export default function AccommodationItem({ item, type }: Props) {
             className="bg-brand text-white py-1 px-2 rounded-lg"
           >
             예약
+          </Link>
+        )}
+        {type === "reservation" && (
+          <Link
+            to={`/payment/${option_id}/complete`}
+            className="bg-brand text-white py-1 px-2 rounded-lg"
+          >
+            상세
           </Link>
         )}
       </div>

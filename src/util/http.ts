@@ -65,7 +65,10 @@ export async function getCarts() {
 
 export async function getReservation(contentid: string) {
   try {
-    const res = await fetch(`/api/reservations/${contentid}`);
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/reservations/${contentid}`,
+      getConfig
+    );
     const data = await res.json();
 
     return data;
