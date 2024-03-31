@@ -8,7 +8,7 @@ import PaymentProvider from "../context/PaymentProvider";
 
 export default function PaymentPage() {
   const { id } = useParams();
-  const { data: accommodation, isLoading } = useQuery({
+  const { data: product, isLoading } = useQuery({
     queryKey: ["accommodation", id],
     queryFn: () => getAccommodation(id as string),
   });
@@ -22,6 +22,8 @@ export default function PaymentPage() {
     return <p>Loading...</p>;
   }
 
+  console.log(product);
+
   if (
     !query.get("check_in") ||
     !query.get("check_out") ||
@@ -32,12 +34,12 @@ export default function PaymentPage() {
   }
 
   return (
-    <PaymentProvider accommodation={accommodation}>
+    <PaymentProvider product={product}>
       <section className="w-[1120px] mx-auto mt-16 relative">
         <p className="text-3xl font-bold mb-12">예약 요청</p>
         <div className="flex">
-          <PaymentInfo accommodation={accommodation} />
-          <PriceInfo accommodation={accommodation} />
+          <PaymentInfo product={product} />
+          <PriceInfo product={product} />
         </div>
       </section>
     </PaymentProvider>

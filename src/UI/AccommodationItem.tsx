@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient, removeCartItem } from "../util/http";
-import { AccommodationWithOption } from "../types/accommodationInfo";
+import { AccommodationWithOption } from "../types/AccommodationInfo";
 import { stayDuration } from "../util/date";
 
 type Props = {

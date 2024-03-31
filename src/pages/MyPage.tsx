@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useUserStore } from "../store/user";
 import { getReservations } from "../util/http";
 import AccommodationItem from "../UI/AccommodationItem";
-import { AccommodationWithOption } from "../types/accommodationInfo";
+import { AccommodationWithOption } from "../types/AccommodationInfo";
 
 export default function MyPage() {
   const { loginUser } = useUserStore();
@@ -14,8 +14,6 @@ export default function MyPage() {
   if (isLoading || !loginUser) {
     return <p>Loading...</p>;
   }
-
-  console.log(loginUser);
 
   return (
     <section className="w-[800px] mx-auto py-16">
@@ -41,8 +39,8 @@ export default function MyPage() {
         </div>
         <p className="font-bold text-xl pt-6 pb-4">예약내역</p>
         <ul className="flex flex-col gap-4">
-          {reservations.length > 0 &&
-            reservations.map((reservation: AccommodationWithOption) => (
+          {reservations.body.length > 0 &&
+            reservations.body.map((reservation: AccommodationWithOption) => (
               <AccommodationItem
                 key={reservation.reservation.id}
                 item={reservation}

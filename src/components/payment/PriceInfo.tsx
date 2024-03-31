@@ -1,14 +1,14 @@
 import { useContext } from "react";
-import { AccommodationInfo } from "../../types/accommodationInfo";
+import { AccommodationInfo } from "../../types/AccommodationInfo";
 import { PaymentContext } from "../../context/PaymentProvider";
 import { stayDuration } from "../../util/date";
 
 type Props = {
-  accommodation: AccommodationInfo;
+  product: AccommodationInfo;
 };
 
-export default function PriceInfo({ accommodation }: Props) {
-  const { title, image1 } = accommodation;
+export default function PriceInfo({ product }: Props) {
+  const { title, image1 } = product.accommodation;
   const { date, room, totalPrice, charge, finalPrice } =
     useContext(PaymentContext);
 
