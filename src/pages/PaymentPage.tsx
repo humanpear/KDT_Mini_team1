@@ -22,8 +22,6 @@ export default function PaymentPage() {
     return <p>Loading...</p>;
   }
 
-  console.log(product);
-
   if (
     !query.get("check_in") ||
     !query.get("check_out") ||
