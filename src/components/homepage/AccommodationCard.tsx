@@ -2,23 +2,33 @@ import { AccommodationInfo } from "../../types/AccommodationInfo";
 import { IoLocationOutline } from "react-icons/io5";
 import { PiPhoneCall } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
+import { formatDate } from "../../util/date";
 
 interface AccommodationInfoProps extends React.HTMLAttributes<HTMLLIElement> {
-	accommodation: AccommodationInfo;
+  accommodation: AccommodationInfo;
 }
 
-export default function AccommodationCard({ accommodation }: AccommodationInfoProps) {
-	const { address, tel, title, description, image1, id } = accommodation;
-	const navigate = useNavigate();
+export default function AccommodationCard({
+  accommodation,
+}: AccommodationInfoProps) {
+  const { address, tel, title, description, image1, id } = accommodation;
+  const navigate = useNavigate();
 
-	const handleClick = () => {
-		// window.open(`/product/${contentid}`, "_blank");
-		// 새탭이 열릴 시 사라지는 상태를 막기위해 백엔드 API와 연결하기 전에는 그냥 navigate로 페이지 이동하겠습니다.
-		navigate(`/product/${id}`);
-	};
+  const currentDate = new Date();
+  const tomorrowDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
 
-	const infoFlex = "flex items-center gap-2";
-	const infoClass = "text-sm opacity-80";
+  const handleClick = () => {
+    // window.open(`/product/${contentid}`, "_blank");
+    // 새탭이 열릴 시 사라지는 상태를 막기위해 백엔드 API와 연결하기 전에는 그냥 navigate로 페이지 이동하겠습니다.
+    navigate(
+      `/product/${id}?check_in=${formatDate(
+        currentDate
+      )}&check_out=${formatDate(tomorrowDate)}&room=2&guest=1`
+    );
+  };
+
+  const infoFlex = "flex items-center gap-2";
+  const infoClass = "text-sm opacity-80";
 
 	return (
 		<li

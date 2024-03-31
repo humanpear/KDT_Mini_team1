@@ -1,10 +1,10 @@
 import { DateRange } from "react-date-range";
 import ko from "date-fns/locale/ko";
-import { PaymentContext } from "../context/PaymentProvider";
+import { OptionContext } from "../context/OptionProvider";
 import { useContext } from "react";
 
 export default function DatePicker() {
-  const { date, changeDate } = useContext(PaymentContext);
+  const { date, changeDate } = useContext(OptionContext);
 
   return (
     <DateRange

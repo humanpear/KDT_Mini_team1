@@ -1,10 +1,10 @@
 import { ReactNode, createContext, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { formatDate, stayDuration } from "../util/date";
+import { formatDate, getStayDuration } from "../util/date";
 import { RangeKeyDict } from "react-date-range";
-import { AccommodationInfo } from "../types/accommodationInfo";
+import { AccommodationInfo, Room } from "../types/AccommodationInfo";
 
-export const PaymentContext = createContext<{
+export const OptionContext = createContext<{
   date: {
     startDate: Date;
     endDate: Date;
@@ -12,13 +12,16 @@ export const PaymentContext = createContext<{
   };
   room: string;
   guest: string;
-  roomPrice: number;
+  selectedRoom: Room | undefined;
+  stayDuration: number | undefined;
+  roomPrice: number | undefined;
   totalPrice: number;
   charge: number;
   finalPrice: number;
   changeDate: (ranges: RangeKeyDict) => void;
   changeRoom: (value: string) => void;
   changeGuest: (value: number) => void;
+  clearDate: () => void;
 }>({
   date: {
     startDate: new Date(),
@@ -27,6 +30,13 @@ export const PaymentContext = createContext<{
   },
   room: "",
   guest: "",
+  selectedRoom: {
+    id: 0,
+    max_capacity: 0,
+    price: 0,
+    stock: 0,
+  },
+  stayDuration: 0,
   roomPrice: 0,
   totalPrice: 0,
   charge: 0,
@@ -34,14 +44,15 @@ export const PaymentContext = createContext<{
   changeDate: () => {},
   changeRoom: () => {},
   changeGuest: () => {},
+  clearDate: () => {},
 });
 
 type Props = {
-  accommodation: AccommodationInfo;
+  product: AccommodationInfo;
   children: ReactNode;
 };
 
-export default function PaymentProvider({ accommodation, children }: Props) {
+export default function OptionProvider({ product, children }: Props) {
   const [query, setQuery] = useSearchParams();
 
   const [date, setDate] = useState({
@@ -53,12 +64,15 @@ export default function PaymentProvider({ accommodation, children }: Props) {
   const [room, setRoom] = useState(query.get("room") || "");
   const [guest, setGuest] = useState(query.get("guest") || "");
 
-  const roomOption = accommodation.room;
+  const { rooms } = product;
 
-  const roomPrice = room === "2" ? roomOption[0].price : roomOption[1].price;
+  const selectedRoom = rooms.find((r) => r.max_capacity.toString() === room);
 
-  const totalPrice =
-    roomPrice * (stayDuration(date.startDate, date.endDate) || 0);
+  const roomPrice = selectedRoom?.price;
+
+  const stayDuration = getStayDuration(date.startDate, date.endDate);
+
+  const totalPrice = roomPrice! * (stayDuration || 0);
   const charge = totalPrice / 10;
 
   const finalPrice = totalPrice + charge;
@@ -82,29 +96,43 @@ export default function PaymentProvider({ accommodation, children }: Props) {
   };
 
   const changeGuest = (value: number) => {
-    setGuest((prev) => (+prev! + value).toString());
+    const newGuest = (+guest + value).toString();
+    const isValid = value === 1 ? +room > +guest : 1 < +guest;
+
+    setGuest((prev) => (isValid ? (+prev + value).toString() : prev));
     setQuery((prevQuery) => ({
       ...Object.fromEntries([...prevQuery]),
-      guest: (+prevQuery.get("guest")! + value).toString(),
+      ...(isValid && { guest: newGuest }),
     }));
+  };
+
+  const clearDate = () => {
+    setDate({
+      startDate: new Date(),
+      endDate: new Date(),
+      key: "selection",
+    });
   };
 
   const paymentCtx = {
     date,
     room,
     guest,
+    selectedRoom,
     roomPrice,
+    stayDuration,
     totalPrice,
     charge,
     finalPrice,
     changeDate,
     changeRoom,
     changeGuest,
+    clearDate,
   };
 
   return (
-    <PaymentContext.Provider value={paymentCtx}>
+    <OptionContext.Provider value={paymentCtx}>
       {children}
-    </PaymentContext.Provider>
+    </OptionContext.Provider>
   );
 }

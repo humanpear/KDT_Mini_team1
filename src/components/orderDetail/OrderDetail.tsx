@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import NextIcon from "../../icons/NextIcon";
 import { useQuery } from "@tanstack/react-query";
 import { getReservation } from "../../util/http";
-import { stayDuration } from "../../util/date";
+import { getStayDuration } from "../../util/date";
 
 export default function OrderDetail() {
   const { id } = useParams();
@@ -47,7 +47,7 @@ export default function OrderDetail() {
             <div className="flex justify-between items-center">
               <p>
                 {room_price.toLocaleString()} x{" "}
-                {stayDuration(new Date(start_date), new Date(end_date))}박
+                {getStayDuration(new Date(start_date), new Date(end_date))}박
               </p>
               <p>{total_price.toLocaleString()}원</p>
             </div>

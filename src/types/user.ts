@@ -1,5 +1,5 @@
 export type LoginUser = {
-  member_id: string;
+  member_id: number;
   name: string;
   profile_image: string;
   type: string;

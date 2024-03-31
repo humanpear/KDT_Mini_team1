@@ -11,6 +11,6 @@ export function formattedDate(date: Date) {
   });
 }
 
-export function stayDuration(start: Date, end: Date) {
+export function getStayDuration(start: Date, end: Date) {
   return intervalToDuration({ start, end }).days;
 }

@@ -1,29 +1,38 @@
 import { useNavigate } from "react-router-dom";
-import { AccommodationInfo } from "../../types/accommodationInfo";
+import { AccommodationInfo } from "../../types/AccommodationInfo";
 import { useToggle } from "../../hooks/useToggle";
 import { formatDate } from "../../util/date";
 import DatePicker from "../../UI/DatePicker";
 import DummyInfo from "./DummyInfo";
 import { useQuery } from "@tanstack/react-query";
 import { getCarts } from "../../util/http";
-import { ReservedAccommodation } from "../../types/reservedAccommodation";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { useContext } from "react";
-import { PaymentContext } from "../../context/PaymentProvider";
+import { OptionContext } from "../../context/OptionProvider";
+import { useUserStore } from "../../store/user";
 
 type Props = {
-  accommodation: AccommodationInfo;
+  product: AccommodationInfo;
 };
 
-export default function PaymentInfo({ accommodation }: Props) {
-  const { contentid } = accommodation;
+export default function PaymentInfo({ product }: Props) {
   const { data: cartItems } = useQuery({
     queryKey: ["carts"],
     queryFn: getCarts,
   });
 
-  const { date, guest, room, roomPrice, finalPrice, changeGuest, changeRoom } =
-    useContext(PaymentContext);
+  const member_id = useUserStore((state) => state.loginUser?.member_id);
+
+  const {
+    date,
+    guest,
+    selectedRoom,
+    room,
+    roomPrice,
+    finalPrice,
+    changeGuest,
+    changeRoom,
+  } = useContext(OptionContext);
 
   const [openDate, toggleDate] = useToggle();
 
@@ -33,33 +42,27 @@ export default function PaymentInfo({ accommodation }: Props) {
     let url;
     let request;
 
-    if (
-      cartItems.find(
-        (item: ReservedAccommodation) => item.contentid === contentid
-      )
-    ) {
-      url = "/api/payments/cart-reservation";
+    if (cartItems.body.find((item) => item.id === id)) {
+      url = `${import.meta.env.VITE_API_URL}/api/payments/cart-reservation`;
       request = {
-        cart_id: contentid,
+        cart_id: id,
         reservation: {
-          room_id:
-            room === "2" ? accommodation.room[0].id : accommodation.room[1].id,
-          capacity: room,
+          member_id,
+          room_id: selectedRoom?.id,
+          capacity: +guest,
           start_date: formatDate(date.startDate),
           end_date: formatDate(date.endDate),
-          room_price: roomPrice,
           total_price: finalPrice,
         },
       };
     } else {
-      url = "/api/payments/reservation";
+      url = `${import.meta.env.VITE_API_URL}/api/payments/reservation`;
       request = {
-        room_id:
-          room === "2" ? accommodation.room[0].id : accommodation.room[1].id,
-        capacity: room,
+        member_id,
+        room_id: selectedRoom?.id,
+        capacity: +guest,
         start_date: formatDate(date.startDate),
         end_date: formatDate(date.endDate),
-        room_price: roomPrice,
         total_price: finalPrice,
       };
     }
@@ -68,13 +71,14 @@ export default function PaymentInfo({ accommodation }: Props) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
       body: JSON.stringify(request),
     });
 
     const data = await response.json();
 
-    navigate(`/payment/${data.reservation.id}/complete`);
+    navigate(`/payment/${data.body.id}/complete`);
   }
 
   return (
