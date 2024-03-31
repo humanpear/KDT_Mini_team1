@@ -29,8 +29,12 @@ export default function PaymentInfo() {
   } = useContext(OptionContext);
 
   const [openDate, toggleDate] = useToggle();
-
   const navigate = useNavigate();
+  const isActiveUp = +room > +guest;
+  const isActiveDown = 1 < +guest;
+  const activeBtn = "p-2 rounded-full bg-gray-200 hover:brightness-90";
+  const inactiveBtn =
+    "p-2 rounded-full border border-stone-200 text-stone-200 cursor-not-allowed";
 
   async function handleClick() {
     const includedCartItem = cartItems.body.find(
@@ -137,14 +141,16 @@ export default function PaymentInfo() {
             <div className="flex items-center w-[100px] justify-between">
               <button
                 onClick={() => changeGuest(1)}
-                className="p-2 rounded-full bg-gray-200"
+                className={isActiveUp ? activeBtn : inactiveBtn}
+                disabled={!isActiveUp}
               >
                 <FaPlus />
               </button>
               <p>{guest}명</p>
               <button
                 onClick={() => changeGuest(-1)}
-                className="p-2 rounded-full bg-gray-200"
+                className={isActiveDown ? activeBtn : inactiveBtn}
+                disabled={!isActiveDown}
               >
                 <FaMinus />
               </button>
