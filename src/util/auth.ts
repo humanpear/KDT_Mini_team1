@@ -1,4 +1,5 @@
 import { LoginUser, SignUpData } from "../types/user";
+import { redirect } from "react-router";
 
 export async function getUser() {
   try {
@@ -100,4 +101,29 @@ export async function signup(
   } finally {
     setIsLoading(false);
   }
+}
+
+export function getAuthToken() {
+  const token = localStorage.getItem("access_token");
+  return token;
+}
+
+export function checkAuthLoader() {
+  const token = getAuthToken();
+
+  if (!token) {
+    return redirect("/login");
+  }
+
+  return null;
+}
+
+export function protectLoginPageLoader() {
+  const token = getAuthToken();
+
+  if (token) {
+    return redirect("/");
+  }
+
+  return null;
 }

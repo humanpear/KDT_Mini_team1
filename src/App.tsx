@@ -11,6 +11,7 @@ import MyPage from "./pages/MyPage";
 import OrderDetailPage from "./pages/OrderDetailPage";
 import PaymentPage from "./pages/PaymentPage";
 import OrderCompletePage from "./pages/OrderCompletePage";
+import { protectLoginPageLoader } from "./util/auth";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -20,7 +21,11 @@ export default function App() {
       children: [
         { index: true, element: <HomePage /> },
         { path: "signup", element: <SignupPage /> },
-        { path: "login", element: <LoginPage /> },
+        {
+          path: "login",
+          element: <LoginPage />,
+          loader: protectLoginPageLoader,
+        },
         { path: "product/:id", element: <ProductDetailPage /> },
         { path: "cart", element: <CartPage /> },
         { path: "mypage", element: <MyPage /> },
