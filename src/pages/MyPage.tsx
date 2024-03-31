@@ -15,6 +15,8 @@ export default function MyPage() {
     return <p>Loading...</p>;
   }
 
+  console.log(loginUser);
+
   return (
     <section className="w-[800px] mx-auto py-16">
       <p className="text-2xl font-bold text-center mb-4">마이페이지</p>

@@ -6,7 +6,6 @@ import DatePicker from "../../UI/DatePicker";
 import DummyInfo from "./DummyInfo";
 import { useQuery } from "@tanstack/react-query";
 import { getCarts } from "../../util/http";
-import { ReservedAccommodation } from "../../types/reservedAccommodation";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { useContext } from "react";
 import { PaymentContext } from "../../context/PaymentProvider";
@@ -33,12 +32,8 @@ export default function PaymentInfo({ accommodation }: Props) {
     let url;
     let request;
 
-    if (
-      cartItems.find(
-        (item: ReservedAccommodation) => item.contentid === contentid
-      )
-    ) {
-      url = "/api/payments/cart-reservation";
+    if (cartItems.body.find((item) => item.contentid === contentid)) {
+      url = `${import.meta.env.VITE_API_URL}/api/payments/cart-reservation`;
       request = {
         cart_id: contentid,
         reservation: {
@@ -52,7 +47,7 @@ export default function PaymentInfo({ accommodation }: Props) {
         },
       };
     } else {
-      url = "/api/payments/reservation";
+      url = `${import.meta.env.VITE_API_URL}/api/payments/reservation`;
       request = {
         room_id:
           room === "2" ? accommodation.room[0].id : accommodation.room[1].id,
@@ -68,13 +63,16 @@ export default function PaymentInfo({ accommodation }: Props) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
       body: JSON.stringify(request),
     });
 
     const data = await response.json();
 
-    navigate(`/payment/${data.reservation.id}/complete`);
+    console.log(data);
+
+    // navigate(`/payment/${data.reservation.id}/complete`);
   }
 
   return (
