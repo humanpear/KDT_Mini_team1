@@ -96,13 +96,10 @@ export default function OptionProvider({ product, children }: Props) {
   };
 
   const changeGuest = (value: number) => {
-    const newGuest = (+guest + value).toString();
-    const isValid = value === 1 ? +room > +guest : 1 < +guest;
-
-    setGuest((prev) => (isValid ? (+prev + value).toString() : prev));
+    setGuest((prev) => (+prev! + value).toString());
     setQuery((prevQuery) => ({
       ...Object.fromEntries([...prevQuery]),
-      ...(isValid && { guest: newGuest }),
+      guest: (+prevQuery.get("guest")! + value).toString(),
     }));
   };
 
