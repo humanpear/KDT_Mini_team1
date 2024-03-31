@@ -10,7 +10,7 @@ export default function ProductImage({ accommodationData }: ProductProps) {
 	return (
 		<div className="grid grid-cols-2 gap-2 rounded overflow-hidden mb-2">
 			<img
-				className="w-full h-full"
+				className="w-full h-full max-h-[362px]"
 				src={
 					image1 === ""
 						? "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcaVBkP%2FbtsFU7koksb%2FzyBL59ycbUCNllOXfQxiYK%2Fimg.png"
