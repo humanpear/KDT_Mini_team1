@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { AccommodationInfo } from "../../types/AccommodationInfo";
+import { CartItemWithOption } from "../../types/AccommodationInfo";
 import { useToggle } from "../../hooks/useToggle";
 import { formatDate } from "../../util/date";
 import DatePicker from "../../UI/DatePicker";
@@ -11,24 +11,18 @@ import { useContext } from "react";
 import { OptionContext } from "../../context/OptionProvider";
 import { useUserStore } from "../../store/user";
 
-type Props = {
-  product: AccommodationInfo;
-};
-
-export default function PaymentInfo({ product }: Props) {
+export default function PaymentInfo() {
+  const member_id = useUserStore((state) => state.loginUser?.member_id);
   const { data: cartItems } = useQuery({
-    queryKey: ["carts"],
+    queryKey: ["carts", member_id],
     queryFn: getCarts,
   });
-
-  const member_id = useUserStore((state) => state.loginUser?.member_id);
 
   const {
     date,
     guest,
     selectedRoom,
     room,
-    roomPrice,
     finalPrice,
     changeGuest,
     changeRoom,
@@ -39,13 +33,21 @@ export default function PaymentInfo({ product }: Props) {
   const navigate = useNavigate();
 
   async function handleClick() {
+    const includedCartItem = cartItems.body.find(
+      (item: CartItemWithOption) =>
+        item.cart?.max_capacity === +room &&
+        item.cart.capacity === +guest &&
+        item.cart.start_date === formatDate(date.startDate) &&
+        item.cart.end_date === formatDate(date.endDate)
+    );
+
     let url;
     let request;
 
-    if (cartItems.body.find((item) => item.id === id)) {
+    if (includedCartItem) {
       url = `${import.meta.env.VITE_API_URL}/api/payments/cart-reservation`;
       request = {
-        cart_id: id,
+        cart_id: includedCartItem.cart.id,
         reservation: {
           member_id,
           room_id: selectedRoom?.id,
