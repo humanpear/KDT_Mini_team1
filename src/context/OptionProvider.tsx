@@ -1,10 +1,10 @@
 import { ReactNode, createContext, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { formatDate, stayDuration } from "../util/date";
+import { formatDate, getStayDuration } from "../util/date";
 import { RangeKeyDict } from "react-date-range";
 import { AccommodationInfo, Room } from "../types/AccommodationInfo";
 
-export const PaymentContext = createContext<{
+export const OptionContext = createContext<{
   date: {
     startDate: Date;
     endDate: Date;
@@ -13,6 +13,7 @@ export const PaymentContext = createContext<{
   room: string;
   guest: string;
   selectedRoom: Room | undefined;
+  stayDuration: number | undefined;
   roomPrice: number | undefined;
   totalPrice: number;
   charge: number;
@@ -20,6 +21,7 @@ export const PaymentContext = createContext<{
   changeDate: (ranges: RangeKeyDict) => void;
   changeRoom: (value: string) => void;
   changeGuest: (value: number) => void;
+  clearDate: () => void;
 }>({
   date: {
     startDate: new Date(),
@@ -34,6 +36,7 @@ export const PaymentContext = createContext<{
     price: 0,
     stock: 0,
   },
+  stayDuration: 0,
   roomPrice: 0,
   totalPrice: 0,
   charge: 0,
@@ -41,6 +44,7 @@ export const PaymentContext = createContext<{
   changeDate: () => {},
   changeRoom: () => {},
   changeGuest: () => {},
+  clearDate: () => {},
 });
 
 type Props = {
@@ -48,7 +52,7 @@ type Props = {
   children: ReactNode;
 };
 
-export default function PaymentProvider({ product, children }: Props) {
+export default function OptionProvider({ product, children }: Props) {
   const [query, setQuery] = useSearchParams();
 
   const [date, setDate] = useState({
@@ -66,8 +70,9 @@ export default function PaymentProvider({ product, children }: Props) {
 
   const roomPrice = selectedRoom?.price;
 
-  const totalPrice =
-    roomPrice! * (stayDuration(date.startDate, date.endDate) || 0);
+  const stayDuration = getStayDuration(date.startDate, date.endDate);
+
+  const totalPrice = roomPrice! * (stayDuration || 0);
   const charge = totalPrice / 10;
 
   const finalPrice = totalPrice + charge;
@@ -98,23 +103,33 @@ export default function PaymentProvider({ product, children }: Props) {
     }));
   };
 
+  const clearDate = () => {
+    setDate({
+      startDate: new Date(),
+      endDate: new Date(),
+      key: "selection",
+    });
+  };
+
   const paymentCtx = {
     date,
     room,
     guest,
     selectedRoom,
     roomPrice,
+    stayDuration,
     totalPrice,
     charge,
     finalPrice,
     changeDate,
     changeRoom,
     changeGuest,
+    clearDate,
   };
 
   return (
-    <PaymentContext.Provider value={paymentCtx}>
+    <OptionContext.Provider value={paymentCtx}>
       {children}
-    </PaymentContext.Provider>
+    </OptionContext.Provider>
   );
 }
