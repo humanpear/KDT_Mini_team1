@@ -15,6 +15,8 @@ export default function RootLayout() {
   useEffect(() => {
     if (data) {
       setLoginUser(data.body);
+    } else {
+      localStorage.removeItem("access_token");
     }
   }, [setLoginUser, data]);
 
