@@ -18,50 +18,32 @@ export async function getAccommodations(
   let url;
 
   if (!category) {
-    url = "/api/accommodations";
+    url = `${import.meta.env.VITE_API_URL}/api/accommodations`;
   } else {
     const categoryCode = categoryMap[category];
-    url = `/api/accommodations/category/${categoryCode}`;
+    url = `${
+      import.meta.env.VITE_API_URL
+    }/api/accommodations/category/${categoryCode}`;
   }
 
   try {
     const res = await fetch(url + `?page=${pageParam}`);
     const data = await res.json();
 
-    return data;
+    return data.body;
   } catch (err) {
     console.error("Error:", err);
   }
 }
 
-// export async function getAccommodations({ pageParam }: { pageParam: number }) {
-// 	try {
-// 		const res = await fetch(`/api/accommodations?page=${pageParam}`);
-// 		const data = await res.json();
-
-// 		return data;
-// 	} catch (err) {
-// 		console.error("Error:", err);
-// 	}
-// }
-
-// export async function getAccommodationCategory(category: string) {
-// 	try {
-// 		const res = await fetch(`/api/accommodations/category/${category}`);
-// 		const data = await res.json();
-
-// 		return data;
-// 	} catch (err) {
-// 		console.error("Error:", err);
-// 	}
-// }
-
-export async function getAccommodation(contentid: string) {
+export async function getAccommodation(accommodationId: string) {
   try {
-    const res = await fetch(`/api/accommodations/${contentid}`);
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/accommodations/${accommodationId}`
+    );
     const data = await res.json();
 
-    return data;
+    return data.body;
   } catch (err) {
     console.error("Error:", err);
   }
@@ -69,12 +51,11 @@ export async function getAccommodation(contentid: string) {
 
 export async function getCarts() {
   try {
-    const response = await fetch(
+    const res = await fetch(
       `${import.meta.env.VITE_API_URL}/api/carts`,
       getConfig
     );
-
-    const data = await response.json();
+    const data = await res.json();
 
     return data;
   } catch (err) {
