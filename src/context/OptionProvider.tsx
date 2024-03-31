@@ -88,6 +88,12 @@ export default function OptionProvider({ product, children }: Props) {
   };
 
   const changeRoom = (value: string) => {
+    if (value === "2" && guest === "4") {
+      changeGuest(-2);
+    }
+    if (value === "2" && guest === "3") {
+      changeGuest(-1);
+    }
     setRoom(value);
     setQuery((prevQuery) => ({
       ...Object.fromEntries([...prevQuery]),
