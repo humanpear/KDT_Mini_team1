@@ -15,9 +15,8 @@ export default function RootLayout() {
   useEffect(() => {
     if (data) {
       setLoginUser(data.body);
-    } else {
-      localStorage.removeItem("access_token");
     }
+    // access_token 만료 시 파기하는 로직 추가해야함
   }, [setLoginUser, data]);
 
   return (

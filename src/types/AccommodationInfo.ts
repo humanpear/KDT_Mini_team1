@@ -28,10 +28,11 @@ export type AccommodationInfo = {
   rooms: Room[];
 };
 
-export type ReservationInfo = {
-  id: string;
-  room_id: string;
-  capacity: "2";
+export type OptionInfo = {
+  id: number;
+  room_id: number;
+  capacity: number;
+  max_capacity: number;
   start_date: string;
   end_date: string;
   room_price: number;
@@ -40,5 +41,12 @@ export type ReservationInfo = {
 
 export type AccommodationWithOption = {
   accommodation: AccommodationInfo;
-  reservation: ReservationInfo;
+  reservation?: OptionInfo;
+  option?: OptionInfo;
+};
+
+export type CartItemWithOption = {
+  accommodation: AccommodationInfo;
+  cart?: OptionInfo;
+  option?: OptionInfo;
 };

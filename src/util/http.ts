@@ -88,14 +88,19 @@ export async function getReservations() {
   }
 }
 
-export async function removeCartItem(contentid: string) {
+export async function removeCartItem(cartid: number) {
   try {
-    await fetch(`/api/carts/${contentid}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/carts/${cartid}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }
+    );
+    console.log(response);
   } catch (err) {
     console.error("Error:", err);
   }
