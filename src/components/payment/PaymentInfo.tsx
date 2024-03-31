@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getCarts } from "../../util/http";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { useContext } from "react";
-import { PaymentContext } from "../../context/PaymentProvider";
+import { OptionContext } from "../../context/OptionProvider";
 import { useUserStore } from "../../store/user";
 
 type Props = {
@@ -32,7 +32,7 @@ export default function PaymentInfo({ product }: Props) {
     finalPrice,
     changeGuest,
     changeRoom,
-  } = useContext(PaymentContext);
+  } = useContext(OptionContext);
 
   const [openDate, toggleDate] = useToggle();
 

@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { AccommodationInfo } from "../../types/AccommodationInfo";
-import { PaymentContext } from "../../context/PaymentProvider";
-import { stayDuration } from "../../util/date";
+import { OptionContext } from "../../context/OptionProvider";
+import { getStayDuration } from "../../util/date";
 
 type Props = {
   product: AccommodationInfo;
@@ -10,7 +10,7 @@ type Props = {
 export default function PriceInfo({ product }: Props) {
   const { title, image1 } = product.accommodation;
   const { date, room, totalPrice, charge, finalPrice } =
-    useContext(PaymentContext);
+    useContext(OptionContext);
 
   return (
     <div className="basis-1/2 flex justify-end">
@@ -31,7 +31,7 @@ export default function PriceInfo({ product }: Props) {
           <div className="flex flex-col gap-4">
             <div className="flex justify-between items-center">
               <p>
-                {room}인실 x {stayDuration(date.startDate, date.endDate)}박
+                {room}인실 x {getStayDuration(date.startDate, date.endDate)}박
               </p>
               <p>{totalPrice.toLocaleString()}원</p>
             </div>

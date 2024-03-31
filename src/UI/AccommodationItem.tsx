@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient, removeCartItem } from "../util/http";
 import { AccommodationWithOption } from "../types/AccommodationInfo";
-import { stayDuration } from "../util/date";
+import { getStayDuration } from "../util/date";
 
 type Props = {
   item: AccommodationWithOption;
@@ -41,7 +41,7 @@ export default function AccommodationItem({ item }: Props) {
         <div className="pl-4">
           <p>
             {start_date} ~ {end_date} |{" "}
-            {stayDuration(new Date(start_date), new Date(end_date))}박
+            {getStayDuration(new Date(start_date), new Date(end_date))}박
           </p>
           {/* <p>인원 : {guest}명</p> */}
         </div>
