@@ -2,9 +2,8 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { getAccommodations } from "../util/http";
 import AccommodationCard from "../components/homepage/AccommodationCard";
 import FilterCategory from "../components/homepage/FilterCategory";
-import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
-import { AccommodationInfo } from "../types/accommodationInfo";
+import { AccommodationInfo } from "../types/AccommodationInfo";
 
 const filters = [
 	"전체",
@@ -35,7 +34,6 @@ export const categoryMap: { [key: string]: string } = {
 
 export default function HomePage() {
 	const [filter, setFilter] = useState(filters[0]);
-	const { ref, inView } = useInView();
 
 	const {
 		data: accommodation,
@@ -48,7 +46,7 @@ export default function HomePage() {
 		queryKey: ["accommodation", filter],
 		queryFn: ({ pageParam }) =>
 			filter === "전체" ? getAccommodations(pageParam, null) : getAccommodations(pageParam, filter),
-		initialPageParam: 1,
+		initialPageParam: 0,
 		getNextPageParam: (lastPage, allPage) => {
 			const nextPage = lastPage.length ? allPage.length + 1 : undefined;
 			return nextPage;
@@ -56,10 +54,21 @@ export default function HomePage() {
 	});
 
 	useEffect(() => {
-		if (inView && hasNextPage) {
-			fetchNextPage();
-		}
-	}, [inView, hasNextPage, fetchNextPage]);
+		const handleScroll = () => {
+			const isAtBottom =
+				window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight;
+
+			if (isAtBottom || isFetchingNextPage) {
+				return;
+			}
+
+			if (hasNextPage) {
+				fetchNextPage();
+			}
+		};
+		window.addEventListener("scroll", handleScroll);
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
 	if (status === "pending") {
 		return <p>Loading...</p>;
@@ -79,12 +88,7 @@ export default function HomePage() {
 			{accommodation.pages && (
 				<ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5 gap-y-4">
 					{accommodation.pages.map(page =>
-						page.map((item: AccommodationInfo, index: number) => {
-							if (item.length == index + 1) {
-								return <AccommodationCard innerRef={ref} key={item.contentid} accommodation={item} />;
-							}
-							return <AccommodationCard key={item.contentid} accommodation={item} />;
-						}),
+						page.map((item: AccommodationInfo) => <AccommodationCard key={item.id} accommodation={item} />),
 					)}
 				</ul>
 			)}

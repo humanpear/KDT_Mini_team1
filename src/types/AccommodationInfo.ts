@@ -1,32 +1,44 @@
 export type Room = {
-  id: string;
-  max_capacity: string;
-  price: number;
-  stock?: number;
+	id: string;
+	max_capacity: string;
+	price: number;
+	stock?: number;
+};
+
+export type accommodation = {
+	id: string;
+	title: string;
+	address: string;
+	image1: string;
+	description: string;
+	category?: string;
+	tel: string;
 };
 
 export type AccommodationInfo = {
-  contentid: string;
-  title: string;
-  description: string;
-  address: string;
-  tel: string;
-  image1: string;
-  category?: string;
-  room: Room[];
+	id: string;
+	title: string;
+	address: string;
+	image1: string;
+	description: string;
+	category?: string;
+	tel: string;
+	length?: number;
+	accommodation: accommodation;
+	rooms: Room[];
 };
 
 export type ReservationInfo = {
-  id: string;
-  room_id: string;
-  capacity: "2";
-  start_date: string;
-  end_date: string;
-  room_price: number;
-  total_price: number;
+	id: string;
+	room_id: string;
+	capacity: "2";
+	start_date: string;
+	end_date: string;
+	room_price: number;
+	total_price: number;
 };
 
 export type AccommodationWithOption = {
-  accommodation: AccommodationInfo;
-  reservation: ReservationInfo;
+	accommodation: AccommodationInfo;
+	reservation: ReservationInfo;
 };
