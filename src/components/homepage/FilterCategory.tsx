@@ -14,7 +14,7 @@ const btnCustom = "p-2 rounded-full bg-gray-100 hover:brightness-90 absolute top
 export default function FilterCategory({ filters, onFilterChange }: FiltersArray) {
 	const [swiper, setSwiper] = useState<SwiperClass>();
 	const [activeFilter, setActiveFilter] = useState<string | null>(filters[0]);
-	
+
 	const handlePrev = () => {
 		swiper?.slidePrev();
 	};
