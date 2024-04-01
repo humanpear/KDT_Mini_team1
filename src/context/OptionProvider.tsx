@@ -2,7 +2,11 @@ import { ReactNode, createContext, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { formatDate, getStayDuration } from "../util/date";
 import { RangeKeyDict } from "react-date-range";
-import { AccommodationInfo, Room } from "../types/AccommodationInfo";
+import {
+  AccommodationInfo,
+  OptionInfo,
+  Room,
+} from "../types/AccommodationInfo";
 import { useQuery } from "@tanstack/react-query";
 import { getRoomInfo } from "../util/http";
 
@@ -20,6 +24,7 @@ export const OptionContext = createContext<{
   totalPrice: number;
   charge: number;
   finalPrice: number;
+  reservationRooms: OptionInfo[] | undefined;
   changeDate: (ranges: RangeKeyDict) => void;
   changeRoom: (value: string) => void;
   changeGuest: (value: number) => void;
@@ -43,6 +48,7 @@ export const OptionContext = createContext<{
   totalPrice: 0,
   charge: 0,
   finalPrice: 0,
+  reservationRooms: undefined,
   changeDate: () => {},
   changeRoom: () => {},
   changeGuest: () => {},
@@ -70,13 +76,15 @@ export default function OptionProvider({ product, children }: Props) {
 
   const selectedRoom = rooms.find((r) => r.max_capacity.toString() === room);
 
-  // 해당 방의 예약 정보 조회
-  // const { data } = useQuery({
-  //   queryKey: ["room", selectedRoom!.id],
-  //   queryFn: () => getRoomInfo(selectedRoom!.id),
-  // });
+  const { data } = useQuery({
+    queryKey: ["room", selectedRoom!.id],
+    queryFn: () => getRoomInfo(selectedRoom!.id),
+  });
 
-  // console.log(data);
+  const reservationRooms = data?.body.map((r: OptionInfo) => ({
+    ...r,
+    max_capacity: selectedRoom?.max_capacity,
+  }));
 
   const roomPrice = selectedRoom?.price;
 
@@ -137,6 +145,7 @@ export default function OptionProvider({ product, children }: Props) {
     totalPrice,
     charge,
     finalPrice,
+    reservationRooms,
     changeDate,
     changeRoom,
     changeGuest,
