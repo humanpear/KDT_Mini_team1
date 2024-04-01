@@ -18,16 +18,16 @@ export async function getAccommodations(
   let url;
 
   if (!category) {
-    url = `${import.meta.env.VITE_API_URL}/api/accommodations`;
+    url = `${import.meta.env.VITE_API_URL}/api/accommodations?`;
   } else {
     const categoryCode = categoryMap[category];
     url = `${
       import.meta.env.VITE_API_URL
-    }/api/accommodations/category/${categoryCode}`;
+    }/api/accommodations?category=${categoryCode}&`;
   }
 
   try {
-    const res = await fetch(url + `?page=${pageParam}`);
+    const res = await fetch(url + `page=${pageParam}`);
     const data = await res.json();
 
     return data.body;

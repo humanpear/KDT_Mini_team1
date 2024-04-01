@@ -3,6 +3,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { getAccommodations } from "../../util/http";
 import AccommodationCard from "../homepage/AccommodationCard";
 import { AccommodationInfo } from "../../types/AccommodationInfo";
+import LoadingSpinner from "../../UI/LoadingSpinner";
 
 type AccommodationListProps = {
 	filter: string;
@@ -45,7 +46,7 @@ export default function AccommodationList({ filter }: AccommodationListProps) {
 	}, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
 	if (status === "pending") {
-		return <p>Loading...</p>;
+		return <LoadingSpinner />;
 	}
 
 	if (status === "error") {
@@ -61,7 +62,7 @@ export default function AccommodationList({ filter }: AccommodationListProps) {
 					)}
 				</ul>
 			)}
-			{isFetchingNextPage && <h3>Loading...</h3>}
+			{isFetchingNextPage && <LoadingSpinner />}
 		</div>
 	);
 }
