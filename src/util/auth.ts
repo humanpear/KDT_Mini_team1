@@ -25,9 +25,7 @@ export async function getUser() {
 export async function login(
   email: string,
   password: string,
-  navigate: (arg: string) => void,
-  setIsLoading: (arg: boolean) => void,
-  setLoginUser: (arg: LoginUser) => void
+  setIsLoading: (arg: boolean) => void
 ) {
   setIsLoading(true);
   try {
@@ -48,12 +46,13 @@ export async function login(
 
     const data = await response.json();
 
-    if (data.result.result_code === 200) {
+    if (data.result.code === 200) {
       localStorage.setItem("access_token", data.body.access_token);
     }
-    const loginUser = await getUser();
-    setLoginUser(loginUser.body);
-    navigate("/");
+    // const loginUser = await getUser();
+    // setLoginUser(loginUser.body);
+    // navigate("/");
+    window.location.href = "/";
   } catch (error) {
     console.error(error);
   } finally {
@@ -84,18 +83,13 @@ export async function signup(
   setIsLoading(true);
 
   try {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/members/register`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(signupData),
-      }
-    );
-
-    console.log(response);
+    await fetch(`${import.meta.env.VITE_API_URL}/api/members/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(signupData),
+    });
   } catch (error) {
     console.error(error);
   } finally {

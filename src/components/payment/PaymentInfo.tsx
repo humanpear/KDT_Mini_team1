@@ -4,7 +4,7 @@ import { formatDate } from "../../util/date";
 import DatePicker from "../../UI/DatePicker";
 import DummyInfo from "./DummyInfo";
 import { FaMinus, FaPlus } from "react-icons/fa";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { OptionContext } from "../../context/OptionProvider";
 import { useUserStore } from "../../store/user";
 
@@ -22,6 +22,13 @@ export default function PaymentInfo() {
   } = useContext(OptionContext);
 
   const [guery] = useSearchParams();
+  const [agreement, setAgreement] = useState({
+    agree1: false,
+    agree2: false,
+    agree3: false,
+  });
+
+  const allChecked = agreement.agree1 && agreement.agree2 && agreement.agree3;
 
   const [openDate, toggleDate] = useToggle();
   const navigate = useNavigate();
@@ -145,10 +152,18 @@ export default function PaymentInfo() {
           </div>
         </div>
       </div>
-      <DummyInfo startDate={formatDate(date.startDate)} />
+      <DummyInfo
+        startDate={formatDate(date.startDate)}
+        agreement={agreement}
+        setAgreement={setAgreement}
+        allChecked={allChecked}
+      />
       <button
         onClick={handleClick}
-        className="w-[120px] py-4 bg-brand text-white rounded-lg"
+        className={`w-[120px] py-4 text-white rounded-lg ${
+          allChecked ? "bg-brand" : "bg-stone-200"
+        } transition`}
+        disabled={!allChecked}
       >
         예약 요청
       </button>

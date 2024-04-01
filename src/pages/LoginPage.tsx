@@ -1,16 +1,10 @@
 import { FormEvent, useState } from "react";
 import { PulseLoader } from "react-spinners";
-import { useNavigate } from "react-router-dom";
 import { login } from "../util/auth";
-import { useUserStore } from "../store/user";
 
 export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  const { setLoginUser } = useUserStore();
-
-  const navigate = useNavigate();
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -42,13 +36,7 @@ export default function LoginPage() {
       return;
     }
 
-    login(
-      data.email as string,
-      data.password as string,
-      navigate,
-      setIsLoading,
-      setLoginUser
-    );
+    login(data.email as string, data.password as string, setIsLoading);
   }
 
   return (
