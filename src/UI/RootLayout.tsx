@@ -10,7 +10,6 @@ export default function RootLayout() {
   const { data, isPending } = useQuery({
     queryKey: ["login"],
     queryFn: getUser,
-    gcTime: 0,
   });
 
   useEffect(() => {

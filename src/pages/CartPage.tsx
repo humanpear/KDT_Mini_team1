@@ -10,14 +10,11 @@ export default function CartPage() {
   const { data, isPending } = useQuery({
     queryKey: ["carts", member_id],
     queryFn: getCarts,
-    gcTime: 0,
   });
 
   if (isPending) {
     return <p>Loading...</p>;
   }
-
-  console.log(data);
 
   const cartItems = data.body.map((cartItem: CartItemWithOption) => {
     const newCartItem = {
