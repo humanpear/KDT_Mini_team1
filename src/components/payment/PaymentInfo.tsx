@@ -1,26 +1,14 @@
-import { useNavigate } from "react-router-dom";
-import { AccommodationInfo } from "../../types/AccommodationInfo";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToggle } from "../../hooks/useToggle";
 import { formatDate } from "../../util/date";
 import DatePicker from "../../UI/DatePicker";
 import DummyInfo from "./DummyInfo";
-import { useQuery } from "@tanstack/react-query";
-import { getCarts } from "../../util/http";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { useContext } from "react";
 import { OptionContext } from "../../context/OptionProvider";
 import { useUserStore } from "../../store/user";
 
-type Props = {
-  product: AccommodationInfo;
-};
-
-export default function PaymentInfo({ product }: Props) {
-  const { data: cartItems } = useQuery({
-    queryKey: ["carts"],
-    queryFn: getCarts,
-  });
-
+export default function PaymentInfo() {
   const member_id = useUserStore((state) => state.loginUser?.member_id);
 
   const {
@@ -28,24 +16,29 @@ export default function PaymentInfo({ product }: Props) {
     guest,
     selectedRoom,
     room,
-    roomPrice,
     finalPrice,
     changeGuest,
     changeRoom,
   } = useContext(OptionContext);
 
-  const [openDate, toggleDate] = useToggle();
+  const [guery] = useSearchParams();
 
+  const [openDate, toggleDate] = useToggle();
   const navigate = useNavigate();
+  const isActiveUp = +room > +guest;
+  const isActiveDown = 1 < +guest;
+  const activeBtn = "p-2 rounded-full bg-gray-200 hover:brightness-90";
+  const inactiveBtn =
+    "p-2 rounded-full border border-stone-200 text-stone-200 cursor-not-allowed w-[32px] h-[32px] box-border";
 
   async function handleClick() {
     let url;
     let request;
 
-    if (cartItems.body.find((item) => item.id === id)) {
+    if (guery.get("cartid")) {
       url = `${import.meta.env.VITE_API_URL}/api/payments/cart-reservation`;
       request = {
-        cart_id: id,
+        cart_id: +guery.get("cartid")!,
         reservation: {
           member_id,
           room_id: selectedRoom?.id,
@@ -135,14 +128,16 @@ export default function PaymentInfo({ product }: Props) {
             <div className="flex items-center w-[100px] justify-between">
               <button
                 onClick={() => changeGuest(1)}
-                className="p-2 rounded-full bg-gray-200"
+                className={isActiveUp ? activeBtn : inactiveBtn}
+                disabled={!isActiveUp}
               >
                 <FaPlus />
               </button>
               <p>{guest}명</p>
               <button
                 onClick={() => changeGuest(-1)}
-                className="p-2 rounded-full bg-gray-200"
+                className={isActiveDown ? activeBtn : inactiveBtn}
+                disabled={!isActiveDown}
               >
                 <FaMinus />
               </button>

@@ -2,10 +2,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { IoCartOutline } from "react-icons/io5";
 import { AccommodationInfo, Room } from "../../types/AccommodationInfo";
 import { useContext, useEffect, useRef, useState } from "react";
-import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
-import ko from "date-fns/locale/ko";
 import {
   MdOutlineKeyboardArrowRight,
   MdOutlineKeyboardArrowDown,
@@ -15,6 +13,7 @@ import { FaPlus, FaMinus } from "react-icons/fa6";
 import { formatDate, formattedDate } from "../../util/date";
 import { RiCloseLine } from "react-icons/ri";
 import { OptionContext } from "../../context/OptionProvider";
+import DatePicker from "../../UI/DatePicker";
 
 type Props = {
   accommodationData: AccommodationInfo;
@@ -38,9 +37,13 @@ export default function ReservationCard({ accommodationData }: Props) {
     selectedRoom,
     changeRoom,
     changeGuest,
-    changeDate,
     clearDate,
   } = useContext(OptionContext);
+
+  const isActiveUp = +room > +guest;
+  const isActiveDown = 1 < +guest;
+  const inactiveBtn =
+    "p-2 rounded-full border border-stone-200 text-stone-200 cursor-not-allowed";
 
   const [success, setSuccess] = useState(false);
 
@@ -190,14 +193,7 @@ export default function ReservationCard({ accommodationData }: Props) {
                 ref={dateRef}
                 className="z-10 absolute -top-1/2 -right-1/2 bg-white border shadow-md p-4"
               >
-                <DateRange
-                  locale={ko}
-                  ranges={[date]}
-                  onChange={changeDate}
-                  minDate={new Date()}
-                  months={2}
-                  direction="horizontal"
-                />
+                <DatePicker />
                 <div className="flex justify-end gap-6">
                   <button className="underline" onClick={clearDate}>
                     날짜지우기
@@ -238,14 +234,16 @@ export default function ReservationCard({ accommodationData }: Props) {
                     <div className="flex justify-between items-center gap-4">
                       <button
                         onClick={() => changeGuest(1)}
-                        className={btnCustom}
+                        className={isActiveUp ? btnCustom : inactiveBtn}
+                        disabled={!isActiveUp}
                       >
                         <FaPlus />
                       </button>
                       {guest}
                       <button
                         onClick={() => changeGuest(-1)}
-                        className={btnCustom}
+                        className={isActiveDown ? btnCustom : inactiveBtn}
+                        disabled={!isActiveDown}
                       >
                         <FaMinus />
                       </button>
