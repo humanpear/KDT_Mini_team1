@@ -25,9 +25,7 @@ export async function getUser() {
 export async function login(
   email: string,
   password: string,
-  navigate: (arg: string) => void,
-  setIsLoading: (arg: boolean) => void,
-  setLoginUser: (arg: LoginUser) => void
+  setIsLoading: (arg: boolean) => void
 ) {
   setIsLoading(true);
   try {
@@ -51,9 +49,10 @@ export async function login(
     if (data.result.code === 200) {
       localStorage.setItem("access_token", data.body.access_token);
     }
-    const loginUser = await getUser();
-    setLoginUser(loginUser.body);
-    navigate("/");
+    // const loginUser = await getUser();
+    // setLoginUser(loginUser.body);
+    // navigate("/");
+    window.location.href = "/";
   } catch (error) {
     console.error(error);
   } finally {
