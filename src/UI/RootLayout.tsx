@@ -16,6 +16,7 @@ export default function RootLayout() {
     if (data) {
       setLoginUser(data.body);
     }
+    // access_token 만료 시 파기하는 로직 추가해야함
   }, [setLoginUser, data]);
 
   return (

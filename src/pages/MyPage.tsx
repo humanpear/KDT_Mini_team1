@@ -3,17 +3,30 @@ import { useUserStore } from "../store/user";
 import { getReservations } from "../util/http";
 import AccommodationItem from "../UI/AccommodationItem";
 import { AccommodationWithOption } from "../types/AccommodationInfo";
+import ReservationNoItem from "../components/mypage/ReservationNoItem";
 
 export default function MyPage() {
   const { loginUser } = useUserStore();
-  const { data: reservations, isLoading } = useQuery({
-    queryKey: ["reservations"],
+  const { data, isPending } = useQuery({
+    queryKey: ["reservations", loginUser?.member_id],
     queryFn: getReservations,
   });
 
-  if (isLoading || !loginUser) {
+  if (isPending || !loginUser) {
     return <p>Loading...</p>;
   }
+
+  const reservations = data.body.map((cartItem: AccommodationWithOption) => {
+    const newReservation = {
+      ...cartItem,
+      option: {
+        ...cartItem.reservation,
+      },
+    };
+    delete newReservation.reservation;
+
+    return newReservation;
+  });
 
   return (
     <section className="w-[800px] mx-auto py-16">
@@ -39,10 +52,11 @@ export default function MyPage() {
         </div>
         <p className="font-bold text-xl pt-6 pb-4">예약내역</p>
         <ul className="flex flex-col gap-4">
-          {reservations.body.length > 0 &&
-            reservations.body.map((reservation: AccommodationWithOption) => (
+          {reservations.length === 0 && <ReservationNoItem />}
+          {reservations.length > 0 &&
+            reservations.map((reservation: AccommodationWithOption) => (
               <AccommodationItem
-                key={reservation.reservation.id}
+                key={reservation.option?.id}
                 item={reservation}
                 type="reservation"
               />

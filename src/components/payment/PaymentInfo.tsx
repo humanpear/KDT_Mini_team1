@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { AccommodationInfo } from "../../types/AccommodationInfo";
+import { CartItemWithOption } from "../../types/AccommodationInfo";
 import { useToggle } from "../../hooks/useToggle";
 import { formatDate } from "../../util/date";
 import DatePicker from "../../UI/DatePicker";
@@ -11,41 +11,47 @@ import { useContext } from "react";
 import { OptionContext } from "../../context/OptionProvider";
 import { useUserStore } from "../../store/user";
 
-type Props = {
-  product: AccommodationInfo;
-};
-
-export default function PaymentInfo({ product }: Props) {
+export default function PaymentInfo() {
+  const member_id = useUserStore((state) => state.loginUser?.member_id);
   const { data: cartItems } = useQuery({
-    queryKey: ["carts"],
+    queryKey: ["carts", member_id],
     queryFn: getCarts,
   });
-
-  const member_id = useUserStore((state) => state.loginUser?.member_id);
 
   const {
     date,
     guest,
     selectedRoom,
     room,
-    roomPrice,
     finalPrice,
     changeGuest,
     changeRoom,
   } = useContext(OptionContext);
 
   const [openDate, toggleDate] = useToggle();
-
   const navigate = useNavigate();
+  const isActiveUp = +room > +guest;
+  const isActiveDown = 1 < +guest;
+  const activeBtn = "p-2 rounded-full bg-gray-200 hover:brightness-90";
+  const inactiveBtn =
+    "p-2 rounded-full border border-stone-200 text-stone-200 cursor-not-allowed w-[32px] h-[32px] box-border";
 
   async function handleClick() {
+    const includedCartItem = cartItems.body.find(
+      (item: CartItemWithOption) =>
+        item.cart?.max_capacity === +room &&
+        item.cart.capacity === +guest &&
+        item.cart.start_date === formatDate(date.startDate) &&
+        item.cart.end_date === formatDate(date.endDate)
+    );
+
     let url;
     let request;
 
-    if (cartItems.body.find((item) => item.id === id)) {
+    if (includedCartItem) {
       url = `${import.meta.env.VITE_API_URL}/api/payments/cart-reservation`;
       request = {
-        cart_id: id,
+        cart_id: includedCartItem.cart.id,
         reservation: {
           member_id,
           room_id: selectedRoom?.id,
@@ -135,14 +141,16 @@ export default function PaymentInfo({ product }: Props) {
             <div className="flex items-center w-[100px] justify-between">
               <button
                 onClick={() => changeGuest(1)}
-                className="p-2 rounded-full bg-gray-200"
+                className={isActiveUp ? activeBtn : inactiveBtn}
+                disabled={!isActiveUp}
               >
                 <FaPlus />
               </button>
               <p>{guest}명</p>
               <button
                 onClick={() => changeGuest(-1)}
-                className="p-2 rounded-full bg-gray-200"
+                className={isActiveDown ? activeBtn : inactiveBtn}
+                disabled={!isActiveDown}
               >
                 <FaMinus />
               </button>

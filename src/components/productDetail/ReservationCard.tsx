@@ -42,6 +42,11 @@ export default function ReservationCard({ accommodationData }: Props) {
     clearDate,
   } = useContext(OptionContext);
 
+  const isActiveUp = +room > +guest;
+  const isActiveDown = 1 < +guest;
+  const inactiveBtn =
+    "p-2 rounded-full border border-stone-200 text-stone-200 cursor-not-allowed";
+
   const [success, setSuccess] = useState(false);
 
   const roomRef = useRef(null);
@@ -238,14 +243,16 @@ export default function ReservationCard({ accommodationData }: Props) {
                     <div className="flex justify-between items-center gap-4">
                       <button
                         onClick={() => changeGuest(1)}
-                        className={btnCustom}
+                        className={isActiveUp ? btnCustom : inactiveBtn}
+                        disabled={!isActiveUp}
                       >
                         <FaPlus />
                       </button>
                       {guest}
                       <button
                         onClick={() => changeGuest(-1)}
-                        className={btnCustom}
+                        className={isActiveDown ? btnCustom : inactiveBtn}
+                        disabled={!isActiveDown}
                       >
                         <FaMinus />
                       </button>

@@ -14,7 +14,7 @@ export default function PriceInfo({ product }: Props) {
 
   return (
     <div className="basis-1/2 flex justify-end">
-      <div className="w-[460px] h-min p-6 border rounded-lg sticky top-[200px]">
+      <div className="w-[460px] h-min p-6 border rounded-lg sticky top-[200px] shadow-basic">
         <div className="flex border-b pb-6">
           <img
             className="w-[100px] h-[100px] rounded-lg object-cover shrink-0"

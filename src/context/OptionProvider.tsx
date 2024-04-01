@@ -3,6 +3,8 @@ import { useSearchParams } from "react-router-dom";
 import { formatDate, getStayDuration } from "../util/date";
 import { RangeKeyDict } from "react-date-range";
 import { AccommodationInfo, Room } from "../types/AccommodationInfo";
+import { useQuery } from "@tanstack/react-query";
+import { getRoomInfo } from "../util/http";
 
 export const OptionContext = createContext<{
   date: {
@@ -68,6 +70,14 @@ export default function OptionProvider({ product, children }: Props) {
 
   const selectedRoom = rooms.find((r) => r.max_capacity.toString() === room);
 
+  // 해당 방의 예약 정보 조회
+  // const { data } = useQuery({
+  //   queryKey: ["room", selectedRoom!.id],
+  //   queryFn: () => getRoomInfo(selectedRoom!.id),
+  // });
+
+  // console.log(data);
+
   const roomPrice = selectedRoom?.price;
 
   const stayDuration = getStayDuration(date.startDate, date.endDate);
@@ -88,6 +98,12 @@ export default function OptionProvider({ product, children }: Props) {
   };
 
   const changeRoom = (value: string) => {
+    if (value === "2" && guest === "4") {
+      changeGuest(-2);
+    }
+    if (value === "2" && guest === "3") {
+      changeGuest(-1);
+    }
     setRoom(value);
     setQuery((prevQuery) => ({
       ...Object.fromEntries([...prevQuery]),
@@ -96,13 +112,10 @@ export default function OptionProvider({ product, children }: Props) {
   };
 
   const changeGuest = (value: number) => {
-    const newGuest = (+guest + value).toString();
-    const isValid = value === 1 ? +room > +guest : 1 < +guest;
-
-    setGuest((prev) => (isValid ? (+prev + value).toString() : prev));
+    setGuest((prev) => (+prev! + value).toString());
     setQuery((prevQuery) => ({
       ...Object.fromEntries([...prevQuery]),
-      ...(isValid && { guest: newGuest }),
+      guest: (+prevQuery.get("guest")! + value).toString(),
     }));
   };
 
