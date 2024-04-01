@@ -2,22 +2,25 @@ import { Outlet } from "react-router-dom";
 import Header from "../components/layout/Header";
 import { useEffect } from "react";
 import { useUserStore } from "../store/user";
-import { useQuery } from "@tanstack/react-query";
 import { getUser } from "../util/auth";
+import { useQuery } from "@tanstack/react-query";
 
 export default function RootLayout() {
   const { setLoginUser } = useUserStore();
-  const { data } = useQuery({
+  const { data, isPending } = useQuery({
     queryKey: ["login"],
     queryFn: getUser,
+    gcTime: 0,
   });
 
   useEffect(() => {
-    if (data) {
+    if (!isPending && data) {
       setLoginUser(data.body);
     }
-    // access_token 만료 시 파기하는 로직 추가해야함
-  }, [setLoginUser, data]);
+    if (!isPending && !data) {
+      localStorage.removeItem("access_token");
+    }
+  }, [setLoginUser, data, isPending]);
 
   return (
     <section>

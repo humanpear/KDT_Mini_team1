@@ -10,11 +10,14 @@ export default function MyPage() {
   const { data, isPending } = useQuery({
     queryKey: ["reservations", loginUser?.member_id],
     queryFn: getReservations,
+    gcTime: 0,
   });
 
   if (isPending || !loginUser) {
     return <p>Loading...</p>;
   }
+
+  console.log(data);
 
   const reservations = data.body.map((cartItem: AccommodationWithOption) => {
     const newReservation = {

@@ -7,12 +7,13 @@ import { useUserStore } from "../store/user";
 
 export default function CartPage() {
   const member_id = useUserStore((state) => state.loginUser?.member_id);
-  const { data, isLoading } = useQuery({
+  const { data, isPending } = useQuery({
     queryKey: ["carts", member_id],
     queryFn: getCarts,
+    gcTime: 0,
   });
 
-  if (isLoading) {
+  if (isPending) {
     return <p>Loading...</p>;
   }
 

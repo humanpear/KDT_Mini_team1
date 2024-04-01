@@ -8,7 +8,7 @@ import OptionProvider from "../context/OptionProvider";
 
 export default function PaymentPage() {
   const { id } = useParams();
-  const { data: product, isLoading } = useQuery({
+  const { data: product, isPending } = useQuery({
     queryKey: ["accommodation", id],
     queryFn: () => getAccommodation(id as string),
   });
@@ -18,7 +18,7 @@ export default function PaymentPage() {
     window.scrollTo(0, 0);
   }, []);
 
-  if (isLoading) {
+  if (isPending) {
     return <p>Loading...</p>;
   }
 
