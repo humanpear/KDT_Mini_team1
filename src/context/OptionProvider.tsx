@@ -3,6 +3,8 @@ import { useSearchParams } from "react-router-dom";
 import { formatDate, getStayDuration } from "../util/date";
 import { RangeKeyDict } from "react-date-range";
 import { AccommodationInfo, Room } from "../types/AccommodationInfo";
+import { useQuery } from "@tanstack/react-query";
+import { getRoomInfo } from "../util/http";
 
 export const OptionContext = createContext<{
   date: {
@@ -67,6 +69,14 @@ export default function OptionProvider({ product, children }: Props) {
   const { rooms } = product;
 
   const selectedRoom = rooms.find((r) => r.max_capacity.toString() === room);
+
+  // 해당 방의 예약 정보 조회
+  // const { data } = useQuery({
+  //   queryKey: ["room", selectedRoom!.id],
+  //   queryFn: () => getRoomInfo(selectedRoom!.id),
+  // });
+
+  // console.log(data);
 
   const roomPrice = selectedRoom?.price;
 

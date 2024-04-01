@@ -34,7 +34,7 @@ export default function PaymentInfo() {
   const isActiveDown = 1 < +guest;
   const activeBtn = "p-2 rounded-full bg-gray-200 hover:brightness-90";
   const inactiveBtn =
-    "p-2 rounded-full border border-stone-200 text-stone-200 cursor-not-allowed";
+    "p-2 rounded-full border border-stone-200 text-stone-200 cursor-not-allowed w-[32px] h-[32px] box-border";
 
   async function handleClick() {
     const includedCartItem = cartItems.body.find(

@@ -108,3 +108,17 @@ export async function removeCartItem(cartid: number) {
     console.error("Error:", err);
   }
 }
+
+export async function getRoomInfo(roomid: number) {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/reservations/room/${roomid}`,
+      getConfig
+    );
+    const data = await res.json();
+
+    return data;
+  } catch (err) {
+    console.error("Error:", err);
+  }
+}
