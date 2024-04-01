@@ -1,11 +1,8 @@
-import { useNavigate } from "react-router-dom";
-import { CartItemWithOption } from "../../types/AccommodationInfo";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useToggle } from "../../hooks/useToggle";
 import { formatDate } from "../../util/date";
 import DatePicker from "../../UI/DatePicker";
 import DummyInfo from "./DummyInfo";
-import { useQuery } from "@tanstack/react-query";
-import { getCarts } from "../../util/http";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { useContext } from "react";
 import { OptionContext } from "../../context/OptionProvider";
@@ -13,10 +10,6 @@ import { useUserStore } from "../../store/user";
 
 export default function PaymentInfo() {
   const member_id = useUserStore((state) => state.loginUser?.member_id);
-  const { data: cartItems } = useQuery({
-    queryKey: ["carts", member_id],
-    queryFn: getCarts,
-  });
 
   const {
     date,
@@ -28,6 +21,8 @@ export default function PaymentInfo() {
     changeRoom,
   } = useContext(OptionContext);
 
+  const [guery] = useSearchParams();
+
   const [openDate, toggleDate] = useToggle();
   const navigate = useNavigate();
   const isActiveUp = +room > +guest;
@@ -37,21 +32,13 @@ export default function PaymentInfo() {
     "p-2 rounded-full border border-stone-200 text-stone-200 cursor-not-allowed w-[32px] h-[32px] box-border";
 
   async function handleClick() {
-    const includedCartItem = cartItems.body.find(
-      (item: CartItemWithOption) =>
-        item.cart?.max_capacity === +room &&
-        item.cart.capacity === +guest &&
-        item.cart.start_date === formatDate(date.startDate) &&
-        item.cart.end_date === formatDate(date.endDate)
-    );
-
     let url;
     let request;
 
-    if (includedCartItem) {
+    if (guery.get("cartid")) {
       url = `${import.meta.env.VITE_API_URL}/api/payments/cart-reservation`;
       request = {
-        cart_id: includedCartItem.cart.id,
+        cart_id: +guery.get("cartid")!,
         reservation: {
           member_id,
           room_id: selectedRoom?.id,

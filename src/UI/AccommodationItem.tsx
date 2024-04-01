@@ -66,7 +66,7 @@ export default function AccommodationItem({ item, type }: Props) {
         </p>
         {type === "cart" && (
           <Link
-            to={`/payment/${id}?check_in=${start_date}&check_out=${end_date}&guest=${guest}&room=${room}`}
+            to={`/payment/${id}?check_in=${start_date}&check_out=${end_date}&guest=${guest}&room=${room}&cartid=${option_id}`}
             className="bg-brand text-white py-1 px-2 rounded-lg"
           >
             예약
