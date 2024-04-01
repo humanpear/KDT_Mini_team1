@@ -3,7 +3,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { getAccommodations } from "../../util/http";
 import AccommodationCard from "../homepage/AccommodationCard";
 import { AccommodationInfo } from "../../types/AccommodationInfo";
-import { ClipLoader } from "react-spinners";
+import LoadingSpinner from "../../UI/LoadingSpinner";
 
 type AccommodationListProps = {
 	filter: string;
@@ -46,11 +46,7 @@ export default function AccommodationList({ filter }: AccommodationListProps) {
 	}, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
 	if (status === "pending") {
-		return (
-			<div className="flex justify-center">
-				<ClipLoader color="#FF385C" />
-			</div>
-		);
+		return <LoadingSpinner />;
 	}
 
 	if (status === "error") {
@@ -66,7 +62,7 @@ export default function AccommodationList({ filter }: AccommodationListProps) {
 					)}
 				</ul>
 			)}
-			<div className="my-4 flex justify-center">{isFetchingNextPage && <ClipLoader color="#FF385C" />}</div>
+			{isFetchingNextPage && <LoadingSpinner />}
 		</div>
 	);
 }
