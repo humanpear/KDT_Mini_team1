@@ -16,6 +16,8 @@ export default function CartPage() {
     return <p>Loading...</p>;
   }
 
+  console.log(data);
+
   const cartItems = data.body.map((cartItem: CartItemWithOption) => {
     const newCartItem = {
       ...cartItem,

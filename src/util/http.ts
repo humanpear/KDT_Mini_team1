@@ -112,7 +112,7 @@ export async function removeCartItem(cartid: number) {
 export async function getRoomInfo(roomid: number) {
   try {
     const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/reservations/room/${roomid}`,
+      `${import.meta.env.VITE_API_URL}/api/reservations?room=${roomid}`,
       getConfig
     );
     const data = await res.json();

@@ -1,10 +1,45 @@
+import AllCheckBox from "../../icons/AllCheckBox";
+import CheckBox from "../../icons/CheckBox";
 import TimerIcon from "../../icons/TimerIcon";
+
+type Agreement = { agree1: boolean; agree2: boolean; agree3: boolean };
 
 type Props = {
   startDate: string;
+  agreement: Agreement;
+  allChecked: boolean;
+  setAgreement: (value: Agreement | ((value: Agreement) => Agreement)) => void;
 };
 
-export default function DummyInfo({ startDate }: Props) {
+export default function DummyInfo({
+  startDate,
+  agreement,
+  allChecked,
+  setAgreement,
+}: Props) {
+  function allCheck() {
+    if (!agreement.agree1 || !agreement.agree2 || !agreement.agree3) {
+      setAgreement({
+        agree1: true,
+        agree2: true,
+        agree3: true,
+      });
+    } else {
+      setAgreement({
+        agree1: false,
+        agree2: false,
+        agree3: false,
+      });
+    }
+  }
+
+  function check(type: keyof Agreement) {
+    setAgreement((prev) => ({
+      ...prev,
+      [type]: !prev[type],
+    }));
+  }
+
   return (
     <>
       <div className="border-b py-6">
@@ -32,6 +67,44 @@ export default function DummyInfo({ startDate }: Props) {
             호스트가 24시간 이내 예약 요청을 수락하기 전까지는 예약이 아직
             확정된 것이 아닙니다. 예약 확정 전까지는 요금이 청구되지 않습니다.
           </p>
+        </div>
+      </div>
+      <div className="pt-6 flex flex-col gap-4">
+        <div
+          className="flex items-center cursor-pointer w-max"
+          onClick={allCheck}
+        >
+          <AllCheckBox
+            className={`text-2xl transition ${!allChecked && "text-stone-300"}`}
+          />
+          <p className="ml-2 font-bold text-lg">필수 약관 전체 동의</p>
+        </div>
+        <div
+          className={`flex items-center cursor-pointer w-max ml-1 transition ${
+            !agreement.agree1 && "text-stone-300"
+          }`}
+          onClick={() => check("agree1")}
+        >
+          <CheckBox />
+          <p className="ml-2">[필수] 만 14세 이상 이용 동의</p>
+        </div>
+        <div
+          className={`flex items-center cursor-pointer w-max ml-1 transition ${
+            !agreement.agree2 && "text-stone-300"
+          }`}
+          onClick={() => check("agree2")}
+        >
+          <CheckBox />
+          <p className="ml-2">[필수] 개인정보 수집 및 이용</p>
+        </div>
+        <div
+          className={`flex items-center cursor-pointer w-max ml-1 transition ${
+            !agreement.agree3 && "text-stone-300"
+          }`}
+          onClick={() => check("agree3")}
+        >
+          <CheckBox />
+          <p className="ml-2">[필수] 개인정보 제 3자 제공</p>
         </div>
       </div>
       <div className="py-6">
