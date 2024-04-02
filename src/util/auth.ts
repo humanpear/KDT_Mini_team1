@@ -25,9 +25,11 @@ export async function getUser() {
 export async function login({
   email,
   password,
+  setErrorMessage,
 }: {
   email: string;
   password: string;
+  setErrorMessage: (arg: string) => void;
 }) {
   try {
     const response = await fetch(
@@ -41,24 +43,19 @@ export async function login({
       }
     );
 
-    if (!response.ok) {
-      console.log(response);
-    }
-
     const data = await response.json();
 
     if (data.result.code === 200) {
       localStorage.setItem("access_token", data.body.access_token);
     } else {
-      console.log(data);
-      return;
+      throw new Error("로그인에 실패하였습니다.");
     }
     // const loginUser = await getUser();
     // setLoginUser(loginUser.body);
     // navigate("/");
     window.location.href = "/";
   } catch (error) {
-    console.error(error);
+    setErrorMessage(error.message);
   }
 }
 

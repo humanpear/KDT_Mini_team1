@@ -39,7 +39,11 @@ export default function LoginPage() {
       return;
     }
 
-    mutate({ email: data.email as string, password: data.password as string });
+    mutate({
+      email: data.email as string,
+      password: data.password as string,
+      setErrorMessage,
+    });
   }
 
   return (
