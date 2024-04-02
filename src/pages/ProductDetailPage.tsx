@@ -5,6 +5,7 @@ import { getAccommodation } from "../util/http";
 import { useParams } from "react-router-dom";
 import OptionProvider from "../context/OptionProvider";
 import ReservationCard from "../components/productDetail/ReservationCard";
+import LoadingSpinner from '../UI/LoadingSpinner';
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -14,7 +15,7 @@ export default function ProductDetailPage() {
   });
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <LoadingSpinner />;
   }
 
   return (
