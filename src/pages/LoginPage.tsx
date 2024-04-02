@@ -1,10 +1,16 @@
 import { FormEvent, useState } from "react";
 import { PulseLoader } from "react-spinners";
 import { login } from "../util/auth";
+import { useMutation } from "@tanstack/react-query";
 
 export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: login,
+  });
+
+  console.log(isError);
+  console.log(error);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -36,7 +42,11 @@ export default function LoginPage() {
       return;
     }
 
-    login(data.email as string, data.password as string, setIsLoading);
+    mutate({
+      email: data.email as string,
+      password: data.password as string,
+      setErrorMessage,
+    });
   }
 
   return (
@@ -68,9 +78,9 @@ export default function LoginPage() {
           )}
           <button
             className="bg-[#F42C5B] py-3 rounded-lg text-white"
-            disabled={isLoading}
+            disabled={isPending}
           >
-            {isLoading ? (
+            {isPending ? (
               <PulseLoader className="translate-y-[4px]" color="white" />
             ) : (
               "로그인"
