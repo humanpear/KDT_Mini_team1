@@ -22,12 +22,13 @@ export async function getUser() {
   }
 }
 
-export async function login(
-  email: string,
-  password: string,
-  setIsLoading: (arg: boolean) => void
-) {
-  setIsLoading(true);
+export async function login({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) {
   try {
     const response = await fetch(
       `${import.meta.env.VITE_API_URL}/api/members/login`,
@@ -41,13 +42,16 @@ export async function login(
     );
 
     if (!response.ok) {
-      return;
+      console.log(response);
     }
 
     const data = await response.json();
 
     if (data.result.code === 200) {
       localStorage.setItem("access_token", data.body.access_token);
+    } else {
+      console.log(data);
+      return;
     }
     // const loginUser = await getUser();
     // setLoginUser(loginUser.body);
@@ -55,8 +59,6 @@ export async function login(
     window.location.href = "/";
   } catch (error) {
     console.error(error);
-  } finally {
-    setIsLoading(false);
   }
 }
 
