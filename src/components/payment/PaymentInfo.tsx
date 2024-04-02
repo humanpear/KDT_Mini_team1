@@ -17,6 +17,8 @@ export default function PaymentInfo() {
     selectedRoom,
     room,
     finalPrice,
+    isInvalidDate,
+    isSameDate,
     changeGuest,
     changeRoom,
   } = useContext(OptionContext);
@@ -29,6 +31,7 @@ export default function PaymentInfo() {
   });
 
   const allChecked = agreement.agree1 && agreement.agree2 && agreement.agree3;
+  const allDone = allChecked && !isInvalidDate && !isSameDate;
 
   const [openDate, toggleDate] = useToggle();
   const navigate = useNavigate();
@@ -108,7 +111,7 @@ export default function PaymentInfo() {
           <div className="flex justify-between items-center">
             <div>
               <p>날짜</p>
-              <p>
+              <p className={isInvalidDate ? "text-brand" : ""}>
                 {formatDate(date.startDate)} ~ {formatDate(date.endDate)}
               </p>
             </div>
@@ -117,7 +120,7 @@ export default function PaymentInfo() {
             </button>
             {openDate && (
               <div
-                className="fixed top-0 left-0 w-full h-full bg-black/70 flex justify-center items-center z-10"
+                className="fixed top-0 left-0 w-full h-full bg-black/70 flex flex-col justify-center items-center z-10"
                 onClick={(event) => {
                   if (event.target === event.currentTarget) {
                     toggleDate();
@@ -125,13 +128,16 @@ export default function PaymentInfo() {
                 }}
               >
                 <DatePicker />
+                {isInvalidDate && (
+                  <p className="bg-white w-[664px] text-center pb-2 text-brand">
+                    선택불가능한 날짜입니다.
+                  </p>
+                )}
               </div>
             )}
           </div>
           <div className="flex justify-between items-center">
-            <div>
-              <p>인원</p>
-            </div>
+            <p>인원</p>
             <div className="flex items-center w-[100px] justify-between">
               <button
                 onClick={() => changeGuest(1)}
@@ -150,6 +156,9 @@ export default function PaymentInfo() {
               </button>
             </div>
           </div>
+          {isInvalidDate && (
+            <p className="text-brand">선택 불가능한 날짜입니다.</p>
+          )}
         </div>
       </div>
       <DummyInfo
@@ -158,12 +167,15 @@ export default function PaymentInfo() {
         setAgreement={setAgreement}
         allChecked={allChecked}
       />
+      {(isInvalidDate || isSameDate) && (
+        <p className="text-brand mb-2">선택하신 날짜를 변경해주세요.</p>
+      )}
       <button
         onClick={handleClick}
         className={`w-[120px] py-4 text-white rounded-lg ${
-          allChecked ? "bg-brand" : "bg-stone-200"
+          allDone ? "bg-brand" : "bg-stone-200"
         } transition`}
-        disabled={!allChecked}
+        disabled={!allDone}
       >
         예약 요청
       </button>

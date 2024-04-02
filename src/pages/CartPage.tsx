@@ -4,6 +4,7 @@ import CartNoItem from "../components/cart/CartNoItem";
 import AccommodationItem from "../UI/AccommodationItem";
 import { CartItemWithOption } from "../types/AccommodationInfo";
 import { useUserStore } from "../store/user";
+import LoadingSpinner from "../UI/LoadingSpinner";
 
 export default function CartPage() {
   const member_id = useUserStore((state) => state.loginUser?.member_id);
@@ -12,11 +13,7 @@ export default function CartPage() {
     queryFn: getCarts,
   });
 
-  if (isPending) {
-    return <p>Loading...</p>;
-  }
-
-  const cartItems = data.body.map((cartItem: CartItemWithOption) => {
+  const cartItems = data?.body.map((cartItem: CartItemWithOption) => {
     const newCartItem = {
       ...cartItem,
       option: {
@@ -31,9 +28,11 @@ export default function CartPage() {
   return (
     <section className="w-[800px] mx-auto py-16">
       <p className="text-2xl font-bold text-center mb-4">장바구니</p>
-      {cartItems.length === 0 && <CartNoItem />}
+      {isPending && <LoadingSpinner />}
+      {!isPending && cartItems.length === 0 && <CartNoItem />}
       <ul className="flex flex-col gap-4">
-        {cartItems.length > 0 &&
+        {!isPending &&
+          cartItems.length > 0 &&
           cartItems.map((cartItem: CartItemWithOption) => (
             <AccommodationItem
               key={cartItem.option!.id}
