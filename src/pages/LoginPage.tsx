@@ -5,9 +5,12 @@ import { useMutation } from "@tanstack/react-query";
 
 export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState("");
-  const { mutate, isPending } = useMutation({
+  const { mutate, isPending, isError, error } = useMutation({
     mutationFn: login,
   });
+
+  console.log(isError);
+  console.log(error);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();

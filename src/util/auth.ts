@@ -2,24 +2,23 @@ import { LoginUser, SignUpData } from "../types/user";
 import { redirect } from "react-router";
 
 export async function getUser() {
-  try {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/members/my-page`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      }
-    );
-
-    const data = await response.json();
-
-    return data;
-  } catch (error) {
-    console.error(error);
+  if (!localStorage.getItem("access_token")) {
+    return null;
   }
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/members/my-page`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    }
+  );
+
+  const data = await response.json();
+
+  return data;
 }
 
 export async function login({
@@ -55,7 +54,9 @@ export async function login({
     // navigate("/");
     window.location.href = "/";
   } catch (error) {
-    setErrorMessage(error.message);
+    if (error instanceof Error) {
+      setErrorMessage(error.message);
+    }
   }
 }
 
