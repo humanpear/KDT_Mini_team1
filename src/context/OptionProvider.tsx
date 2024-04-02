@@ -9,6 +9,7 @@ import {
 } from "../types/AccommodationInfo";
 import { useQuery } from "@tanstack/react-query";
 import { getRoomInfo } from "../util/http";
+import { addDays } from "date-fns";
 
 export const OptionContext = createContext<{
   date: {
@@ -24,7 +25,9 @@ export const OptionContext = createContext<{
   totalPrice: number;
   charge: number;
   finalPrice: number;
-  reservationRooms: OptionInfo[] | undefined;
+  reservedDates: string[];
+  isInvalidDate: boolean;
+  isSameDate: boolean;
   changeDate: (ranges: RangeKeyDict) => void;
   changeRoom: (value: string) => void;
   changeGuest: (value: number) => void;
@@ -48,7 +51,9 @@ export const OptionContext = createContext<{
   totalPrice: 0,
   charge: 0,
   finalPrice: 0,
-  reservationRooms: undefined,
+  reservedDates: [],
+  isInvalidDate: false,
+  isSameDate: false,
   changeDate: () => {},
   changeRoom: () => {},
   changeGuest: () => {},
@@ -85,6 +90,35 @@ export default function OptionProvider({ product, children }: Props) {
     ...r,
     max_capacity: selectedRoom?.max_capacity,
   }));
+
+  const disabledDates = reservationRooms?.map((r: OptionInfo) => ({
+    startDate: new Date(r.start_date),
+    endDate: new Date(r.end_date),
+  }));
+
+  function getAllDatesBetween(startDate: Date, endDate: Date) {
+    const dates = [];
+    let currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+      dates.push(formatDate(currentDate));
+      currentDate = addDays(currentDate, 1);
+    }
+
+    return dates;
+  }
+
+  const reservedDates = disabledDates
+    ?.map((d: { startDate: Date; endDate: Date }) =>
+      getAllDatesBetween(d.startDate, d.endDate)
+    )
+    .flat();
+
+  const isInvalidDate = getAllDatesBetween(date.startDate, date.endDate).some(
+    (item) => reservedDates?.includes(item)
+  );
+
+  const isSameDate = formatDate(date.startDate) === formatDate(date.endDate);
 
   const roomPrice = selectedRoom?.price;
 
@@ -145,7 +179,9 @@ export default function OptionProvider({ product, children }: Props) {
     totalPrice,
     charge,
     finalPrice,
-    reservationRooms,
+    reservedDates,
+    isInvalidDate,
+    isSameDate,
     changeDate,
     changeRoom,
     changeGuest,
