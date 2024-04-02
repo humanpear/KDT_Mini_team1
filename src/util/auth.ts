@@ -70,7 +70,13 @@ export async function logout(
   navigate("/login");
 }
 
-export async function signup(signupData: SignUpData) {
+export async function signup({
+  signupData,
+  navigate,
+}: {
+  signupData: SignUpData;
+  navigate: (arg: string) => void;
+}) {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/api/members/register`,
     {
@@ -85,6 +91,7 @@ export async function signup(signupData: SignUpData) {
   if (!response.ok) {
     throw new Error("회원가입에 실패했습니다.");
   }
+  navigate("/login");
 }
 
 export function getAuthToken() {

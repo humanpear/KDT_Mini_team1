@@ -3,10 +3,12 @@ import ImageUpload from "../components/signup/ImageUpload";
 import { PulseLoader } from "react-spinners";
 import { signup } from "../util/auth";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 export default function SignupPage() {
   const [file, setFile] = useState<File>();
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: signup,
@@ -85,7 +87,7 @@ export default function SignupPage() {
         "https://github.com/humanpear/KDT_Mini_team1/assets/102540636/54738902-5dfd-4cc9-8da4-68bff10df040",
     };
 
-    mutate(signupData);
+    mutate({ signupData, navigate });
   };
 
   return (
