@@ -14,6 +14,7 @@ import { formatDate, formattedDate } from "../../util/date";
 import { RiCloseLine } from "react-icons/ri";
 import { OptionContext } from "../../context/OptionProvider";
 import DatePicker from "../../UI/DatePicker";
+import { ACCESS_TOKEN } from "../../util/auth";
 
 type Props = {
   accommodationData: AccommodationInfo;
@@ -104,7 +105,7 @@ export default function ReservationCard({ accommodationData }: Props) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
       },
       body: JSON.stringify({
         room_id: selectedRoom?.id,

@@ -1,12 +1,24 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import ImageUpload from "../components/signup/ImageUpload";
 import { PulseLoader } from "react-spinners";
 import { signup } from "../util/auth";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 export default function SignupPage() {
   const [file, setFile] = useState<File>();
   const [errorMessage, setErrorMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: signup,
+  });
+
+  useEffect(() => {
+    if (isError) {
+      setErrorMessage(error.message);
+    }
+  }, [isError, error]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -75,7 +87,7 @@ export default function SignupPage() {
         "https://github.com/humanpear/KDT_Mini_team1/assets/102540636/54738902-5dfd-4cc9-8da4-68bff10df040",
     };
 
-    signup(signupData, setIsLoading);
+    mutate({ signupData, navigate });
   };
 
   return (
@@ -129,9 +141,9 @@ export default function SignupPage() {
           )}
           <button
             className="bg-[#F42C5B] py-3 rounded-lg text-white"
-            disabled={isLoading}
+            disabled={isPending}
           >
-            {isLoading ? (
+            {isPending ? (
               <PulseLoader className="translate-y-[4px]" color="white" />
             ) : (
               "회원가입"

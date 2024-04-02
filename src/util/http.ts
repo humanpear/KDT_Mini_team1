@@ -1,5 +1,6 @@
 import { QueryClient } from "@tanstack/react-query";
 import { categoryMap } from "../pages/HomePage";
+import { ACCESS_TOKEN } from "./auth";
 
 export const queryClient = new QueryClient();
 
@@ -7,7 +8,7 @@ const getConfig = {
   method: "GET",
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
   },
 };
 
@@ -97,7 +98,7 @@ export async function removeCartItem(cartid: number) {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
       },
     });
   } catch (err) {
