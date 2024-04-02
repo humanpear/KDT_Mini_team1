@@ -1,8 +1,10 @@
 import { LoginUser, SignUpData } from "../types/user";
 import { redirect } from "react-router";
 
+export const ACCESS_TOKEN = "access_token";
+
 export async function getUser() {
-  if (!localStorage.getItem("access_token")) {
+  if (!localStorage.getItem(ACCESS_TOKEN)) {
     return null;
   }
   const response = await fetch(
@@ -11,7 +13,7 @@ export async function getUser() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
       },
     }
   );
@@ -24,40 +26,32 @@ export async function getUser() {
 export async function login({
   email,
   password,
-  setErrorMessage,
 }: {
   email: string;
   password: string;
-  setErrorMessage: (arg: string) => void;
 }) {
-  try {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/members/login`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username: email, password: password }),
-      }
-    );
-
-    const data = await response.json();
-
-    if (data.result.code === 200) {
-      localStorage.setItem("access_token", data.body.access_token);
-    } else {
-      throw new Error("로그인에 실패하였습니다.");
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/members/login`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username: email, password: password }),
     }
-    // const loginUser = await getUser();
-    // setLoginUser(loginUser.body);
-    // navigate("/");
-    window.location.href = "/";
-  } catch (error) {
-    if (error instanceof Error) {
-      setErrorMessage(error.message);
-    }
+  );
+
+  const data = await response.json();
+
+  if (data.result.code === 200) {
+    localStorage.setItem(ACCESS_TOKEN, data.body.access_token);
+  } else {
+    throw new Error("로그인에 실패하였습니다.");
   }
+  // const loginUser = await getUser();
+  // setLoginUser(loginUser.body);
+  // navigate("/");
+  window.location.href = "/";
 }
 
 export async function logout(
@@ -68,37 +62,40 @@ export async function logout(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
     },
   });
   setLoginUser(null);
-  localStorage.removeItem("access_token");
+  localStorage.removeItem(ACCESS_TOKEN);
   navigate("/login");
 }
 
-export async function signup(
-  signupData: SignUpData,
-  setIsLoading: (arg: boolean) => void
-) {
-  setIsLoading(true);
-
-  try {
-    await fetch(`${import.meta.env.VITE_API_URL}/api/members/register`, {
+export async function signup({
+  signupData,
+  navigate,
+}: {
+  signupData: SignUpData;
+  navigate: (arg: string) => void;
+}) {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/members/register`,
+    {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(signupData),
-    });
-  } catch (error) {
-    console.error(error);
-  } finally {
-    setIsLoading(false);
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("회원가입에 실패했습니다.");
   }
+  navigate("/login");
 }
 
 export function getAuthToken() {
-  const token = localStorage.getItem("access_token");
+  const token = localStorage.getItem(ACCESS_TOKEN);
   return token;
 }
 

@@ -1,7 +1,8 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
 import { login } from "../util/auth";
 import { useMutation } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 
 export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState("");
@@ -9,8 +10,11 @@ export default function LoginPage() {
     mutationFn: login,
   });
 
-  console.log(isError);
-  console.log(error);
+  useEffect(() => {
+    if (isError) {
+      setErrorMessage(error.message);
+    }
+  }, [isError, error]);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -45,7 +49,6 @@ export default function LoginPage() {
     mutate({
       email: data.email as string,
       password: data.password as string,
-      setErrorMessage,
     });
   }
 
@@ -75,6 +78,14 @@ export default function LoginPage() {
             <p className="bg-red-300 text-red-400 text-center rounded-lg p-1">
               {errorMessage}
             </p>
+          )}
+          {!errorMessage && (
+            <Link
+              to="/signup"
+              className="text-gray-300 text-center hover:underline"
+            >
+              혹시 아직 회원이 아니신가요 ?
+            </Link>
           )}
           <button
             className="bg-[#F42C5B] py-3 rounded-lg text-white"

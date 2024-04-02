@@ -7,6 +7,7 @@ import { FaMinus, FaPlus } from "react-icons/fa";
 import { useContext, useState } from "react";
 import { OptionContext } from "../../context/OptionProvider";
 import { useUserStore } from "../../store/user";
+import { ACCESS_TOKEN } from "../../util/auth";
 
 export default function PaymentInfo() {
   const member_id = useUserStore((state) => state.loginUser?.member_id);
@@ -74,7 +75,7 @@ export default function PaymentInfo() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
       },
       body: JSON.stringify(request),
     });
