@@ -5,6 +5,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { getAccommodation } from "../util/http";
 import { useEffect } from "react";
 import OptionProvider from "../context/OptionProvider";
+import LoadingSpinner from "../UI/LoadingSpinner";
 
 export default function PaymentPage() {
   const { id } = useParams();
@@ -19,7 +20,7 @@ export default function PaymentPage() {
   }, []);
 
   if (isPending) {
-    return <p>Loading...</p>;
+    return <LoadingSpinner />;
   }
 
   if (

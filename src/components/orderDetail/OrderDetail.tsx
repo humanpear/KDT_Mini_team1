@@ -3,6 +3,7 @@ import NextIcon from "../../icons/NextIcon";
 import { useQuery } from "@tanstack/react-query";
 import { getReservation } from "../../util/http";
 import { getStayDuration } from "../../util/date";
+import LoadingSpinner from "../../UI/LoadingSpinner";
 
 export default function OrderDetail() {
   const { id } = useParams();
@@ -12,7 +13,7 @@ export default function OrderDetail() {
   });
 
   if (isPending) {
-    return <p>Loading...</p>;
+    return <LoadingSpinner />;
   }
 
   const { title } = data.body.accommodation;
