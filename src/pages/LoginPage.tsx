@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
 import { login } from "../util/auth";
 import { useMutation } from "@tanstack/react-query";
@@ -9,8 +9,11 @@ export default function LoginPage() {
     mutationFn: login,
   });
 
-  console.log(isError);
-  console.log(error);
+  useEffect(() => {
+    if (isError) {
+      setErrorMessage(error.message);
+    }
+  }, [isError, error]);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -45,7 +48,6 @@ export default function LoginPage() {
     mutate({
       email: data.email as string,
       password: data.password as string,
-      setErrorMessage,
     });
   }
 

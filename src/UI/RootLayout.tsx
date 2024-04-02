@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import Header from "../components/layout/Header";
 import { useEffect } from "react";
 import { useUserStore } from "../store/user";
-import { getUser } from "../util/auth";
+import { ACCESS_TOKEN, getUser } from "../util/auth";
 import { useQuery } from "@tanstack/react-query";
 
 export default function RootLayout() {
@@ -17,7 +17,7 @@ export default function RootLayout() {
       setLoginUser(data.body);
     }
     if (!isPending && !data) {
-      localStorage.removeItem("access_token");
+      localStorage.removeItem(ACCESS_TOKEN);
     }
   }, [setLoginUser, data, isPending]);
 
