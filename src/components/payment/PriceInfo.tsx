@@ -8,7 +8,7 @@ type Props = {
 };
 
 export default function PriceInfo({ product }: Props) {
-  const { title, image1 } = product.accommodation;
+  const { title, image1 } = product;
   const { date, room, totalPrice, charge, finalPrice } =
     useContext(OptionContext);
 
