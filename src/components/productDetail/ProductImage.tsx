@@ -5,7 +5,7 @@ interface ProductProps {
 }
 
 export default function ProductImage({ accommodationData }: ProductProps) {
-	const { image1, title } = accommodationData.accommodation;
+	const { image1, title } = accommodationData;
 
 	return (
 		<div className="grid grid-cols-2 gap-2 rounded overflow-hidden mb-2">

@@ -7,7 +7,7 @@ interface ProductProps {
 }
 
 export default function ProductInfo({ accommodationData }: ProductProps) {
-	const { title, description, address } = accommodationData.accommodation;
+	const { title, description, address } = accommodationData;
 
 	return (
 		<div className="w-8/12 flex flex-col">
