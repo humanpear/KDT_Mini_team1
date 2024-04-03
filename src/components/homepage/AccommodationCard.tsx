@@ -40,9 +40,9 @@ export default function AccommodationCard({ accommodation }: AccommodationInfoPr
 				}
 				alt={title}
 			/>
-			<div className="p-4">
+			<div className="flex flex-col gap-1 p-4">
 				<p className="font-semibold my-1 line-clamp-1">{title}</p>
-				<p>
+				<p className="font-semibold">
 					₩{minPrice.toLocaleString()} ~ {maxPrice.toLocaleString()} / 박
 				</p>
 				<div className={infoFlex}>

@@ -4,7 +4,11 @@ import { OptionContext } from "../context/OptionProvider";
 import { useContext } from "react";
 import { formatDate } from "../util/date";
 
-export default function DatePicker() {
+type DateProps = {
+  months : number;
+}
+
+export default function DatePicker({months} : DateProps) {
   const { date, reservedDates, changeDate } = useContext(OptionContext);
 
   return (
@@ -13,7 +17,7 @@ export default function DatePicker() {
       ranges={[date]}
       onChange={changeDate}
       minDate={new Date()}
-      months={2}
+      months={months}
       direction="horizontal"
       disabledDay={(date) =>
         reservedDates ? reservedDates.includes(formatDate(date)) : false
