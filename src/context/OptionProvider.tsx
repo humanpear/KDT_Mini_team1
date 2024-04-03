@@ -124,8 +124,6 @@ export default function OptionProvider({ product, children }: Props) {
 
   const stayDuration = getStayDuration(date.startDate, date.endDate);
 
-  console.log(stayDuration);
-
   const totalPrice = roomPrice! * (stayDuration || 0);
   const charge = totalPrice / 10;
 
