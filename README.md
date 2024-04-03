@@ -49,8 +49,8 @@ React.js / TypeScript / tailwind css / React Query / zustand
 ```react
 src
 |-- components
-|		|-- 기능A   
-|				|-- file a
+|    |-- 기능A   
+|      |-- file a
 |-- utils  
 |-- types   
 |   |-- product.ts
@@ -86,7 +86,7 @@ src
    </tr>
    <tr>
       <td  align="center"><img src="https://github.com/humanpear/KDT_Mini_team1/assets/102540636/8eeab8b5-825b-48cd-b8a0-dbdf423ce324" width="400" height="300"/> </td>
-      <td  align="center"><img src="https://s4.ezgif.com/tmp/ezgif-4-12c5bef52f.gif" width="400" height="300"/> </td>
+      <td  align="center"><img src="https://cdn.discordapp.com/attachments/1218113005179637810/1224945508993339442/2024-04-03124431-ezgif.com-video-to-gif-converter.gif?ex=661f5667&is=660ce167&hm=e524262dc8d049234dc42b91950d5248b6e75219ff4777e908d315903c1389c9&" width="400" height="300"/> </td>
    </tr>
    <tr>
       <td  align="center">로그인 폼을 통해 로그인 및 회원가입</td>
