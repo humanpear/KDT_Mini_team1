@@ -107,6 +107,9 @@ export async function removeCartItem(cartid: number) {
 }
 
 export async function getRoomInfo(roomid: number) {
+  if (!localStorage.getItem(ACCESS_TOKEN)) {
+    return null;
+  }
   try {
     const res = await fetch(
       `${import.meta.env.VITE_API_URL}/api/reservations?room=${roomid}`,

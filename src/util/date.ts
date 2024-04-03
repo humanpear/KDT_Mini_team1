@@ -1,4 +1,4 @@
-import { format, intervalToDuration } from "date-fns";
+import { format } from "date-fns";
 import ko from "date-fns/locale/ko";
 
 export function formatDate(date: Date) {
@@ -12,5 +12,7 @@ export function formattedDate(date: Date) {
 }
 
 export function getStayDuration(start: Date, end: Date) {
-  return intervalToDuration({ start, end }).days;
+  const diffTime = Math.abs(end.getTime() - start.getTime());
+
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 }
