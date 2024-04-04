@@ -25,12 +25,12 @@ export default function OrderDetail() {
   return (
     <section className="py-16">
       <div className="text-center mb-12">
-        <p className="text-3xl font-bold mb-6">
+        <p className="text-2xl md:text-3xl font-bold mb-6">
           예약이 정상적으로 완료되었습니다.
         </p>
         <p>아래의 주문내역을 확인해주세요.</p>
       </div>
-      <div className="w-[600px] mx-auto">
+      <div className="w-full max-w-[600px] mx-auto">
         <p className="text-xl">{title}</p>
         <div className="flex justify-between items-center py-6 border-b">
           <div>

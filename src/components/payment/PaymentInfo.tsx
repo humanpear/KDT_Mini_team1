@@ -86,7 +86,7 @@ export default function PaymentInfo() {
   }
 
   return (
-    <div className="basis-1/2 pb-12">
+    <div className="md:basis-1/2 pb-12">
       <div className="border-b">
         <p className="text-[24px] mb-6">예약 정보</p>
         <div className="flex flex-col gap-4 pb-6">
@@ -128,7 +128,12 @@ export default function PaymentInfo() {
                   }
                 }}
               >
-                <DatePicker months={2} />
+                <div className="md:hidden">
+                  <DatePicker months={1} />
+                </div>
+                <div className="hidden md:block">
+                  <DatePicker months={2} />
+                </div>
                 {isInvalidDate && (
                   <p className="bg-white w-[664px] text-center pb-2 text-brand">
                     선택불가능한 날짜입니다.
@@ -141,19 +146,19 @@ export default function PaymentInfo() {
             <p>인원</p>
             <div className="flex items-center w-[100px] justify-between">
               <button
-                onClick={() => changeGuest(1)}
-                className={isActiveUp ? activeBtn : inactiveBtn}
-                disabled={!isActiveUp}
-              >
-                <FaPlus />
-              </button>
-              <p>{guest}명</p>
-              <button
                 onClick={() => changeGuest(-1)}
                 className={isActiveDown ? activeBtn : inactiveBtn}
                 disabled={!isActiveDown}
               >
                 <FaMinus />
+              </button>
+              <p>{guest}명</p>
+              <button
+                onClick={() => changeGuest(1)}
+                className={isActiveUp ? activeBtn : inactiveBtn}
+                disabled={!isActiveUp}
+              >
+                <FaPlus />
               </button>
             </div>
           </div>
@@ -173,7 +178,7 @@ export default function PaymentInfo() {
       )}
       <button
         onClick={handleClick}
-        className={`w-[120px] py-4 text-white rounded-lg ${
+        className={`w-full md:w-[120px] py-4 text-white rounded-lg ${
           allDone ? "bg-brand" : "bg-stone-200"
         } transition`}
         disabled={!allDone}

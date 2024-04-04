@@ -91,7 +91,7 @@ export default function SignupPage() {
   };
 
   return (
-    <section className="w-[520px] shadow-basic rounded-lg mx-auto mt-16">
+    <section className="w-11/12 max-w-[520px] shadow-basic rounded-lg mx-auto mt-16 mb-8">
       <div className="h-16 font-bold text-center leading-[64px] border-b">
         회원가입
       </div>

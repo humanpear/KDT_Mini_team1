@@ -26,7 +26,7 @@ export default function CartPage() {
   });
 
   return (
-    <section className="w-[800px] mx-auto py-16">
+    <section className="w-full max-w-[800px] mx-auto py-16">
       <p className="text-2xl font-bold text-center mb-4">장바구니</p>
       {isPending && <LoadingSpinner />}
       {!isPending && cartItems.length === 0 && <CartNoItem />}

@@ -34,9 +34,9 @@ export default function PaymentPage() {
 
   return (
     <OptionProvider product={product}>
-      <section className="w-[1120px] mx-auto mt-16 relative">
-        <p className="text-3xl font-bold mb-12">예약 요청</p>
-        <div className="flex">
+      <section className="w-full md:w-[1120px] mx-auto mt-16 relative">
+        <p className="text-3xl font-bold mb-4 md:mb-12">예약 요청</p>
+        <div className="flex flex-col-reverse md:flex-row">
           <PaymentInfo />
           <PriceInfo product={product} />
         </div>

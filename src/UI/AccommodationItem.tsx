@@ -40,7 +40,7 @@ export default function AccommodationItem({ item, type }: Props) {
   }
 
   return (
-    <li className="shadow-basic p-6 rounded-md relative">
+    <li className="shadow-basic p-3 md:p-6 rounded-md relative">
       <div className="border-b pb-4">
         <p>{title}</p>
         <p className="text-[13px] text-stone-400">{address}</p>
@@ -51,7 +51,7 @@ export default function AccommodationItem({ item, type }: Props) {
           alt={`${title} 숙소 이미지`}
           className="w-[100px] h-[100px] object-cover rounded-lg"
         />
-        <div className="pl-4">
+        <div className="pl-4 text-[14px] md:text-[16px]">
           <p>
             {start_date} ~ {end_date} |{" "}
             {getStayDuration(new Date(start_date), new Date(end_date))}박

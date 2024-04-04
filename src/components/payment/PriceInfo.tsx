@@ -13,8 +13,8 @@ export default function PriceInfo({ product }: Props) {
     useContext(OptionContext);
 
   return (
-    <div className="basis-1/2 flex justify-end">
-      <div className="w-[460px] h-min p-6 border rounded-lg sticky top-[200px] shadow-basic">
+    <div className="md:basis-1/2 flex md:justify-end mb-6 md:mb-0">
+      <div className="w-full md:w-[460px] h-min p-6 border rounded-lg sticky top-[200px] shadow-basic">
         <div className="flex border-b pb-6">
           <img
             className="w-[100px] h-[100px] rounded-lg object-cover shrink-0"
