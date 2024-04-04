@@ -33,6 +33,7 @@ export default function FilterCategory({ filters, onFilterChange }: FiltersArray
 				modules={[Navigation]}
 				navigation
 				slidesPerView={1}
+				spaceBetween={10}
 				onSwiper={e => {
 					setSwiper(e);
 				}}
@@ -51,9 +52,9 @@ export default function FilterCategory({ filters, onFilterChange }: FiltersArray
 						slidesPerView: 6,
 					},
 				}}
-				className="relative w-8/12 gap-4 mb-4">
+				className="md:w-8/12 gap-4 mb-4">
 				{filters.map((filter, index) => (
-					<SwiperSlide key={index}>
+					<SwiperSlide key={index} className="flex justify-center">
 						<button
 							onClick={() => handleClickFilter(filter)}
 							className={`w-[150px] font-semibold p-2 rounded-full ${
