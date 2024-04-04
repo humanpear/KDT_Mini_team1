@@ -10,7 +10,7 @@ export default function ProductInfo({ accommodationData }: ProductProps) {
 	const { title, description, address } = accommodationData;
 
 	return (
-		<div className="w-8/12 flex flex-col">
+		<div className="flex flex-col lg:w-6/12 xl:w-8/12">
 			<div className="border-b">
 				<p className="text-2xl font-semibold">{title}</p>
 				<p>최대 인원 4명 &middot; 침실 1개 &middot; 침대 2개 &middot;욕실 1개</p>

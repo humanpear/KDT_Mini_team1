@@ -128,7 +128,7 @@ export default function PaymentInfo() {
                   }
                 }}
               >
-                <DatePicker />
+                <DatePicker months={2} />
                 {isInvalidDate && (
                   <p className="bg-white w-[664px] text-center pb-2 text-brand">
                     선택불가능한 날짜입니다.
