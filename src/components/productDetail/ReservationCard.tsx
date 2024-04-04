@@ -24,8 +24,19 @@ const btnCustom = "p-2 rounded-full bg-gray-200 hover:brightness-90";
 export default function ReservationCard({ accommodationData }: Props) {
 	const navigate = useNavigate();
 	const { id } = useParams();
-	const { room, date, guest, stayDuration, totalPrice, finalPrice, selectedRoom, changeRoom, changeGuest, clearDate } =
-		useContext(OptionContext);
+	const {
+		room,
+		date,
+		guest,
+		stayDuration,
+		totalPrice,
+		finalPrice,
+		selectedRoom,
+		changeRoom,
+		changeGuest,
+		clearDate,
+		isInvalidDate,
+	} = useContext(OptionContext);
 
 	const isActiveUp = +room > +guest;
 	const isActiveDown = 1 < +guest;
@@ -154,12 +165,12 @@ export default function ReservationCard({ accommodationData }: Props) {
 						<div
 							onClick={() => changeOpenOptionType("date")}
 							className="flex justify-between items-center cursor-pointer p-4">
-							<div className={textFlex}>
+							<div className={isInvalidDate ? `${textFlex} text-brand` : textFlex}>
 								<span className={textClass}>체크인</span>
 								{formattedDate(date.startDate)}
 							</div>
 							<MdOutlineKeyboardArrowRight className={iconClass} />
-							<div className={textFlex}>
+							<div className={isInvalidDate ? `${textFlex} text-brand` : textFlex}>
 								<span className={textClass}>체크아웃</span>
 								{formattedDate(date.endDate)}
 							</div>
@@ -167,7 +178,7 @@ export default function ReservationCard({ accommodationData }: Props) {
 						{isDate && (
 							<div
 								ref={dateRef}
-								className="z-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border shadow-md p-4 xl:-right-1/2">
+								className="z-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border shadow-md p-4">
 								<div className="md:hidden">
 									<DatePicker months={1} />
 								</div>
@@ -179,6 +190,9 @@ export default function ReservationCard({ accommodationData }: Props) {
 										날짜지우기
 									</button>
 								</div>
+								{isInvalidDate && (
+									<p className="bg-white text-center pb-2 text-brand">선택불가능한 날짜입니다.</p>
+								)}
 							</div>
 						)}
 					</div>
