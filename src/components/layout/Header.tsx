@@ -22,7 +22,7 @@ export default function Header() {
         <Link to="/" className="font-bold text-brand text-3xl w-[114px]">
           minibnb
         </Link>
-        <div className="relative">
+        <div className="relative hidden md:block">
           <input
             type="search"
             className="border rounded-[40px] w-[300px] h-[48px] pl-[20px] shadow-basic outline-none"

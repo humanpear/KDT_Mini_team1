@@ -53,7 +53,7 @@ export default function LoginPage() {
   }
 
   return (
-    <section className="absolute top-1/2 left-1/2 w-[520px] shadow-basic translate-x-[-50%] translate-y-[-50%] rounded-lg">
+    <section className="absolute top-1/2 left-1/2 w-11/12 max-w-[520px] shadow-basic translate-x-[-50%] translate-y-[-50%] rounded-lg">
       <div className="h-16 font-bold text-center leading-[64px] border-b">
         로그인
       </div>
