@@ -51,7 +51,13 @@ export default function OrderDetail() {
                 {room_price.toLocaleString()} x{" "}
                 {getStayDuration(new Date(start_date), new Date(end_date))}박
               </p>
-              <p>{total_price.toLocaleString()}원</p>
+              <p>
+                {(
+                  room_price *
+                  getStayDuration(new Date(start_date), new Date(end_date))
+                ).toLocaleString()}
+                원
+              </p>
             </div>
             <div className="flex justify-between items-center">
               <p className="underline">미니비앤비 서비스 수수료</p>
