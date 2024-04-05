@@ -35,25 +35,25 @@ export default function MyPage() {
           <p className="font-bold text-xl mb-6">개인정보</p>
           <div className="flex items-center">
             <img
-              src={loginUser.profile_image}
+              src={loginUser?.profile_image}
               alt={`${loginUser?.name}님의 프로필 이미지`}
               className="w-[100px] h-[100px] md:w-[200px] md:h-[200px] object-cover shrink-0"
             />
             <div className="ml-2 md:ml-6 w-full">
               <div className="text-[14px] md:text-xl flex border-b p-2 md:p-4">
                 <p className="w-[40px] md:w-[70px] text-stone-400">이름</p>
-                <p>{loginUser.name}</p>
+                <p>{loginUser?.name}</p>
               </div>
               <div className="text-[14px] md:text-xl flex border-b p-2 md:p-4">
                 <p className="w-[40px] md:w-[70px] text-stone-400">이메일</p>
-                <p>{loginUser.username}</p>
+                <p>{loginUser?.username}</p>
               </div>
             </div>
           </div>
           <p className="font-bold text-xl pt-6 pb-4">예약내역</p>
           <ul className="flex flex-col gap-4">
-            {reservations.length === 0 && <ReservationNoItem />}
-            {reservations.length > 0 &&
+            {reservations?.length === 0 && <ReservationNoItem />}
+            {reservations?.length > 0 &&
               reservations.map((reservation: AccommodationWithOption) => (
                 <AccommodationItem
                   key={reservation.option?.id}
