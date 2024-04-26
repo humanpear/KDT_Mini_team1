@@ -2,6 +2,9 @@ import { useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUserStore } from "../../store/user";
 import { logout } from "../../util/auth";
+import { useQuery } from "@tanstack/react-query";
+import { getCarts, getReservations } from "../../util/http";
+import Badge from "../../UI/Badge";
 
 type Props = {
   onClose: () => void;
@@ -9,11 +12,19 @@ type Props = {
 };
 
 export default function NavBar({ onClose, navToggleRef }: Props) {
-  const linkStyle = "py-2 px-4 hover:bg-[#f8f9fa]";
+  const linkStyle = "py-2 px-4 hover:bg-[#f8f9fa] flex justify-between";
   const navRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   const { loginUser, setLoginUser } = useUserStore();
+  const { data: reservations, isPending: isReservationsPending } = useQuery({
+    queryKey: ["reservations", loginUser?.member_id],
+    queryFn: getReservations,
+  });
+  const { data: carts, isPending: isCartsPending } = useQuery({
+    queryKey: ["carts", loginUser?.member_id],
+    queryFn: getCarts,
+  });
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -51,12 +62,14 @@ export default function NavBar({ onClose, navToggleRef }: Props) {
       )}
       {loginUser && (
         <Link to="/mypage" onClick={onClose} className={linkStyle}>
-          마이페이지
+          <p>마이페이지</p>
+          {!isReservationsPending && <Badge count={reservations.body.length} />}
         </Link>
       )}
       {loginUser && (
         <Link to="/cart" onClick={onClose} className={linkStyle}>
-          장바구니
+          <p>장바구니</p>
+          {!isCartsPending && <Badge count={carts.body.length} />}
         </Link>
       )}
       {loginUser && (
